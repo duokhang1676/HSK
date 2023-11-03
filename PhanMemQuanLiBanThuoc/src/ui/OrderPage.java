@@ -38,8 +38,11 @@ public class OrderPage extends BasePage {
 
 	@Override
 	protected JPanel onCreateHeader() {
+		JPanel jp_test = new JPanel();
+		jp_test.add(new JLabel("Hihi haha"));
 		return new Header()
 				.addTitle("Đơn hàng")
+				.addInsidePanel(jp_test)
 				.createView();
 	}
 	

@@ -30,9 +30,13 @@ public class NavigationBar implements IComponent {
 		navigationBarPanel.setBackground(Color.decode(ColorConsts.BackgroundColor));
 	}
 	
-	public NavigationBar addNaviButton(String text) {
+	public NavigationBar addNaviButton(String text, String urlImg) {
 		JButton naviButton = new JButton(text);
+		if (!urlImg.isEmpty()) {
+			
+		}
 		navigationBarPanel.add(naviButton);
+		
 		
 		naviButton.addActionListener(e -> {
 			JButton clickedButton = ((JButton) e.getSource());

@@ -37,11 +37,11 @@ public class RootFrame extends JFrame {
 	
 	private JPanel getNavigationBar() {
 		return new NavigationBar()
-				.addNaviButton("Trang chủ")
-				.addNaviButton("Đơn hàng")
-				.addNaviButton("Sản phẩm")
-				.addNaviButton("Khách hàng")
-				.addNaviButton("Cài đặt")
+				.addNaviButton("Trang chủ", "")
+				.addNaviButton("Đơn hàng", "")
+				.addNaviButton("Sản phẩm", "")
+				.addNaviButton("Khách hàng", "")
+				.addNaviButton("Cài đặt", "")
 				.addNavigateListener(new INavigateListener() {
 					@Override
 					public void onNavigated(String txt) {
