@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 public class NavigationBar implements IComponent {
 	
-	private final int MAX_ROW_COUNT = 30;
+	private final int MAX_ROW_COUNT = 25;
 	private final int COLUMN_COUNT = 1;
 	
 	private JPanel navigationBarPanel;
@@ -32,6 +32,9 @@ public class NavigationBar implements IComponent {
 	
 	public NavigationBar addNaviButton(String text, String urlImg) {
 		JButton naviButton = new JButton(text);
+		
+		naviButton.setPreferredSize(new Dimension(250, 120));
+		
 		if (!urlImg.isEmpty()) {
 			
 		}

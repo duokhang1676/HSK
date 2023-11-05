@@ -25,7 +25,7 @@ public class Header {
 		label.setFont(new Font("Arial", Font.BOLD, 30));
 		label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-		headerPanel.add(label, BorderLayout.WEST);
+		headerPanel.add(label, BorderLayout.NORTH);
 		return this;
 	}
 	

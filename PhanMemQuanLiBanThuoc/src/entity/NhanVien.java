@@ -1,78 +1,83 @@
 package entity;
 
+import java.time.LocalDate;
+import java.util.Objects;
+
 public class NhanVien {
-	private int maNV;
-	private String ho;
-	private String ten;
-	private int tuoi;
-	private boolean phai;
-	private double luong;
-	private PhongBan pBan;
-	
-	public NhanVien(int maNV, String ho, String ten, int tuoi, boolean phai, double luong, PhongBan pBan) {
+	private int maNhanVien;
+	private String tenNhanVien;
+	private LocalDate ngayVaoLam;
+	private String caLamViec;
+	private String soDienThoai;
+
+	public NhanVien(int maNhanVien, String tenNhanVien, LocalDate ngayVaoLam, String caLamViec, String soDienThoai) {
 		super();
-		this.maNV = maNV;
-		this.ho = ho;
-		this.ten = ten;
-		this.tuoi = tuoi;
-		this.phai = phai;
-		this.luong = luong;
-		this.pBan = pBan;
+		this.maNhanVien = maNhanVien;
+		this.tenNhanVien = tenNhanVien;
+		this.ngayVaoLam = ngayVaoLam;
+		this.caLamViec = caLamViec;
+		this.soDienThoai = soDienThoai;
 	}
 
-	public double getLuong() {
-		return luong;
+	public NhanVien() {
+		super();
 	}
 
-	public void setLuong(double luong) {
-		this.luong = luong;
+	public int getMaNhanVien() {
+		return maNhanVien;
 	}
 
-	public int getMaNV() {
-		return maNV;
+	public void setMaNhanVien(int maNhanVien) {
+		this.maNhanVien = maNhanVien;
 	}
 
-	public void setMaNV(int maNV) {
-		this.maNV = maNV;
+	public String getTenNhanVien() {
+		return tenNhanVien;
 	}
 
-	public String getHo() {
-		return ho;
+	@Override
+	public int hashCode() {
+		return Objects.hash(maNhanVien);
 	}
 
-	public void setHo(String ho) {
-		this.ho = ho;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NhanVien other = (NhanVien) obj;
+		return maNhanVien == other.maNhanVien;
 	}
 
-	public String getTen() {
-		return ten;
+	public void setTenNhanVien(String tenNhanVien) {
+		this.tenNhanVien = tenNhanVien;
 	}
 
-	public void setTen(String ten) {
-		this.ten = ten;
+	public LocalDate getNgayVaoLam() {
+		return ngayVaoLam;
 	}
 
-	public int getTuoi() {
-		return tuoi;
+	public void setNgayVaoLam(LocalDate ngayVaoLam) {
+		this.ngayVaoLam = ngayVaoLam;
 	}
 
-	public void setTuoi(int tuoi) {
-		this.tuoi = tuoi;
+	public String getCaLamViec() {
+		return caLamViec;
 	}
 
-	public boolean getPhai() {
-		return phai;
+	public void setCaLamViec(String caLamViec) {
+		this.caLamViec = caLamViec;
 	}
 
-	public void setPhai(boolean phai) {
-		this.phai = phai;
+	public String getSoDienThoai() {
+		return soDienThoai;
 	}
 
-	public PhongBan getpBan() {
-		return pBan;
+	public void setSoDienThoai(String soDienThoai) {
+		this.soDienThoai = soDienThoai;
 	}
 
-	public void setpBan(PhongBan pBan) {
-		this.pBan = pBan;
-	}
 }

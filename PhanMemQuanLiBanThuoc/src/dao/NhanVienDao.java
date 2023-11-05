@@ -32,7 +32,7 @@ public class NhanVienDao {
 				double luong = rs.getDouble("tienLuong");
 				PhongBan pBan = new PhongBan(rs.getString("maPhong"));
 				
-				dsNhanVien.add(new NhanVien(maNV, ho, ten, tuoi, phai, luong, pBan));
+				//dsNhanVien.add(new NhanVien(maNV, ho, ten, tuoi, phai, luong, pBan));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
