@@ -78,7 +78,7 @@ public class DashboardPage extends BasePage {
 		JLabel box2Label = new JLabel("Doanh thu");
 		box2Label.setFont(new Font("Arials", Font.PLAIN, 20));
 		incomeLabel = new JLabel("1,520,000đ");
-		incomeLabel.setFont(new Font("Arials", Font.PLAIN, 30));
+		incomeLabel.setFont(new Font("Arials", Font.BOLD, 30));
 		box2.setOpaque(true);
 		box2.setBorder(new EmptyBorder(15, 15, 15, 15));
 		box2.setBackground(Color.BLACK);
@@ -90,7 +90,7 @@ public class DashboardPage extends BasePage {
 		JLabel box1Label = new JLabel("Số hóa đơn");
 		box1Label.setFont(new Font("Arials", Font.PLAIN, 20));
 		orderCountLabel = new JLabel("25");
-		orderCountLabel.setFont(new Font("Arials", Font.PLAIN, 30));
+		orderCountLabel.setFont(new Font("Arials", Font.BOLD, 30));
 		box1.setBorder(new EmptyBorder(15, 15, 15, 15));
 		box1.setOpaque(true);
 		box1.setBackground(new Color(22, 120, 254, 80));
@@ -101,7 +101,7 @@ public class DashboardPage extends BasePage {
 		JLabel box3Label = new JLabel("Số thuốc");
 		box3Label.setFont(new Font("Arials", Font.PLAIN, 20));
 		productCountLabel = new JLabel("25");
-		productCountLabel.setFont(new Font("Arials", Font.PLAIN, 30));
+		productCountLabel.setFont(new Font("Arials", Font.BOLD, 30));
 		box3.setOpaque(true);
 		box3.setBackground(new Color(22, 120, 254, 80));
 		box3.setBorder(new EmptyBorder(15, 15, 15, 15));
@@ -196,7 +196,7 @@ public class DashboardPage extends BasePage {
 
 		CategoryPlot cplotPremis = (CategoryPlot)premisSaleChart.getPlot();
 	    BarRenderer rPremis = (BarRenderer)premisSaleChart.getCategoryPlot().getRenderer();
-	    r.setSeriesPaint(0, new Color(22, 120, 254));
+	    rPremis.setSeriesPaint(0, new Color(22, 120, 254));
 		
 		ChartPanel premisSaleChartPanel =new ChartPanel(premisSaleChart);
 		premisSaleChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
@@ -221,9 +221,7 @@ public class DashboardPage extends BasePage {
 		
 		
 		
-		
-		
-		
+
 		
 		panel.add(boxGroup, BorderLayout.NORTH);
 		panel.add(chartGridGroup, BorderLayout.CENTER);
