@@ -21,6 +21,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 
 	private BasePage dashboardPage;
 	private BasePage orderPage;
+	private BasePage productPage;
 
 	public RootFrame() {
 		super("Phần mềm quản lí thuốc nhóm 2");
@@ -32,6 +33,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 
 		dashboardPage = new DashboardPage();
 		orderPage = new OrderPage();
+		productPage = new ProductPage();
 
 		add(getNavigationBar(), BorderLayout.WEST);
 		add(dashboardPage, BorderLayout.CENTER);
@@ -56,6 +58,10 @@ public class RootFrame extends JFrame implements WindowStateListener {
 
 						if (txt.equals("Đơn hàng")) {
 							add(orderPage, BorderLayout.CENTER);
+						}
+						
+						if (txt.equals("Sản phẩm")) {
+							add(productPage, BorderLayout.CENTER);
 						}
 
 						SwingUtilities.updateComponentTreeUI(RootFrame.this);
