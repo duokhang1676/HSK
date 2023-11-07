@@ -1,6 +1,7 @@
 package entity;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 public class Thuoc {
@@ -10,7 +11,7 @@ public class Thuoc {
 	private String DonViTinh;
 	private String ThanhPhanChinh;
 	private String DonViTinhLe;
-	private Date HanSuDung;
+	private LocalDate HanSuDung;
 	private String DieuKienBaoQuan;
 	private String DonViTinhChan;
 	private String GhiChu;
@@ -23,7 +24,7 @@ public class Thuoc {
 		super();
 	}
 	public Thuoc(int maThuoc, String tenThuoc, NhaCungCap nhaCungCap, String donViTinh, String thanhPhanChinh,
-			String donViTinhLe, Date hanSuDung, String dieuKienBaoQuan, String donViTinhChan, String ghiChu,
+			String donViTinhLe, LocalDate hanSuDung, String dieuKienBaoQuan, String donViTinhChan, String ghiChu,
 			double giaNhapLe, double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc) {
 		super();
 		MaThuoc = maThuoc;
@@ -82,10 +83,10 @@ public class Thuoc {
 	public void setDonViTinhLe(String donViTinhLe) {
 		DonViTinhLe = donViTinhLe;
 	}
-	public Date getHanSuDung() {
+	public LocalDate getHanSuDung() {
 		return HanSuDung;
 	}
-	public void setHanSuDung(Date hanSuDung) {
+	public void setHanSuDung(LocalDate hanSuDung) {
 		HanSuDung = hanSuDung;
 	}
 	public String getDieuKienBaoQuan() {
