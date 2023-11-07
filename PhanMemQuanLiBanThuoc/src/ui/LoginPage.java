@@ -19,103 +19,116 @@ import javax.swing.JTextField;
 import java.awt.Panel;
 import java.awt.Label;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
+
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.Image;
+
 import javax.swing.SwingConstants;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
+import javax.swing.border.BevelBorder;
 
-public class LoginPage extends JFrame {
-
-	private JPanel contentPane;
+public class LoginPage extends JFrame implements ActionListener {
 	private JTextField txtUserName;
 	private JTextField txtPassword;
+	private JButton btnLogin;
 	private JButton btnSignUp;
+	private JButton btnExit;
 	
 	/**
 	 * Create the frame.
 	 */
 	public LoginPage() {
-		setTitle("Login\r\n");
+		setTitle("Login");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setLocationRelativeTo(null);
 		setBounds(100, 100, 700, 700);
-		contentPane = new JPanel();
-		contentPane.setBackground(new Color(255, 250, 250));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
-		setContentPane(contentPane);
+		Image img = Toolkit.getDefaultToolkit().createImage("img\\img_logoSmall.png");
+		setIconImage(img);
+		getContentPane().setLayout(null);
 		
-		JButton btnLogin = new JButton("Login\r\n");
-		btnLogin.setBackground(new Color(3, 120, 154));
-		btnLogin.setForeground(new Color(255, 255, 255));
-		btnLogin.setBounds(383, 376, 170, 45);
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (true) {
-					setVisible(false);
-					new RootFrame().setVisible(true);
-				}
-			}
-		});
-		contentPane.setBackground(Color.decode(ColorConsts.ForegroundColor));
-		contentPane.setLayout(null);
-		contentPane.add(btnLogin);
+		JPanel jp_bg1 = new JPanel();
+		jp_bg1.setBounds(0, 0, 686, 663);
+		getContentPane().add(jp_bg1);
+		jp_bg1.setLayout(null);
+		
+		JPanel jp_bg2 = new JPanel();
+		jp_bg2.setBounds(10, 10, 666, 643);
+		jp_bg2.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		jp_bg1.add(jp_bg2);
+		jp_bg2.setLayout(null);
+		
+		JPanel jp_login = new JPanel();
+		jp_login.setBounds(25, 25, 615, 591);
+		jp_login.setBackground(Color.decode(ColorConsts.ForegroundColor));
+		jp_bg2.add(jp_login);
+		jp_login.setLayout(null);
+		
+		JLabel lbllogo = new JLabel("");
+		lbllogo.setBounds(129, 10, 395, 180);
+		lbllogo.setIcon(new ImageIcon("img\\img_logo.png"));
+		jp_login.add(lbllogo);
+		
+		JLabel lblNewLabel = new JLabel("Welcome!");
+		lblNewLabel.setForeground(new Color(22, 65, 135));
+		lblNewLabel.setFont(new Font("Letterpress Clean Script", Font.BOLD, 40));
+		lblNewLabel.setBounds(262, 200, 151, 72);
+		jp_login.add(lblNewLabel);
+		
+		JLabel lblUserName = new JLabel("User Name");
+		lblUserName.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblUserName.setBounds(90, 280, 99, 26);
+		jp_login.add(lblUserName);
+		
+		JLabel lblPassword = new JLabel("Password");
+		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblPassword.setBounds(90, 354, 99, 26);
+		jp_login.add(lblPassword);
 		
 		txtUserName = new JTextField();
-		txtUserName.setFont(new Font("Tahoma", Font.BOLD, 10));
-		txtUserName.setToolTipText("");
-		txtUserName.setForeground(new Color(0, 0, 0));
-		txtUserName.setBounds(383, 244, 269, 44);
-		contentPane.add(txtUserName);
+		txtUserName.setBounds(90, 303, 434, 41);
+		jp_login.add(txtUserName);
 		txtUserName.setColumns(10);
 		
 		txtPassword = new JTextField();
-		txtPassword.setFont(new Font("Tahoma", Font.BOLD, 10));
-		txtPassword.setForeground(new Color(0, 0, 0));
 		txtPassword.setColumns(10);
-		txtPassword.setBounds(383, 322, 269, 44);
-		contentPane.add(txtPassword);
+		txtPassword.setBounds(90, 378, 434, 41);
+		jp_login.add(txtPassword);
 		
-		btnSignUp = new JButton("Sign up");
-		btnSignUp.setForeground(new Color(255, 255, 255));
-		btnSignUp.setBackground(new Color(3, 120, 154));
-		btnSignUp.setBounds(383, 434, 170, 45);
-		contentPane.add(btnSignUp);
+		btnLogin = new JButton("Login");
+		btnLogin.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnLogin.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		btnLogin.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		btnLogin.setBounds(90, 442, 99, 41);
+		jp_login.add(btnLogin);
 		
-		Panel colorPanel = new Panel();
-		colorPanel.setBackground(Color.decode(ColorConsts.PrimaryColor));
-		colorPanel.setBounds(10, 10, 342, 643);
-		contentPane.add(colorPanel);
-		colorPanel.setLayout(null);
+		btnSignUp = new JButton("Sign Up");
+		btnSignUp.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnSignUp.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		btnSignUp.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		btnSignUp.setBounds(253, 442, 99, 41);
+		jp_login.add(btnSignUp);
 		
-		JLabel lblWelcome = new JLabel("Welcome!!!");
-		lblWelcome.setHorizontalAlignment(SwingConstants.CENTER);
-		lblWelcome.setFont(new Font("Times New Roman", Font.PLAIN, 25));
-		lblWelcome.setBounds(70, 214, 189, 69);
-		colorPanel.add(lblWelcome);
+		btnExit = new JButton("Exit");
+		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnExit.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		btnExit.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		btnExit.setBounds(425, 442, 99, 41);
+		jp_login.add(btnExit);
 		
-		JLabel lblUserIcon = new JLabel("");
-		lblUserIcon.setIcon(new ImageIcon("icon\\ic_userIcon.png"));
-		lblUserIcon.setBounds(113, 129, 98, 104);
-		colorPanel.add(lblUserIcon);
-		
-		JLabel lbUsername = new JLabel("User name");
-		lbUsername.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lbUsername.setSize(new Dimension(9, 0));
-		lbUsername.setBounds(383, 204, 101, 40);
-		contentPane.add(lbUsername);
-		
-		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setSize(new Dimension(9, 0));
-		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		lblPassword.setBounds(383, 284, 101, 40);
-		contentPane.add(lblPassword);
-		
-		JLabel lblLogo = new JLabel("");
-		lblLogo.setIcon(new ImageIcon("img\\img_logoImg.png"));
-		lblLogo.setBounds(383, 61, 269, 133);
-		contentPane.add(lblLogo);
+		//add event
+		btnLogin.addActionListener(this);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		Object src = e.getSource();
+		if (src.equals(btnLogin)) {
+			new RootFrame().setVisible(true);
+			setVisible(false);
+		}
 	}
 }

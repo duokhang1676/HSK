@@ -22,7 +22,9 @@ public class RootFrame extends JFrame implements WindowStateListener {
 	private BasePage dashboardPage;
 	private BasePage orderPage;
 	private BasePage customerPage;
-
+	private BasePage premisesPage;
+	private BasePage productPage;
+	
 	public RootFrame() {
 		super("Phần mềm quản lí thuốc nhóm 2");
 
@@ -34,7 +36,9 @@ public class RootFrame extends JFrame implements WindowStateListener {
 		dashboardPage = new DashboardPage();
 		orderPage = new OrderPage();
 		customerPage = new CustomerPage();
-
+		premisesPage = new PremisePage();
+		productPage = new ProductPage();
+		
 		add(getNavigationBar(), BorderLayout.WEST);
 		add(dashboardPage, BorderLayout.CENTER);
 
@@ -44,15 +48,21 @@ public class RootFrame extends JFrame implements WindowStateListener {
 	}
 
 	private JPanel getNavigationBar() {
-		return new NavigationBar().addNaviButton("Trang chủ", "").addNaviButton("Đơn hàng", "")
-				.addNaviButton("Sản phẩm", "").addNaviButton("Khách hàng", "").addNaviButton("Cài đặt", "")
+		return new NavigationBar()
+				.addNaviButton("Trang chủ", "icon\\ic_home.png")
+				.addNaviButton("Đơn hàng", "icon\\ic_bill.png")
+				.addNaviButton("Sản phẩm", "icon\\ic_product.png")
+				.addNaviButton("Khách hàng", "icon\\ic_customer.png")
+				.addNaviButton("Quầy", "")
 				.addNavigateListener(new INavigateListener() {
 					@Override
 					public void onNavigated(String txt) {
 						remove(dashboardPage);
 						remove(orderPage);
 						remove(customerPage);
-
+						remove(premisesPage);
+						remove(productPage);
+						
 						if (txt.equals("Trang chủ")) {
 							add(dashboardPage, BorderLayout.CENTER);
 						}
@@ -63,6 +73,14 @@ public class RootFrame extends JFrame implements WindowStateListener {
 						
 						if (txt.equals("Khách hàng")) {
 							add(customerPage, BorderLayout.CENTER);
+						}
+						
+						if (txt.equals("Quầy")) {
+							add(premisesPage, BorderLayout.CENTER);
+						}
+
+						if (txt.equals("Sản phẩm")) {
+							add(productPage, BorderLayout.CENTER);
 						}
 
 						SwingUtilities.updateComponentTreeUI(RootFrame.this);

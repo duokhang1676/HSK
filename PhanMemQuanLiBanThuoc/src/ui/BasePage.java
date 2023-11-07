@@ -19,6 +19,7 @@ public abstract class BasePage extends JPanel {
 		add(header != null ? header : new JPanel(), BorderLayout.NORTH);
 		add(nestedContainer != null ? nestedContainer : new JPanel(), BorderLayout.CENTER);
 		
-
+		
 	}
+	
 }

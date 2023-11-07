@@ -18,7 +18,8 @@ import javax.swing.table.DefaultTableModel;
 import components.ColorConsts;
 import components.Header;
 
-public class CustomerPage extends BasePage{
+public class CustomerPage extends BasePage {
+	
 	private JTextField txtMa;
 	private JTextField txtTen;
 	private JTextField txtHo;
