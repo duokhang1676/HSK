@@ -2,13 +2,18 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -19,6 +24,8 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -35,7 +42,7 @@ import components.TopSaleProductView;
 import dao.QuayDao;
 import entity.Quay;
 
-public class PremisePage extends BasePage {
+public class PremisePage extends BasePage implements MouseListener {
 
 	private JTextField maQuayTxt;
 	private JTextField tenQuayTxt;
@@ -59,7 +66,7 @@ public class PremisePage extends BasePage {
 	private DefaultListModel<Object> topSaleProductModel;
 	
 	private JFreeChart incomeIPeriodChart;
-	
+	private ChartPanel incomeIPeriodChartPanel;
 	private QuayDao quayDao;
 	
 	public PremisePage() {
@@ -79,9 +86,28 @@ public class PremisePage extends BasePage {
 		JPanel left = new JPanel(new BorderLayout());
 		left.setBackground(Color.decode(ColorConsts.ForegroundColor));
 
+		
+		
+		
 		quayModel = new DefaultTableModel(new String[] { "Mã quầy", "Tên quầy", "Địa chỉ", "Phường", "Thành phố", "Tỉnh" }, 0);
-		quayTable = new JTable(quayModel);
-
+		quayTable =new JTable(quayModel);
+		
+		
+		JTableHeader headerTable = quayTable.getTableHeader();
+		headerTable.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		headerTable.setFont(new Font("Arial", Font.PLAIN, 14));
+		headerTable.setPreferredSize(new Dimension(headerTable.getPreferredSize().width, 40));
+		headerTable.setForeground(Color.WHITE);
+		
+		quayTable.setRowHeight(40);
+		
+		quayTable.setShowVerticalLines(false);
+		quayTable.setFont(new Font("Arial", Font.PLAIN, 14));
+		quayTable.setRowHeight(40);
+		quayTable.setGridColor(Color.decode("#696969"));
+		quayTable.setTableHeader(headerTable);
+		quayTable.addMouseListener(this);
+		
 		left.add(new JScrollPane(quayTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER);
 		
@@ -104,7 +130,7 @@ public class PremisePage extends BasePage {
 		JLabel tbLb = new JLabel("Thành phố");
 		
 		tbLb.setFont(commonFont);
-		thanhPhoTxt = new JTextField("Thành phố Nha Trang");
+		thanhPhoTxt = new JTextField("");
 		thanhPhoTxt.setEditable(false);
 		tpBox.add(tbLb);
 		tpBox.add(thanhPhoTxt);
@@ -115,7 +141,7 @@ public class PremisePage extends BasePage {
 		
 		maQuayLb.setFont(commonFont);
 		maQuayLb.setPreferredSize(tbLb.getPreferredSize());
-		maQuayTxt = new JTextField("1");
+		maQuayTxt = new JTextField("");
 		maQuayTxt.setEditable(false);
 		maQuayBox.add(maQuayLb);
 		maQuayBox.add(maQuayTxt);
@@ -127,7 +153,7 @@ public class PremisePage extends BasePage {
 		
 		tenQuayLb.setFont(commonFont);
 		tenQuayLb.setPreferredSize(tbLb.getPreferredSize());
-		tenQuayTxt = new JTextField("HKTD Phan Văn Trị");
+		tenQuayTxt = new JTextField("");
 		tenQuayTxt.setEditable(false);
 		tenQuayBox.add(maQuayLb);
 		tenQuayBox.add(maQuayTxt);
@@ -138,7 +164,7 @@ public class PremisePage extends BasePage {
 		
 		diaChiLb.setFont(commonFont);
 		diaChiLb.setPreferredSize(tbLb.getPreferredSize());
-		diaChiTxt = new JTextField("1 Phan Văn Trị");
+		diaChiTxt = new JTextField("");
 		diaChiTxt.setEditable(false);
 		diaChiBox.add(diaChiLb);
 		diaChiBox.add(diaChiTxt);
@@ -149,7 +175,7 @@ public class PremisePage extends BasePage {
 		
 		phuongLb.setFont(commonFont);
 		phuongLb.setPreferredSize(tbLb.getPreferredSize());
-		phuongTxt = new JTextField("Phường 5");
+		phuongTxt = new JTextField("");
 		phuongTxt.setEditable(false);
 		phuongBox.add(phuongLb);
 		phuongBox.add(phuongTxt);
@@ -187,9 +213,10 @@ public class PremisePage extends BasePage {
 		incomeIPeriodChart.setPadding(new RectangleInsets(15, 15, 15, 15));
 		incomeIPeriodChart.setBackgroundPaint(Color.white);
 		
-		ChartPanel incomeIPeriodChartPanel =new ChartPanel(incomeIPeriodChart);
+		incomeIPeriodChartPanel =new ChartPanel(incomeIPeriodChart);
+		incomeIPeriodChartPanel.setPreferredSize(new Dimension(500, 500));
 		incomeIPeriodChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		
+		incomeIPeriodChartPanel.setVisible(false);
 		
 		JLabel topSanPhamChayThangLb = new JLabel("Sản phẩm bán chạy tại chi nhánh");
 		topSanPhamChayThangLb.setFont(new Font("Arials", Font.BOLD, 20));
@@ -197,6 +224,8 @@ public class PremisePage extends BasePage {
 		
 		JPanel topSaleProductPanel = new JPanel(new BorderLayout());
 		topSaleProductPanel.setBackground(Color.decode(ColorConsts.ForegroundColor));
+		topSaleProductPanel.setPreferredSize(new Dimension(500, 300));
+		
 		
 		topSaleProductModel = new DefaultListModel<Object>();
 		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
@@ -213,7 +242,7 @@ public class PremisePage extends BasePage {
 		topSaleProductList.setCellRenderer(new TopSaleProductView());
 		topSaleProductPanel.add(topSanPhamChayThangLb, BorderLayout.NORTH);
 		topSaleProductPanel.add(topSaleProductList, BorderLayout.CENTER);
-		
+		//topSaleProductPanel.setVisible(false);
 		
 		right.add(tieuDeLabel);
 		right.add(maQuayBox);
@@ -278,5 +307,44 @@ public class PremisePage extends BasePage {
 					element.getTinh()
 			});
 		}
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		int row = quayTable.getSelectedRow();
+		
+		
+		maQuayTxt.setText(quayModel.getValueAt(row, 0).toString());
+		tenQuayTxt.setText(quayModel.getValueAt(row, 1).toString());
+		diaChiTxt.setText(quayModel.getValueAt(row, 2).toString());
+		phuongTxt.setText(quayModel.getValueAt(row, 3).toString());
+		thanhPhoTxt.setText(quayModel.getValueAt(row, 4).toString());
+		tinhTxt.setText(quayModel.getValueAt(row, 5).toString());
+		
+		incomeIPeriodChartPanel.setVisible(true);
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
