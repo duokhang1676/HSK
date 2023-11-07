@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -32,7 +33,12 @@ public class NavigationBar implements IComponent {
 	
 	public NavigationBar addNaviButton(String text, String urlImg) {
 		JButton naviButton = new JButton(text);
+		naviButton.setBackground(Color.decode(ColorConsts.ForegroundColor));
+		naviButton.setPreferredSize(new Dimension(250, 120));
 		
+		if (!urlImg.isEmpty()) {
+			naviButton.setIcon(new ImageIcon(urlImg));
+		}
 		naviButton.setPreferredSize(new Dimension(250, 120));
 		
 		if (!urlImg.isEmpty()) {

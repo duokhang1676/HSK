@@ -19,8 +19,9 @@ public class NhanVien {
 		this.soDienThoai = soDienThoai;
 	}
 
-	public NhanVien() {
+	public NhanVien(int maNhanVien) {
 		super();
+		this.maNhanVien = maNhanVien;
 	}
 
 	public int getMaNhanVien() {

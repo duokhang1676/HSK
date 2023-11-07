@@ -11,6 +11,7 @@ public class StartingPoint {
 			public void run() {
 //				RootFrame frm = new RootFrame();
 				LoginPage login = new LoginPage();
+				login.setLocationRelativeTo(null);
 				login.setVisible(true);
 			}
 		});

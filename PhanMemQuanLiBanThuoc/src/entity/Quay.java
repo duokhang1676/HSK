@@ -1,6 +1,6 @@
 package entity;
 
-public class QuayThuoc {
+public class Quay {
 	private int maQuay;
 	private String tenQuay;
 	private String diaChi;
@@ -8,6 +8,10 @@ public class QuayThuoc {
 	private String thanhPho;
 	private String tinh;
 
+	public Quay(int maQuay) {
+		this.maQuay = maQuay;
+	}
+	
 	public int getMaQuay() {
 		return maQuay;
 	}
@@ -56,7 +60,7 @@ public class QuayThuoc {
 		this.tinh = tinh;
 	}
 
-	public QuayThuoc(int maQuay, String tenQuay, String diaChi, String phuong, String thanhPho, String tinh) {
+	public Quay(int maQuay, String tenQuay, String diaChi, String phuong, String thanhPho, String tinh) {
 		super();
 		this.maQuay = maQuay;
 		this.tenQuay = tenQuay;
