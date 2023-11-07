@@ -16,6 +16,7 @@ import javax.swing.SwingUtilities;
 import components.ColorConsts;
 import components.INavigateListener;
 import components.NavigationBar;
+import db.ConnectDB;
 
 public class RootFrame extends JFrame implements WindowStateListener {
 
@@ -24,20 +25,38 @@ public class RootFrame extends JFrame implements WindowStateListener {
 	private BasePage customerPage;
 	private BasePage premisesPage;
 	private BasePage productPage;
+	private BasePage employeeManagerPage;
 	
 	public RootFrame() {
 		super("Phần mềm quản lí thuốc nhóm 2");
 
+		
+		
+		try {
+			ConnectDB.getInstance().connect();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("khong ket noi");
+		}
+		
+	
+		
+		
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setMinimumSize(new Dimension(1000, 1000));
 
+		
+		
+		
 		dashboardPage = new DashboardPage();
 		orderPage = new OrderPage();
 		customerPage = new CustomerPage();
 		premisesPage = new PremisePage();
 		productPage = new ProductPage();
+		employeeManagerPage = new EmployeeManagerPage();
 		
 		add(getNavigationBar(), BorderLayout.WEST);
 		add(dashboardPage, BorderLayout.CENTER);
@@ -54,6 +73,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 				.addNaviButton("Sản phẩm", "icon\\ic_product.png")
 				.addNaviButton("Khách hàng", "icon\\ic_customer.png")
 				.addNaviButton("Quầy", "")
+				.addNaviButton("Quản lí nhân viên", "")
 				.addNavigateListener(new INavigateListener() {
 					@Override
 					public void onNavigated(String txt) {
@@ -62,6 +82,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 						remove(customerPage);
 						remove(premisesPage);
 						remove(productPage);
+						remove(employeeManagerPage);
 						
 						if (txt.equals("Trang chủ")) {
 							add(dashboardPage, BorderLayout.CENTER);
@@ -81,6 +102,10 @@ public class RootFrame extends JFrame implements WindowStateListener {
 
 						if (txt.equals("Sản phẩm")) {
 							add(productPage, BorderLayout.CENTER);
+						}
+
+						if (txt.equals("Quản lí nhân viên")) {
+							add(employeeManagerPage, BorderLayout.CENTER);
 						}
 
 						SwingUtilities.updateComponentTreeUI(RootFrame.this);
