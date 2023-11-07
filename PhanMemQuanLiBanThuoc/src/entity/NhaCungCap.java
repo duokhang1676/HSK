@@ -21,6 +21,10 @@ public class NhaCungCap {
 		this.eMail = eMail;
 		this.quocGia = quocGia;
 	}
+	public NhaCungCap(int maNhaCungCap) {
+		super();
+	    this.maNhaCungCap = maNhaCungCap;
+	}
 	public int getMaNhaCungCap() {
 		return maNhaCungCap;
 	}
