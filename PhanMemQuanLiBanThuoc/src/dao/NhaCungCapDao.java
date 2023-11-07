@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 import db.ConnectDB;
 import entity.NhaCungCap;
-
 public class NhaCungCapDao {
 	public ArrayList<NhaCungCap> getAllPhongBan() {
 		ArrayList<NhaCungCap> dsNhaCungCap = new ArrayList<NhaCungCap>();
@@ -23,14 +22,13 @@ public class NhaCungCapDao {
 			
 			
 			while (rs.next()) {
-				int maNCC = rs.getInt("maNCC");
-				String tenNCC = rs.getString("tenNCC");
-				String sdtNCC = rs.getString("sdtNCC");
+				int maNCC = rs.getInt("MaNhaCungCap");
+				String tenNCC = rs.getString("TenNhaCungCap");
+				String sdtNCC = rs.getString("SoDienThoai");
 				String diachiNCC = rs.getString("diachiNCC");
 				String emailNCC = rs.getString("emailNCC");
-				
-
-				
+				String quocGia = rs.getString("QuocGia");
+				dsNhaCungCap.add(new NhaCungCap(maNCC , tenNCC , sdtNCC , diachiNCC , emailNCC, quocGia));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

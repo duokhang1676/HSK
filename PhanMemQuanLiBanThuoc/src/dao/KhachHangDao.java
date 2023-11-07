@@ -3,6 +3,8 @@ package dao;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import db.ConnectDB;
@@ -23,11 +25,11 @@ public class KhachHangDao {
 			
 			
 			while (rs.next()) {
-				int maKH = rs.getInt("maKH");
-				String ten = rs.getString("tenKH");
-				String sdt = rs.getString("sdt");
-				String ngaytao = rs.getString("ngayTao");
-				
+				int maKH = rs.getInt("MaKhachHang");
+				String ten = rs.getString("TenKhachHang");
+				String sdt = rs.getString("SoDienThoai");
+				LocalDateTime ngaytao = LocalDateTime.parse(rs.getString("NgayTao"));
+				dsKhachHang.add(new KhachHang(maKH , ten , sdt , ngaytao));
 
 			}
 		} catch (Exception e) {

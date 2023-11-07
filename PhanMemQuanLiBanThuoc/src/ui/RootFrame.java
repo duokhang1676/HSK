@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.util.ArrayList;
@@ -47,6 +49,8 @@ public class RootFrame extends JFrame implements WindowStateListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setMinimumSize(new Dimension(1000, 1000));
+		Image img = Toolkit.getDefaultToolkit().createImage("img\\img_logoSmall.png");
+		setIconImage(img);
 
 		
 		
