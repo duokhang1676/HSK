@@ -94,16 +94,16 @@ public class PremisePage extends BasePage implements MouseListener {
 		
 		
 		JTableHeader headerTable = quayTable.getTableHeader();
-		headerTable.setBackground(Color.decode(ColorConsts.PrimaryColor));
-		headerTable.setFont(new Font("Arial", Font.PLAIN, 14));
+		headerTable.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		headerTable.setFont(new Font("Arial", Font.BOLD, 14));
 		headerTable.setPreferredSize(new Dimension(headerTable.getPreferredSize().width, 40));
-		headerTable.setForeground(Color.WHITE);
 		
 		quayTable.setRowHeight(40);
 		
 		quayTable.setShowVerticalLines(false);
 		quayTable.setFont(new Font("Arial", Font.PLAIN, 14));
 		quayTable.setRowHeight(40);
+		quayTable.setIntercellSpacing(new Dimension(0, 0));
 		quayTable.setGridColor(Color.decode("#696969"));
 		quayTable.setTableHeader(headerTable);
 		quayTable.addMouseListener(this);
