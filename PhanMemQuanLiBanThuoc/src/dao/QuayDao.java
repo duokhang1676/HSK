@@ -28,7 +28,7 @@ public class QuayDao {
 				String thanhPho = rs.getString("ThanhPho");
 				String tinh = rs.getString("Tinh");
 				
-				Quay quay = new Quay(maQuay, tenQuay, diaChi, diaChi, thanhPho, tinh);
+				Quay quay = new Quay(maQuay, tenQuay, phuong, diaChi, thanhPho, tinh);
 				dsQuay.add(quay);
 				
 			}
