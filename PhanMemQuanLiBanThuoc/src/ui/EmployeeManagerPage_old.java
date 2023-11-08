@@ -19,7 +19,7 @@ import javax.swing.table.DefaultTableModel;
 import components.ColorConsts;
 import components.Header;
 
-public class EmployeeManagerPage extends BasePage {
+public class EmployeeManagerPage_old extends BasePage {
 
 	private JTextField maNvTextField;
 	private JTextField hoTextField;

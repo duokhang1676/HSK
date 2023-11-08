@@ -13,26 +13,24 @@ import java.util.ArrayList;
 import db.ConnectDB;
 import entity.NhanVien;
 import entity.NhomThuoc;
+import entity.Quay;
 
 
 public class NhanVienDao {
 	public ArrayList<NhanVien> getAllNhanVien() {
 		ArrayList<NhanVien> dsNhanVien = new ArrayList<NhanVien>();
-		
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		try {
-			ConnectDB.getInstance();
-			Connection con = ConnectDB.getConnection();
-			
-			String sql = "SELECT * FROM NhanVien";
-			Statement statement = con.createStatement();
-			
-			ResultSet rs = statement.executeQuery(sql);
-			
+			String sql = "Select * from NhanVien";
+			Statement stmt = con.createStatement();
+			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
+				System.out.println("hello");
 				int maNhanVien = rs.getInt("MaNhanVien");
 				String tenNhanVien = rs.getString("TenNhanVien");
 				LocalDate ngayVaoLam = rs.getDate("NgayVaoLam").toLocalDate();
-				String caLamViec = rs.getString("Ca làm việc");
+				String caLamViec = rs.getString("CaLamViec");
 				String soDienThoai = rs.getString("SoDienThoai");
 				
 				dsNhanVien.add(new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai));

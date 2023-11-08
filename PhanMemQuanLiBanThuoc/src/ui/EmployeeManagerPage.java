@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.LocalDate;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -39,10 +41,10 @@ import org.jfree.ui.tabbedui.VerticalLayout;
 import components.ColorConsts;
 import components.Header;
 import components.TopSaleProductView;
-import dao.QuayDao;
-import entity.Quay;
+import dao.NhanVienDao;
+import entity.NhanVien;
 
-public class PremisePage extends BasePage implements MouseListener {
+public class EmployeeManagerPage extends BasePage implements MouseListener {
 
 	private JTextField maQuayTxt;
 	private JTextField tenQuayTxt;
@@ -67,16 +69,16 @@ public class PremisePage extends BasePage implements MouseListener {
 	
 	private JFreeChart incomeIPeriodChart;
 	private ChartPanel incomeIPeriodChartPanel;
-	private QuayDao quayDao;
+	private NhanVienDao nhanVienDao;
 	
-	public PremisePage() {
+	public EmployeeManagerPage() {
 		super();
 		
-		quayDao = new QuayDao();
+		nhanVienDao = new NhanVienDao();
 		
 		
 		
-		getAllQuay();
+		getAllNhanVien();
 	}
 	
 	@Override
@@ -89,7 +91,7 @@ public class PremisePage extends BasePage implements MouseListener {
 		
 		
 		
-		quayModel = new DefaultTableModel(new String[] { "Mã quầy", "Tên quầy", "Địa chỉ", "Phường", "Thành phố", "Tỉnh" }, 0);
+		quayModel = new DefaultTableModel(new String[] { "Mã nhân viên", "Tên nhân viên", "Ngày vào làm", "Ca làm việc", "Số điện thoại"}, 0);
 		quayTable =new JTable(quayModel);
 		
 		
@@ -121,49 +123,45 @@ public class PremisePage extends BasePage implements MouseListener {
 		/**
 		 * Tiêu đề
 		 */
-		JLabel tieuDeLabel = new JLabel("Quầy");
+		JLabel tieuDeLabel = new JLabel("Thông tin nhân viên");
 		tieuDeLabel.setFont(new Font("Arials", Font.BOLD, 30));
 		tieuDeLabel.setBorder(new EmptyBorder(20, 0, 20, 0));
 		 
+		Box maQuayBox = Box.createHorizontalBox();
+		JLabel maQuayLb = new JLabel("Mã nhân viên  ");
+		
+		maQuayLb.setFont(commonFont);
+		maQuayTxt = new JTextField("");
+		maQuayTxt.setEditable(false);
+		maQuayBox.add(maQuayLb);
+		maQuayBox.add(maQuayTxt);
 		
 		Box tpBox = Box.createHorizontalBox();
-		JLabel tbLb = new JLabel("Thành phố");
-		
+		JLabel tbLb = new JLabel("Phái");
+		tbLb.setPreferredSize(maQuayLb.getPreferredSize());
 		tbLb.setFont(commonFont);
 		thanhPhoTxt = new JTextField("");
 		thanhPhoTxt.setEditable(false);
 		tpBox.add(tbLb);
 		tpBox.add(thanhPhoTxt);
 		
-		
-		Box maQuayBox = Box.createHorizontalBox();
-		JLabel maQuayLb = new JLabel("Mã quầy");
-		
-		maQuayLb.setFont(commonFont);
-		maQuayLb.setPreferredSize(tbLb.getPreferredSize());
-		maQuayTxt = new JTextField("");
-		maQuayTxt.setEditable(false);
-		maQuayBox.add(maQuayLb);
-		maQuayBox.add(maQuayTxt);
-		
-		
-		
+	
 		Box tenQuayBox = Box.createHorizontalBox();
-		JLabel tenQuayLb = new JLabel("Mã quầy");
+		JLabel tenQuayLb = new JLabel("Họ");
 		
 		tenQuayLb.setFont(commonFont);
-		tenQuayLb.setPreferredSize(tbLb.getPreferredSize());
+		tenQuayLb.setPreferredSize(maQuayLb.getPreferredSize());
 		tenQuayTxt = new JTextField("");
 		tenQuayTxt.setEditable(false);
-		tenQuayBox.add(maQuayLb);
-		tenQuayBox.add(maQuayTxt);
+		tenQuayBox.add(tenQuayLb);
+		tenQuayBox.add(tenQuayTxt);
 		
 		
 		Box diaChiBox = Box.createHorizontalBox();
-		JLabel diaChiLb = new JLabel("Địa chỉ");
+		JLabel diaChiLb = new JLabel("Tên");
 		
 		diaChiLb.setFont(commonFont);
-		diaChiLb.setPreferredSize(tbLb.getPreferredSize());
+		diaChiLb.setPreferredSize(maQuayLb.getPreferredSize());
 		diaChiTxt = new JTextField("");
 		diaChiTxt.setEditable(false);
 		diaChiBox.add(diaChiLb);
@@ -171,11 +169,11 @@ public class PremisePage extends BasePage implements MouseListener {
 		
 		
 		Box phuongBox = Box.createHorizontalBox();
-		JLabel phuongLb = new JLabel("Phường");
+		JLabel phuongLb = new JLabel("Tuổi");
 		
 		phuongLb.setFont(commonFont);
-		phuongLb.setPreferredSize(tbLb.getPreferredSize());
-		phuongTxt = new JTextField("");
+		phuongLb.setPreferredSize(maQuayLb.getPreferredSize());
+		phuongTxt = new JTextField();
 		phuongTxt.setEditable(false);
 		phuongBox.add(phuongLb);
 		phuongBox.add(phuongTxt);
@@ -183,11 +181,11 @@ public class PremisePage extends BasePage implements MouseListener {
 		
 		
 		Box tinhBox = Box.createHorizontalBox();
-		JLabel tinhLb = new JLabel("Tỉnh");
+		JLabel tinhLb = new JLabel("Tiền lương");
 		
 		tinhLb.setFont(commonFont);
-		tinhLb.setPreferredSize(tbLb.getPreferredSize());
-		tinhTxt = new JTextField("Khánh Hòa");
+		tinhLb.setPreferredSize(maQuayLb.getPreferredSize());
+		tinhTxt = new JTextField("");
 		tinhTxt.setEditable(false);
 		tinhBox.add(tinhLb);
 		tinhBox.add(tinhTxt);
@@ -218,31 +216,6 @@ public class PremisePage extends BasePage implements MouseListener {
 		incomeIPeriodChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		incomeIPeriodChartPanel.setVisible(false);
 		
-		JLabel topSanPhamChayThangLb = new JLabel("Sản phẩm bán chạy tại chi nhánh");
-		topSanPhamChayThangLb.setFont(new Font("Arials", Font.BOLD, 20));
-		topSanPhamChayThangLb.setBorder(new EmptyBorder(20, 0, 20, 0));
-		
-		JPanel topSaleProductPanel = new JPanel(new BorderLayout());
-		topSaleProductPanel.setBackground(Color.decode(ColorConsts.ForegroundColor));
-		topSaleProductPanel.setPreferredSize(new Dimension(500, 300));
-		
-		
-		topSaleProductModel = new DefaultListModel<Object>();
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductList = new JList<Object>(topSaleProductModel);
-		topSaleProductList.setCellRenderer(new TopSaleProductView());
-		topSaleProductPanel.add(topSanPhamChayThangLb, BorderLayout.NORTH);
-		topSaleProductPanel.add(topSaleProductList, BorderLayout.CENTER);
-		//topSaleProductPanel.setVisible(false);
 		
 		right.add(tieuDeLabel);
 		right.add(maQuayBox);
@@ -258,8 +231,6 @@ public class PremisePage extends BasePage implements MouseListener {
 		right.add(tinhBox);
 		right.add(doanhThuTheoThangLb); 
 		right.add(incomeIPeriodChartPanel);
-		right.add(topSanPhamChayThangLb); 
-		right.add(topSaleProductPanel); 
 		
 		
 		
@@ -275,7 +246,7 @@ public class PremisePage extends BasePage implements MouseListener {
 	protected JPanel onCreateHeader() {
 		JPanel jp_test = new JPanel();
 		return new Header()
-				.addTitle("Đơn hàng")
+				.addTitle("Quản lý nhân viên")
 				.addInsidePanel(jp_test)
 				.createView();
 	}
@@ -296,15 +267,16 @@ public class PremisePage extends BasePage implements MouseListener {
 	}
 	
 
-	private void getAllQuay() {
-		for (Quay element : quayDao.getAllData()) {
-			quayModel.addRow(new String[] {
-					String.valueOf(element.getMaQuay()),
-					element.getTenQuay(),
-					element.getDiaChi(),
-					element.getPhuong(),
-					element.getThanhPho(),
-					element.getTinh()
+	private void getAllNhanVien() {
+	
+		List<NhanVien> list = nhanVienDao.getAllNhanVien();
+		for (NhanVien nv : list) {
+			quayModel.addRow(new Object[] {
+					nv.getMaNhanVien(),
+					nv.getTenNhanVien(),
+					nv.getNgayVaoLam(),
+					nv.getCaLamViec(),
+					nv.getSoDienThoai(),
 			});
 		}
 	}
@@ -319,7 +291,6 @@ public class PremisePage extends BasePage implements MouseListener {
 		diaChiTxt.setText(quayModel.getValueAt(row, 2).toString());
 		phuongTxt.setText(quayModel.getValueAt(row, 3).toString());
 		thanhPhoTxt.setText(quayModel.getValueAt(row, 4).toString());
-		tinhTxt.setText(quayModel.getValueAt(row, 5).toString());
 		
 		incomeIPeriodChartPanel.setVisible(true);
 	}
