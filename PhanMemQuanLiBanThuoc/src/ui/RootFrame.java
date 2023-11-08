@@ -28,6 +28,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 	private BasePage premisesPage;
 	private BasePage productPage;
 	private BasePage employeeManagerPage;
+	private BasePage orderListPage;
 	
 	public RootFrame() {
 		super("Phần mềm quản lí thuốc nhóm 2");
@@ -54,7 +55,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 
 		
 		
-		
+		orderListPage = new OrderListPage();
 		dashboardPage = new DashboardPage();
 		orderPage = new OrderPage();
 		customerPage = new CustomerPage();
@@ -69,6 +70,13 @@ public class RootFrame extends JFrame implements WindowStateListener {
 
 		addWindowStateListener(this);
 	}
+	//change
+	public BasePage getOrderListPage() {
+	    return orderListPage;
+	}
+	public BasePage getOrderPage() {
+	    return orderPage;
+	}
 
 	private JPanel getNavigationBar() {
 		return new NavigationBar()
@@ -81,12 +89,14 @@ public class RootFrame extends JFrame implements WindowStateListener {
 				.addNavigateListener(new INavigateListener() {
 					@Override
 					public void onNavigated(String txt) {
+						remove(orderListPage);//change
 						remove(dashboardPage);
 						remove(orderPage);
 						remove(customerPage);
 						remove(premisesPage);
 						remove(productPage);
 						remove(employeeManagerPage);
+						
 						
 						if (txt.equals("Trang chủ")) {
 							add(dashboardPage, BorderLayout.CENTER);

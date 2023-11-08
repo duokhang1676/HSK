@@ -25,8 +25,8 @@ public class NhaCungCapDao {
 				int maNCC = rs.getInt("MaNhaCungCap");
 				String tenNCC = rs.getString("TenNhaCungCap");
 				String sdtNCC = rs.getString("SoDienThoai");
-				String diachiNCC = rs.getString("diachiNCC");
-				String emailNCC = rs.getString("emailNCC");
+				String diachiNCC = rs.getString("DiaChi");
+				String emailNCC = rs.getString("Email");
 				String quocGia = rs.getString("QuocGia");
 				dsNhaCungCap.add(new NhaCungCap(maNCC , tenNCC , sdtNCC , diachiNCC , emailNCC, quocGia));
 			}
