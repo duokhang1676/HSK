@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -38,5 +39,24 @@ public class QuayDao {
 		}
 		
 		return dsQuay;
+	}
+	
+	
+	public boolean deleteQuay(int maQuay) {
+		
+		try {
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
+			
+			PreparedStatement statement = con.prepareStatement(
+				    "DELETE FROM [Quay] WHERE [MaQuay] = ?");
+			statement.setInt(1, maQuay);
+		
+			return statement.executeUpdate() > 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 }

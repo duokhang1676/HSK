@@ -28,40 +28,37 @@ public class RootFrame extends JFrame implements WindowStateListener {
 	private BasePage premisesPage;
 	private BasePage productPage;
 	private BasePage employeeManagerPage;
+
 	private BasePage orderListPage;
+
+	private BasePage myProfilePage;
+
 	
 	public RootFrame() {
 		super("Phần mềm quản lí thuốc nhóm 2");
 
 		
-		
-		try {
-			ConnectDB.getInstance().connect();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println("khong ket noi");
-		}
-		
-	
-		
-		
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setMinimumSize(new Dimension(1000, 1000));
+
 		Image img = Toolkit.getDefaultToolkit().createImage("img\\img_logoSmall.png");
 		setIconImage(img);
 
 		
 		
 		orderListPage = new OrderListPage();
+
+		
+
 		dashboardPage = new DashboardPage();
 		orderPage = new OrderPage();
 		customerPage = new CustomerPage();
 		premisesPage = new PremisePage();
 		productPage = new ProductPage();
 		employeeManagerPage = new EmployeeManagerPage();
+		myProfilePage = new MyProfilePage();
 		
 		add(getNavigationBar(), BorderLayout.WEST);
 		add(dashboardPage, BorderLayout.CENTER);
@@ -86,6 +83,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 				.addNaviButton("Khách hàng", "icon\\ic_customer.png")
 				.addNaviButton("Quầy", "")
 				.addNaviButton("Quản lí nhân viên", "")
+				.addNaviButton("Thông tin cá nhân", "")
 				.addNavigateListener(new INavigateListener() {
 					@Override
 					public void onNavigated(String txt) {
@@ -96,6 +94,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 						remove(premisesPage);
 						remove(productPage);
 						remove(employeeManagerPage);
+						remove(myProfilePage);
 						
 						
 						if (txt.equals("Trang chủ")) {
@@ -120,6 +119,10 @@ public class RootFrame extends JFrame implements WindowStateListener {
 
 						if (txt.equals("Quản lí nhân viên")) {
 							add(employeeManagerPage, BorderLayout.CENTER);
+						}
+						
+						if (txt.equals("Thông tin cá nhân")) {
+							add(myProfilePage, BorderLayout.CENTER);
 						}
 
 						SwingUtilities.updateComponentTreeUI(RootFrame.this);
