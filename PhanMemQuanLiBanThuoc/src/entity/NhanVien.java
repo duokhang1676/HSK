@@ -9,19 +9,30 @@ public class NhanVien {
 	private LocalDate ngayVaoLam;
 	private String caLamViec;
 	private String soDienThoai;
+	private String matKhau;
+	private Quay quay;
+	private String chucVu;
 
-	public NhanVien(int maNhanVien, String tenNhanVien, LocalDate ngayVaoLam, String caLamViec, String soDienThoai) {
+	public NhanVien(int maNhanVien, String tenNhanVien, LocalDate ngayVaoLam, String caLamViec, String soDienThoai,
+			String matKhau, Quay quay, String chucVu) {
 		super();
 		this.maNhanVien = maNhanVien;
 		this.tenNhanVien = tenNhanVien;
 		this.ngayVaoLam = ngayVaoLam;
 		this.caLamViec = caLamViec;
 		this.soDienThoai = soDienThoai;
+		this.matKhau = matKhau;
+		this.quay = quay;
+		this.chucVu = chucVu;
 	}
 
 	public NhanVien(int maNhanVien) {
 		super();
 		this.maNhanVien = maNhanVien;
+	}
+
+	public NhanVien() {
+		super();
 	}
 
 	public int getMaNhanVien() {
@@ -34,23 +45,6 @@ public class NhanVien {
 
 	public String getTenNhanVien() {
 		return tenNhanVien;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(maNhanVien);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		NhanVien other = (NhanVien) obj;
-		return maNhanVien == other.maNhanVien;
 	}
 
 	public void setTenNhanVien(String tenNhanVien) {
@@ -79,6 +73,54 @@ public class NhanVien {
 
 	public void setSoDienThoai(String soDienThoai) {
 		this.soDienThoai = soDienThoai;
+	}
+
+	public String getMatKhau() {
+		return matKhau;
+	}
+
+	public void setMatKhau(String matKhau) {
+		this.matKhau = matKhau;
+	}
+
+	public Quay getQuay() {
+		return quay;
+	}
+
+	public void setQuay(Quay quay) {
+		this.quay = quay;
+	}
+
+	public String getChucVu() {
+		return chucVu;
+	}
+
+	public void setChucVu(String chucVu) {
+		this.chucVu = chucVu;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(maNhanVien);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NhanVien other = (NhanVien) obj;
+		return maNhanVien == other.maNhanVien;
+	}
+
+	@Override
+	public String toString() {
+		return "NhanVien [maNhanVien=" + maNhanVien + ", tenNhanVien=" + tenNhanVien + ", ngayVaoLam=" + ngayVaoLam
+				+ ", caLamViec=" + caLamViec + ", soDienThoai=" + soDienThoai + ", matKhau=" + matKhau + ", quay="
+				+ quay + ", chucVu=" + chucVu + "]";
 	}
 
 }

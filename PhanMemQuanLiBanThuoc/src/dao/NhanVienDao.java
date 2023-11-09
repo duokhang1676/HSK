@@ -26,14 +26,16 @@ public class NhanVienDao {
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-				System.out.println("hello");
 				int maNhanVien = rs.getInt("MaNhanVien");
 				String tenNhanVien = rs.getString("TenNhanVien");
 				LocalDate ngayVaoLam = rs.getDate("NgayVaoLam").toLocalDate();
 				String caLamViec = rs.getString("CaLamViec");
 				String soDienThoai = rs.getString("SoDienThoai");
+				String matKhau = rs.getString("MatKhau");
+				Quay quay = new Quay(rs.getInt("MaQuay"));
+				String chucVu = rs.getString("ChucVu");
 				
-				dsNhanVien.add(new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai));
+				dsNhanVien.add(new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, matKhau, quay, chucVu));
 			}
 			
 		} catch (Exception e) {

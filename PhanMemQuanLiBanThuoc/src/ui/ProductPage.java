@@ -529,7 +529,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		int maNhomThuoc = Integer.parseInt((String) txt_maNhom.getSelectedItem());
 		NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc);
 		
-		Thuoc t = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+		Thuoc t = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, null) ;
 		try {
 			thuoc_dao.themThuoc(t);
 			prod_model.addRow(new Object[] {t.getMaThuoc(), t.getTenThuoc(), t.getHanSuDung(), t.getDonViTinh(), t.getDonViTinhLe(),

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import db.ConnectDB;
+import entity.MaGiamGia;
 import entity.NhaCungCap;
 import entity.NhanVien;
 import entity.NhomThuoc;
@@ -30,7 +31,7 @@ public class ThuocDao {
 			while (rs.next()) {
 				int maThuoc = rs.getInt("MaThuoc");
 				String tenThuoc = rs.getString("TenThuoc");
-//				NhaCungCap nhaCC = new Nha
+				NhaCungCap nhaCungCap = new NhaCungCap(rs.getInt("MaNhaCungCap"));
 				String donViTinh = rs.getString("DonViTinh");
 				String thanhPhanChinh = rs.getString("ThanhPhanChinh");
 				String donViTinhLe = rs.getString("DonViTinhLe");
@@ -43,8 +44,8 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
-				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, null, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCungCap, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
 				dsThuoc.add(thuoc);
 				
 			}
@@ -130,7 +131,7 @@ public class ThuocDao {
 			while (rs.next()) {
 				int maThuoc = rs.getInt("MaThuoc");
 				String tenThuoc = rs.getString("TenThuoc");
-				//NhaCungCap nhaCC = new NhaCungCap(rs.getInt("MaNhaCungCap"));
+				NhaCungCap nhaCungCap = new NhaCungCap(rs.getInt("MaNhaCungCap"));
 				String donViTinh = rs.getString("DonViTinh");
 				String thanhPhanChinh = rs.getString("ThanhPhanChinh");
 				String donViTinhLe = rs.getString("DonViTinhLe");
@@ -143,8 +144,9 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
-				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, null, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+		
+				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCungCap, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
 				return thuoc;
 				
 			}
@@ -168,7 +170,7 @@ public class ThuocDao {
 			while (rs.next()) {
 				int maThuoc = rs.getInt("MaThuoc");
 				String tenThuoc = rs.getString("TenThuoc");
-//				NhaCungCap nhaCC = new Nha
+				NhaCungCap nhaCungCap = new NhaCungCap(rs.getInt("MaNhaCungCap"));
 				String donViTinh = rs.getString("DonViTinh");
 				String thanhPhanChinh = rs.getString("ThanhPhanChinh");
 				String donViTinhLe = rs.getString("DonViTinhLe");
@@ -181,8 +183,8 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
-				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, null, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCungCap, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
 				dsThuoc.add(thuoc);
 				
 			}

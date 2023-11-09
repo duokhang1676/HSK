@@ -128,7 +128,7 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		tieuDeLabel.setBorder(new EmptyBorder(20, 0, 20, 0));
 		 
 		Box maQuayBox = Box.createHorizontalBox();
-		JLabel maQuayLb = new JLabel("Mã nhân viên  ");
+		JLabel maQuayLb = new JLabel("Mã nhân viên    ");
 		
 		maQuayLb.setFont(commonFont);
 		maQuayTxt = new JTextField("");
@@ -137,7 +137,7 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		maQuayBox.add(maQuayTxt);
 		
 		Box tpBox = Box.createHorizontalBox();
-		JLabel tbLb = new JLabel("Phái");
+		JLabel tbLb = new JLabel("Số điện thoại");
 		tbLb.setPreferredSize(maQuayLb.getPreferredSize());
 		tbLb.setFont(commonFont);
 		thanhPhoTxt = new JTextField("");
@@ -147,7 +147,7 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		
 	
 		Box tenQuayBox = Box.createHorizontalBox();
-		JLabel tenQuayLb = new JLabel("Họ");
+		JLabel tenQuayLb = new JLabel("Tên nhân viên");
 		
 		tenQuayLb.setFont(commonFont);
 		tenQuayLb.setPreferredSize(maQuayLb.getPreferredSize());
@@ -158,7 +158,7 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		
 		
 		Box diaChiBox = Box.createHorizontalBox();
-		JLabel diaChiLb = new JLabel("Tên");
+		JLabel diaChiLb = new JLabel("Ngày vào làm");
 		
 		diaChiLb.setFont(commonFont);
 		diaChiLb.setPreferredSize(maQuayLb.getPreferredSize());
@@ -169,7 +169,7 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		
 		
 		Box phuongBox = Box.createHorizontalBox();
-		JLabel phuongLb = new JLabel("Tuổi");
+		JLabel phuongLb = new JLabel("Ca làm việc");
 		
 		phuongLb.setFont(commonFont);
 		phuongLb.setPreferredSize(maQuayLb.getPreferredSize());
@@ -178,17 +178,6 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		phuongBox.add(phuongLb);
 		phuongBox.add(phuongTxt);
 		
-		
-		
-		Box tinhBox = Box.createHorizontalBox();
-		JLabel tinhLb = new JLabel("Tiền lương");
-		
-		tinhLb.setFont(commonFont);
-		tinhLb.setPreferredSize(maQuayLb.getPreferredSize());
-		tinhTxt = new JTextField("");
-		tinhTxt.setEditable(false);
-		tinhBox.add(tinhLb);
-		tinhBox.add(tinhTxt);
 		
 		
 		
@@ -228,7 +217,6 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		right.add(Box.createVerticalStrut(20));
 		right.add(tpBox);
 		right.add(Box.createVerticalStrut(20));
-		right.add(tinhBox);
 		right.add(doanhThuTheoThangLb); 
 		right.add(incomeIPeriodChartPanel);
 		
@@ -268,8 +256,8 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 	
 
 	private void getAllNhanVien() {
-	
 		List<NhanVien> list = nhanVienDao.getAllNhanVien();
+		System.out.println(list.size());
 		for (NhanVien nv : list) {
 			quayModel.addRow(new Object[] {
 					nv.getMaNhanVien(),

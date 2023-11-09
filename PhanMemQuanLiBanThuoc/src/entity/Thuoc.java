@@ -20,12 +20,11 @@ public class Thuoc {
 	private double GiaBanLe;
 	private double GiaBanChan;
 	private NhomThuoc nhomThuoc;
-	public Thuoc() {
-		super();
-	}
+	private MaGiamGia maGiamGia;
 	public Thuoc(int maThuoc, String tenThuoc, NhaCungCap nhaCungCap, String donViTinh, String thanhPhanChinh,
 			String donViTinhLe, LocalDate hanSuDung, String dieuKienBaoQuan, String donViTinhChan, String ghiChu,
-			double giaNhapLe, double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc) {
+			double giaNhapLe, double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc,
+			MaGiamGia maGiamGia) {
 		super();
 		MaThuoc = maThuoc;
 		TenThuoc = tenThuoc;
@@ -42,10 +41,14 @@ public class Thuoc {
 		GiaBanLe = giaBanLe;
 		GiaBanChan = giaBanChan;
 		this.nhomThuoc = nhomThuoc;
+		this.maGiamGia = maGiamGia;
 	}
 	public Thuoc(int maThuoc) {
 		super();
 		MaThuoc = maThuoc;
+	}
+	public Thuoc() {
+		super();
 	}
 	public int getMaThuoc() {
 		return MaThuoc;
@@ -137,13 +140,11 @@ public class Thuoc {
 	public void setNhomThuoc(NhomThuoc nhomThuoc) {
 		this.nhomThuoc = nhomThuoc;
 	}
-	@Override
-	public String toString() {
-		return "Thuoc [MaThuoc=" + MaThuoc + ", TenThuoc=" + TenThuoc + ", DonViTinh=" + DonViTinh + ", ThanhPhanChinh="
-				+ ThanhPhanChinh + ", DonViTinhLe=" + DonViTinhLe + ", HanSuDung=" + HanSuDung + ", DieuKienBaoQuan="
-				+ DieuKienBaoQuan + ", DonViTinhChan=" + DonViTinhChan + ", GhiChu=" + GhiChu + ", GiaNhapLe="
-				+ GiaNhapLe + ", GiaNhapChan=" + GiaNhapChan + ", GiaBanLe=" + GiaBanLe + ", GiaBanChan=" + GiaBanChan
-				+ ", nhomThuoc=" + nhomThuoc + "]";
+	public MaGiamGia getMaGiamGia() {
+		return maGiamGia;
+	}
+	public void setMaGiamGia(MaGiamGia maGiamGia) {
+		this.maGiamGia = maGiamGia;
 	}
 	@Override
 	public int hashCode() {
@@ -160,6 +161,15 @@ public class Thuoc {
 		Thuoc other = (Thuoc) obj;
 		return MaThuoc == other.MaThuoc;
 	}
+	@Override
+	public String toString() {
+		return "Thuoc [MaThuoc=" + MaThuoc + ", TenThuoc=" + TenThuoc + ", nhaCungCap=" + nhaCungCap + ", DonViTinh="
+				+ DonViTinh + ", ThanhPhanChinh=" + ThanhPhanChinh + ", DonViTinhLe=" + DonViTinhLe + ", HanSuDung="
+				+ HanSuDung + ", DieuKienBaoQuan=" + DieuKienBaoQuan + ", DonViTinhChan=" + DonViTinhChan + ", GhiChu="
+				+ GhiChu + ", GiaNhapLe=" + GiaNhapLe + ", GiaNhapChan=" + GiaNhapChan + ", GiaBanLe=" + GiaBanLe
+				+ ", GiaBanChan=" + GiaBanChan + ", nhomThuoc=" + nhomThuoc + ", maGiamGia=" + maGiamGia + "]";
+	}
+	
 	
 	
 }
