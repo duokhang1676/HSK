@@ -257,7 +257,6 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 
 	private void getAllNhanVien() {
 		List<NhanVien> list = nhanVienDao.getAllNhanVien();
-		System.out.println(list.size());
 		for (NhanVien nv : list) {
 			quayModel.addRow(new Object[] {
 					nv.getMaNhanVien(),

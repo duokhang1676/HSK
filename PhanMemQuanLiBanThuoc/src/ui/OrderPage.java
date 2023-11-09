@@ -15,7 +15,9 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,6 +38,7 @@ import javax.swing.table.TableColumnModel;
 import components.ColorConsts;
 import components.Header;
 import dao.ThuocDao;
+import entity.ChiTietHoaDon;
 import entity.NhanVien;
 import entity.Thuoc;
 
@@ -69,16 +72,23 @@ public class OrderPage extends BasePage {
 	private JButton btn500k;
 	private JList list;
 	
+	private int stt = 0;
+	
 	private ThuocDao thuocDao;
 	
-	private String tenThuoc[] = {};
+	private List<String> tenThuoc = new ArrayList<String>();
 	private JLabel gioLapHD;
 	private JLabel ngayLapHD;
 	
 	private LocalDateTime thoiGianHienHanh;
 	private JScrollPane khPane;
 	private JTextField txtSDTNhap;
-
+	
+	private ArrayList<Thuoc> dsThuoc;
+	private ArrayList<ChiTietHoaDon>dsCTHD = new ArrayList<ChiTietHoaDon>();
+	private ArrayList<Integer> dsSoLuong = new ArrayList<Integer>();
+	private ArrayList<Thuoc> dsThuocTemp = new ArrayList<Thuoc>();
+	private ArrayList<Integer> dsMaThuoc = new ArrayList<Integer>();
 	
 	public OrderPage() {
 		super();
@@ -176,11 +186,37 @@ public class OrderPage extends BasePage {
 				    khPane.setVisible(false);
 			}
 		});
-		
+		//Thêm thuốc khi double click vào jlist
 		list.addMouseListener(new MouseAdapter() {	
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2 && !e.isConsumed()) {
+					int i = list.getSelectedIndex();
+					if(!list.getSelectedValue().toString().equals("Không tìm thấy sản phẩm :(")) {
+						if(!dsMaThuoc.contains(dsThuocTemp.get(i).getMaThuoc()))
+						{
+							dsSoLuong.add(1);
+							double thanhTien = (dsThuocTemp.get(i).getGiaBanLe())*(dsSoLuong.get(stt))*(1-(dsThuocTemp.get(i).getMaGiamGia().getPhanTramGiamGia()/100));
+							dsMaThuoc.add(dsThuocTemp.get(i).getMaThuoc());
+							orderTableModel.addRow(new Object[] {++stt,
+								list.getSelectedValue().toString(),
+								dsThuocTemp.get(i).getDonViTinh(),
+								dsSoLuong.get(i),
+								dsThuocTemp.get(i).getGiaBanLe(),
+								dsThuocTemp.get(i).getMaGiamGia().getPhanTramGiamGia(),
+								thanhTien});
+						}// Khi thêm trùng thuốc thì số lượng tăng thêm 1
+						else {
+							int index = dsMaThuoc.indexOf(dsThuocTemp.get(i).getMaThuoc());
+							dsSoLuong.set(index, dsSoLuong.get(index)+1);
+							orderTableModel.setValueAt(dsSoLuong.get(index), index, 3);
+							Double giaBan = Double.valueOf(orderTableModel.getValueAt(index, 4).toString());
+							Double giamGia = Double.valueOf(orderTableModel.getValueAt(index, 5).toString());
+							double thanhTien2 =  giaBan*(dsSoLuong.get(index))*(1-giamGia/100);
+							orderTableModel.setValueAt(thanhTien2, index, 6);
+							//chổ này fix 3 tiếng :))
+						}
+					}
 				     e.consume();
 				     listPane.setVisible(false);
 				     //handle double click event.
@@ -195,9 +231,9 @@ public class OrderPage extends BasePage {
 			public void mouseClicked(MouseEvent e) {
 				listPane.setVisible(true);
 				listModel.removeAllElements();
-				for(int i = 0;i<tenThuoc.length;i++) {
-					if(tenThuoc[i].contains(txtTim.getText()))
-						listModel.addElement(tenThuoc[i]);
+				for(int i = 0;i<dsThuoc.size();i++) {
+					if(dsThuoc.get(i).getTenThuoc().contains(txtTim.getText()))
+						listModel.addElement(dsThuoc.get(i).getTenThuoc());
 				}
 				if(txtTim.getText().trim().equals("")) {
 					listModel.removeAllElements();
@@ -214,9 +250,13 @@ public class OrderPage extends BasePage {
 			public void removeUpdate(DocumentEvent e) {
 				listPane.setVisible(true);
 				listModel.removeAllElements();
-				for(int i = 0;i<tenThuoc.length;i++) {
-					if(tenThuoc[i].contains(txtTim.getText()))
-						listModel.addElement(tenThuoc[i]);
+				dsThuocTemp.clear();
+				for(int i = 0;i<dsThuoc.size();i++) {
+					if(dsThuoc.get(i).getTenThuoc().contains(txtTim.getText())) {
+						listModel.addElement(dsThuoc.get(i).getTenThuoc());
+						dsThuocTemp.add(dsThuoc.get(i));
+					}
+						
 				}
 				if(txtTim.getText().trim().equals("")){
 					listModel.removeAllElements();
@@ -231,9 +271,12 @@ public class OrderPage extends BasePage {
 			public void insertUpdate(DocumentEvent e) {
 				listPane.setVisible(true);
 				listModel.removeAllElements();
-				for(int i = 0;i<tenThuoc.length;i++) {
-					if(tenThuoc[i].contains(txtTim.getText()))
-						listModel.addElement(tenThuoc[i]);
+				dsThuocTemp.clear();
+				for(int i = 0;i<dsThuoc.size();i++) {
+					if(dsThuoc.get(i).getTenThuoc().contains(txtTim.getText())) {
+						listModel.addElement(dsThuoc.get(i).getTenThuoc());
+						dsThuocTemp.add(dsThuoc.get(i));
+					}
 				}
 				if(txtTim.getText().trim().equals("")){
 					listModel.removeAllElements();
@@ -382,9 +425,9 @@ public class OrderPage extends BasePage {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				listModelKH.removeAllElements();
-				for(int i = 0;i<tenThuoc.length;i++) {
-					if(tenThuoc[i].contains(txtTim.getText()))
-						listModel.addElement(tenThuoc[i]);
+				for(int i = 0;i<tenThuoc.size();i++) {
+					if(tenThuoc.get(i).contains(txtTim.getText()))
+						listModel.addElement(tenThuoc.get(i));
 				}
 				if(txtTim.getText().trim().equals("")) {
 					listModelKH.removeAllElements();
@@ -398,9 +441,9 @@ public class OrderPage extends BasePage {
 			public void removeUpdate(DocumentEvent e) {
 				khPane.setVisible(true);
 				listModelKH.removeAllElements();
-				for(int i = 0;i<tenThuoc.length;i++) {
-					if(tenThuoc[i].contains(txtTim.getText()))
-						listModelKH.addElement(tenThuoc[i]);
+				for(int i = 0;i<tenThuoc.size();i++) {
+					if(tenThuoc.get(i).contains(txtTim.getText()))
+						listModelKH.addElement(tenThuoc.get(i));
 				}
 				if(txtSDT.getText().trim().equals("")){
 					listModelKH.removeAllElements();
@@ -415,9 +458,9 @@ public class OrderPage extends BasePage {
 			public void insertUpdate(DocumentEvent e) {
 				khPane.setVisible(true);
 				listModelKH.removeAllElements();
-				for(int i = 0;i<tenThuoc.length;i++) {
-					if(tenThuoc[i].contains(txtTim.getText()))
-						listModelKH.addElement(tenThuoc[i]);
+				for(int i = 0;i<tenThuoc.size();i++) {
+					if(tenThuoc.get(i).contains(txtTim.getText()))
+						listModelKH.addElement(tenThuoc.get(i));
 				}
 				if(txtSDT.getText().trim().equals("")){
 					listModelKH.removeAllElements();
@@ -591,10 +634,9 @@ public class OrderPage extends BasePage {
 				.createView();
 	}
 	public void docDuLieuTuDB() {
-		List<Thuoc> list = thuocDao.getAllData();
-		System.out.println(list.size());
-		for(int i = 0;i<list.size();i++) {
-			tenThuoc[i] = list.get(i).getTenThuoc();
-		}
+		dsThuoc = thuocDao.getAllData();
+//		for(int i = 0;i<dsThuoc.size();i++) {
+//			tenThuoc.add(dsThuoc.get(i).getTenThuoc());
+//		}
 	}
 }

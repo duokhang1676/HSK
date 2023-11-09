@@ -30,8 +30,6 @@ public class ThuocDao {
 			String sql = "Select * from Thuoc";
 			Statement stmt = con.createStatement();
 			ResultSet rs = stmt.executeQuery(sql);
-			
-			System.out.println(rs.next());
 			while (rs.next()) {
 				int maThuoc = rs.getInt("MaThuoc");
 				String tenThuoc = rs.getString("TenThuoc");
@@ -51,8 +49,7 @@ public class ThuocDao {
 				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
 				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCungCap, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
 				dsThuoc.add(thuoc);
-				
-				con.close();
+		
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
