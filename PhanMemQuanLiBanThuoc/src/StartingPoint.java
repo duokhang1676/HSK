@@ -1,5 +1,6 @@
 import javax.swing.SwingUtilities;
 
+import db.ConnectDB;
 import ui.DashboardPage;
 import ui.RootFrame;
 import ui.LoginPage;
@@ -14,5 +15,14 @@ public class StartingPoint {
 				login.setVisible(true);
 			}
 		});
+		
+		try {
+			ConnectDB.getInstance().connect();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("khong ket noi");
+		}
+		
 	}
 }

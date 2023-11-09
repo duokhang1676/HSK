@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import components.ColorConsts;
+import dao.NhanVienDao;
+import entity.NhanVien;
 
 import javax.swing.BoxLayout;
 import java.awt.BorderLayout;
@@ -22,6 +24,8 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Image;
 
@@ -31,12 +35,14 @@ import java.awt.Dimension;
 import javax.swing.border.BevelBorder;
 
 public class LoginPage extends JFrame implements ActionListener {
-	private JTextField txtUserName;
+	private JTextField txtSdt;
 	private JTextField txtPassword;
 	private JButton btnLogin;
 	private JButton btnSignUp;
 	private JButton btnExit;
 	
+	
+	private NhanVienDao nhanVienDao;
 	/**
 	 * Create the frame.
 	 */
@@ -45,6 +51,9 @@ public class LoginPage extends JFrame implements ActionListener {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 700);
+		
+		nhanVienDao = new NhanVienDao();
+		
 		Image img = Toolkit.getDefaultToolkit().createImage("img\\img_logoSmall.png");
 		setIconImage(img);
 		getContentPane().setLayout(null);
@@ -56,7 +65,7 @@ public class LoginPage extends JFrame implements ActionListener {
 		
 		JPanel jp_bg2 = new JPanel();
 		jp_bg2.setBounds(10, 10, 666, 643);
-		jp_bg2.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		jp_bg2.setBackground(Color.decode(ColorConsts.ForegroundColor));
 		jp_bg1.add(jp_bg2);
 		jp_bg2.setLayout(null);
 		
@@ -77,35 +86,35 @@ public class LoginPage extends JFrame implements ActionListener {
 		lblNewLabel.setBounds(262, 200, 151, 72);
 		jp_login.add(lblNewLabel);
 		
-		JLabel lblUserName = new JLabel("User Name");
-		lblUserName.setFont(new Font("Tahoma", Font.BOLD, 15));
+		JLabel lblUserName = new JLabel("Số điện thoại");
+		lblUserName.setFont(new Font("Arials", Font.BOLD, 15));
 		lblUserName.setBounds(90, 280, 99, 26);
 		jp_login.add(lblUserName);
 		
-		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 15));
+		JLabel lblPassword = new JLabel("Mật khẩu");
+		lblPassword.setFont(new Font("Arials", Font.BOLD, 15));
 		lblPassword.setBounds(90, 354, 99, 26);
 		jp_login.add(lblPassword);
 		
-		txtUserName = new JTextField();
-		txtUserName.setBounds(90, 303, 434, 41);
-		jp_login.add(txtUserName);
-		txtUserName.setColumns(10);
+		txtSdt = new JTextField();
+		txtSdt.setBounds(90, 303, 434, 41);
+		jp_login.add(txtSdt);
+		txtSdt.setColumns(10);
 		
 		txtPassword = new JTextField();
 		txtPassword.setColumns(10);
 		txtPassword.setBounds(90, 378, 434, 41);
 		jp_login.add(txtPassword);
 		
-		btnLogin = new JButton("Login");
-		btnLogin.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnLogin = new JButton("Đăng nhập");
+		btnLogin.setFont(new Font("Arials", Font.PLAIN, 16));
 		btnLogin.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btnLogin.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btnLogin.setBounds(90, 442, 99, 41);
 		jp_login.add(btnLogin);
 		
 		btnSignUp = new JButton("Sign Up");
-		btnSignUp.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnSignUp.setFont(new Font("Arials", Font.PLAIN, 15));
 		btnSignUp.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btnSignUp.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btnSignUp.setBounds(253, 442, 99, 41);
@@ -127,8 +136,29 @@ public class LoginPage extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		Object src = e.getSource();
 		if (src.equals(btnLogin)) {
-			new RootFrame().setVisible(true);
-			setVisible(false);
+			String sdt = txtSdt.getText().trim();
+			String pwd = txtPassword.getText().trim();
+			
+			if (sdt.isEmpty() || pwd.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Vui lòng nhập đủ thông tin.");
+				return;
+			}
+			
+			if (dangNhap(sdt, pwd)) {
+				new RootFrame().setVisible(true);
+				setVisible(false);
+			}
 		}
+	}
+	
+	private boolean dangNhap(String sdt, String pwd) {
+		NhanVien nv = nhanVienDao.getNhanVienBySdtPwd(sdt, pwd);
+		
+		if (nv == null) {
+			return false;
+		}
+		
+		System.out.println(nv.getTenNhanVien());
+		return true;
 	}
 }

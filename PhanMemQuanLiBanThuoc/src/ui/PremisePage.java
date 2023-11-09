@@ -162,12 +162,7 @@ public class PremisePage extends BasePage implements MouseListener {
 		lamMoiBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		lamMoiBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				while(quayModel.getRowCount() > 0) {
-					quayModel.removeRow(0);
-				}
-				
 				getAllQuay();
-				
 			}
 		});
 
@@ -332,7 +327,9 @@ public class PremisePage extends BasePage implements MouseListener {
 	}
 
 	private void getAllQuay() {
-
+		while(quayModel.getRowCount() > 0) {
+			quayModel.removeRow(0);
+		}
 		
 		for (Quay element : quayDao.getAllData()) {
 			quayModel.addRow(new String[] { String.valueOf(element.getMaQuay()), element.getTenQuay(),
