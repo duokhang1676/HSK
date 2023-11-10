@@ -9,21 +9,34 @@ public class NhanVien {
 	private LocalDate ngayVaoLam;
 	private String caLamViec;
 	private String soDienThoai;
-
-	public NhanVien(int maNhanVien, String tenNhanVien, LocalDate ngayVaoLam, String caLamViec, String soDienThoai) {
+	private Quay quay;
+	
+	public NhanVien(
+			int maNhanVien,
+			String tenNhanVien, 
+			LocalDate ngayVaoLam, 
+			String caLamViec, 
+			String soDienThoai, 
+			Quay quay
+			) {
 		super();
 		this.maNhanVien = maNhanVien;
 		this.tenNhanVien = tenNhanVien;
 		this.ngayVaoLam = ngayVaoLam;
 		this.caLamViec = caLamViec;
 		this.soDienThoai = soDienThoai;
+		this.quay = quay;
 	}
-
+	
 	public NhanVien(int maNhanVien) {
 		super();
 		this.maNhanVien = maNhanVien;
 	}
 
+	public Quay getQuay() {
+		return quay;
+	}
+	
 	public int getMaNhanVien() {
 		return maNhanVien;
 	}

@@ -133,7 +133,6 @@ public class LoginPage extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		Object src = e.getSource();
 		if (src.equals(btnLogin)) {
 			String sdt = txtSdt.getText().trim();
@@ -147,6 +146,9 @@ public class LoginPage extends JFrame implements ActionListener {
 			if (dangNhap(sdt, pwd)) {
 				new RootFrame().setVisible(true);
 				setVisible(false);
+			} else {
+				JOptionPane.showMessageDialog(null, "Đăng nhập không thành công.");
+				return;
 			}
 		}
 	}

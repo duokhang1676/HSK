@@ -1,5 +1,8 @@
 package entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Quay {
 	private int maQuay;
 	private String tenQuay;
@@ -7,9 +10,15 @@ public class Quay {
 	private String phuong;
 	private String thanhPho;
 	private String tinh;
-
+	
 	public Quay(int maQuay) {
 		this.maQuay = maQuay;
+	}
+	
+	public Quay(int maQuay, String tenQuay) {
+		super();
+		this.maQuay = maQuay;
+		this.tenQuay = tenQuay;
 	}
 	
 	public int getMaQuay() {

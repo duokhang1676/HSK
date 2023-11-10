@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import db.ConnectDB;
 import entity.NhanVien;
 import entity.NhomThuoc;
+import entity.Quay;
 
 public class NhanVienDao {
 	public ArrayList<NhanVien> getAllNhanVien() {
@@ -21,7 +22,7 @@ public class NhanVienDao {
 			ConnectDB.getInstance();
 			Connection con = ConnectDB.getConnection();
 
-			String sql = "SELECT * FROM NhanVien";
+			String sql = "SELECT [MaNhanVien], [TenNhanVien], [NgayVaoLam], [SoDienThoai], [CaLamViec], [ChucVu] ,[NhanVien].[MaQuay], [TenQuay]  FROM NhanVien LEFT JOIN Quay ON [NhanVien].[MaQuay] = [dbo].[Quay].[MaQuay]";
 			Statement statement = con.createStatement();
 
 			ResultSet rs = statement.executeQuery(sql);
@@ -30,10 +31,13 @@ public class NhanVienDao {
 				int maNhanVien = rs.getInt("MaNhanVien");
 				String tenNhanVien = rs.getString("TenNhanVien");
 				LocalDate ngayVaoLam = rs.getDate("NgayVaoLam").toLocalDate();
-				String caLamViec = rs.getString("Ca làm việc");
+				String caLamViec = rs.getString("CaLamViec");
 				String soDienThoai = rs.getString("SoDienThoai");
 
-				dsNhanVien.add(new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai));
+				int maQuay = rs.getInt("MaQuay");
+				String tenQuay = rs.getString("TenQuay");
+				
+				dsNhanVien.add(new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, new Quay(maQuay, tenQuay)));
 			}
 
 		} catch (Exception e) {
@@ -73,7 +77,6 @@ public class NhanVienDao {
 					.prepareStatement("SELECT * FROM [NhanVien] WHERE [SoDienThoai] = ? AND [MatKhau] = ?");
 			stmt.setString(1, sdt);
 			stmt.setString(2, ma);
-			;
 
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
@@ -83,7 +86,7 @@ public class NhanVienDao {
 				String caLamViec = rs.getString("CaLamViec");
 				String soDienThoai = rs.getString("SoDienThoai");
 
-				return new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai);
+				return new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, new Quay(0));
 			}
 			
 
