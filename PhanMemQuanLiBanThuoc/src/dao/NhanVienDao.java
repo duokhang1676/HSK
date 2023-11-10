@@ -89,9 +89,12 @@ public class NhanVienDao {
 				LocalDate ngayVaoLam = rs.getDate("NgayVaoLam").toLocalDate();
 				String caLamViec = rs.getString("CaLamViec");
 				String soDienThoai = rs.getString("SoDienThoai");
+				String matKhau = rs.getString("MatKhau");
+				Quay quay = new Quay(rs.getInt("MaQuay"));
+				String chucVu = rs.getString("ChucVu");
 
-				//return new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai);
-			}
+				return new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, matKhau, quay, chucVu);
+						}
 			
 
 		} catch (Exception e) {
