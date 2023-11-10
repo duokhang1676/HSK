@@ -47,9 +47,10 @@ public class ThuocDao {
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
 				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
-				
+
 				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
-						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
+						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc,
+						maGiamGia);
 				dsThuoc.add(thuoc);
 
 			}
@@ -130,11 +131,27 @@ public class ThuocDao {
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		try {
-			String sql = "Select \r\n" + "MaThuoc, \r\n" + "TenThuoc, \r\n" + "ThanhPhanChinh, \r\n" + "HanSuDung, \r\n"
-					+ "DieuKienBaoQuan, \r\n" + "DonViTinh, \r\n" + "DonViTinhLe, \r\n" + "DonViTinhChan, \r\n"
-					+ "GiaNhapLe, \r\n" + "GiaNhapChan, \r\n" + "GiaBanLe, \r\n" + "GiaNhapChan, \r\n"
-					+ "GiaBanChan, \r\n" + "GhiChu,\r\n" + "[Thuoc].MaNhomThuoc,\r\n" + "TenNhomThuoc,\r\n"
-					+ "[Thuoc].MaNhaCungCap,\r\n" + "[NhaCungCap].[TenNhaCungCap]\r\n" + "FROM Thuoc \r\n"
+			String sql = "Select \r\n" 
+					+ "MaThuoc, \r\n" 
+					+ "TenThuoc, \r\n" 
+					+ "ThanhPhanChinh, \r\n"
+					+ "HanSuDung, \r\n"
+					+ "DieuKienBaoQuan, \r\n" 
+					+ "DonViTinh, \r\n" 
+					+ "DonViTinhLe, \r\n" 
+					+ "DonViTinhChan, \r\n"
+					+ "GiaNhapLe, \r\n" 
+					+ "GiaNhapChan, \r\n" 
+					+ "GiaBanLe, \r\n" 
+					+ "GiaNhapChan, \r\n"
+					+ "GiaBanChan, \r\n" 
+					+ "GhiChu,\r\n" 
+					+ "[Thuoc].MaNhomThuoc,\r\n"
+					+ "TenNhomThuoc,\r\n"
+					+ "[Thuoc].MaNhaCungCap,\r\n" 
+					+ "[NhaCungCap].[TenNhaCungCap], \r\n"
+					+ "MaGiamGia\r\n"
+					+ "FROM Thuoc \r\n"
 					+ "LEFT JOIN [NhomThuoc] ON [Thuoc].MaNhomThuoc = [NhomThuoc].[MaNhomThuoc] \r\n"
 					+ "LEFT JOIN [NhaCungCap] ON [Thuoc].MaNhaCungCap = [NhaCungCap].MaNhaCungCap\r\n"
 					+ "where TenThuoc = ?";
@@ -164,9 +181,10 @@ public class ThuocDao {
 				String tenNhaCungCap = rs.getString("TenNhaCungCap");
 				NhaCungCap nhaCC = new NhaCungCap(maNhaCungCap, tenNhaCungCap);
 				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
-				
+
 				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
-						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
+						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc,
+						maGiamGia);
 				return thuoc;
 
 			}
