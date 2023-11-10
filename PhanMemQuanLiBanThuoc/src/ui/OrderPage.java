@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
@@ -12,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
+import java.time.LocalDate;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +30,8 @@ import javax.swing.table.TableColumnModel;
 
 import org.jfree.ui.tabbedui.VerticalLayout;
 
+import com.github.lgooddatepicker.components.DatePicker;
+
 import components.ColorConsts;
 import components.Header;
 import components.OrderDetailView;
@@ -43,8 +47,10 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.Scrollable;
+import javax.swing.SwingUtilities;
 
 public class OrderPage extends BasePage implements MouseListener{
 
@@ -81,6 +87,12 @@ public class OrderPage extends BasePage implements MouseListener{
 	private JRadioButton tienMatRdBtn;
 	private JRadioButton nganHangRdBtn;
 	private JRadioButton viDienTuRdBtn;
+	private JTextField txtPttt;
+	private DatePicker datePickerFrom;
+	private DatePicker datePickerTo;
+	private JRadioButton btnDTT;
+	private JRadioButton btnCTT;
+	private JButton btnLoc;
 	
 	
 	public OrderPage() {
@@ -93,50 +105,113 @@ public class OrderPage extends BasePage implements MouseListener{
 
 	@Override
 	public JPanel onCreateNestedContainerView() {
+		
 		Font commonFont = new Font("Arial", Font.PLAIN, 14);
 
 		JPanel contentPane = new JPanel(new BorderLayout());
 		contentPane.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		contentPane.setBorder(new EmptyBorder(5, 10, 10, 10));
 
-		JLabel lblTimThuoc = new JLabel("Tìm kiếm thuốc");
-		lblTimThuoc.setFont(commonFont);
+		JPanel datePickerGroup = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		datePickerGroup.setBorder(new EmptyBorder(0, 5, 0, 0));
 
-		txtTim = new JTextField();
+		datePickerFrom = new DatePicker();
+		//datePickerFrom.setDate(LocalDate.now().minusDays(7));
+		datePickerTo = new DatePicker();
+		//datePickerTo.setDateToToday();
 
-		JButton btnHoaDonDaTao = new JButton("Hóa đơn đã tạo");
-		btnHoaDonDaTao.setBackground(Color.decode(ColorConsts.PrimaryColor));
-		btnHoaDonDaTao.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		datePickerGroup.add(datePickerFrom);
+		datePickerGroup.add(datePickerTo);
+		//datePickerGroup.setBackground(Color.decode(ColorConsts.ForegroundColor));
+
+		String listCombo[] = "Mã hóa đơn;Quầy;Khách hàng;Trạng thái".split(";");
+		JComboBox<String> comboBox= new JComboBox<String>(listCombo);
+		comboBox.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(comboBox.getSelectedItem().toString().equals("Trạng thái")) {
+					btnDTT.setVisible(true);
+					btnCTT.setVisible(true);
+					txtTim.setVisible(false);
+				}else {
+					btnDTT.setVisible(false);
+					btnCTT.setVisible(false);
+					txtTim.setVisible(true);
+				}
+			}
+		});
+		
+		txtTim = new JTextField(18);
+		txtTim.setPreferredSize(new Dimension(0,25));
+		
+		btnDTT = new JRadioButton("Đã thanh toán");
+		btnCTT = new JRadioButton("Chưa thanh toán");
+		btnDTT.setVisible(false);
+		btnCTT.setVisible(false);
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(btnDTT);
+		group.add(btnCTT);
+
+		btnLoc = new JButton("Lọc");
+		btnLoc.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		btnLoc.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		
 
 		Box leftHeaderBox = Box.createHorizontalBox();
+		leftHeaderBox.add(Box.createVerticalStrut(10));
 		leftHeaderBox.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		leftHeaderBox.add(lblTimThuoc);
-		leftHeaderBox.add(txtTim);
-		leftHeaderBox.add(btnHoaDonDaTao);
+		leftHeaderBox.add(datePickerGroup);
+		JPanel leftHeaderRight = new JPanel();
+		leftHeaderRight.add(comboBox);
+		leftHeaderRight.add(txtTim);
+		leftHeaderRight.add(btnDTT);
+		leftHeaderRight.add(btnCTT);
+		leftHeaderRight.add(btnLoc);
+		leftHeaderBox.add(leftHeaderRight);
+//		leftHeaderBox.add(comboBox);
+//		leftHeaderBox.add(txtTim);
+//		leftHeaderBox.add(btnDTT);
+//		leftHeaderBox.add(btnCTT);
+//		leftHeaderBox.add(btnLoc);
+		leftHeaderBox.add(Box.createVerticalStrut(10));
+//		leftHeaderBox.setPreferredSize(new Dimension(200,25));
 
-		String[] headerCols = "STT;Tên hàng;Đơn vị tính;Số lượng;Giá bán;Giảm giá;Thành tiền".split(";");
+		String[] headerCols = "Mã hóa đơn;Quầy;Khách hàng;Tổng thanh toán;Thời gian;Trạng thái".split(";");
 		orderTableModel = new DefaultTableModel(headerCols, 0);
 		orderTable = new JTable(orderTableModel);
 		orderTable.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		
+		
+		
 		taoDonHang = new JButton("Tạo đơn hàng");
+		taoDonHang.setBackground(Color.decode(ColorConsts.ForegroundColor));
+		taoDonHang.setForeground(Color.decode(ColorConsts.PrimaryColor));
+		taoDonHang.setPreferredSize(new Dimension(0,50));
+		taoDonHang.setFont(new Font("Arial",Font.BOLD,16));
 		taoDonHang.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new CreateOrderFrm().setVisible(true);
+				new CreateBillFrm().setVisible(true);;
+//		        RootFrame rootFrame = (RootFrame) SwingUtilities.getWindowAncestor(OrderPage.this);
+//		        BasePage orderPage = rootFrame.getOrderPage();
+//		        Container container = getParent(); 
+//		        container.remove(OrderPage.this); 
+//		        rootFrame.getContentPane().add(orderPage, BorderLayout.CENTER);
+//		        rootFrame.revalidate();
+//		        rootFrame.repaint();
 			}
 		});
-		
-		
 		JPanel leftButtonGroup = new JPanel(new BorderLayout());
 		leftButtonGroup.add(taoDonHang);
 		
 		
-		JPanel left = new JPanel(new BorderLayout());
 		
+		JPanel left = new JPanel(new BorderLayout());
+//		left.setBorder(BorderFactory.createEmptyBorder(0,0,10,0));
 		
 		left.add(leftHeaderBox, BorderLayout.NORTH);
-		left.add(new JScrollPane(orderTable), BorderLayout.CENTER);
+		JScrollPane orderCroll;
+		left.add(orderCroll = new JScrollPane(orderTable), BorderLayout.CENTER);
 		left.add(leftButtonGroup, BorderLayout.SOUTH);
 		left.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		/**
@@ -146,9 +221,10 @@ public class OrderPage extends BasePage implements MouseListener{
 		lblDonHang.setFont(commonFont);
 
 		txtDH = new JTextField();
-		txtDH.setPreferredSize(txtDH.getPreferredSize());
+		lblDonHang.setPreferredSize(new Dimension(lblDonHang.getPreferredSize().width + 20, lblDonHang.getPreferredSize().height));
+		txtDH.setEditable(false);
 		
-		JLabel lblQuay = new JLabel("Quầy số 1");
+		JLabel lblQuay = new JLabel("     Quầy số 1");
 		lblQuay.setFont(commonFont);
 		Box donHangGroup = Box.createHorizontalBox();
 		donHangGroup.add(lblDonHang);
@@ -182,10 +258,16 @@ public class OrderPage extends BasePage implements MouseListener{
 		lblTimKH.setFont(new Font("Arials", Font.BOLD, 16));
 		lblTimKH.setBorder(new EmptyBorder(15, 0, 15, 0));
 		
-		String[] colOrderDetails = "STT;Tên hàng;Số lượng;Đơn giá;Thành tiền".split(";");
+		String[] colOrderDetails = "STT;Tên hàng;Đơn vị tính;Số lượng;Giá bán;Giảm giá;Thành tiền".split(";");
 		chiTietHoaDonModel = new DefaultTableModel(colOrderDetails, 0);
 		chiTietHoaDonTable = new JTable(chiTietHoaDonModel);
-	
+		
+		TableColumnModel columnModel = chiTietHoaDonTable.getColumnModel();
+		columnModel.getColumn(0).setPreferredWidth(7);
+		columnModel.getColumn(1).setPreferredWidth(130);
+		columnModel.getColumn(2).setPreferredWidth(50);
+		columnModel.getColumn(3).setPreferredWidth(40);
+		columnModel.getColumn(5).setPreferredWidth(40);
 		
 		chiTietHoaDonTable.addMouseListener(this);
 		/**
@@ -193,7 +275,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		 */
 		Box tienThuaBox = Box.createHorizontalBox();
 		JLabel lblTienThua = new JLabel("Tiền thừa trả khách");
-		lblTienThua.setPreferredSize(new Dimension(lblTienThua.getPreferredSize().width + 10, lblTienThua.getPreferredSize().height));
+		lblTienThua.setPreferredSize(new Dimension(lblTienThua.getPreferredSize().width + 50, lblTienThua.getPreferredSize().height));
 		lblTienThua.setFont(commonFont);
 		txtTienThua = new JTextField("1,000,000d");
 		txtTienThua.setEditable(false);
@@ -262,7 +344,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		 * Tổng giảm box
 		 */
 		Box khachCanTraBox = Box.createHorizontalBox();
-		JLabel lblKhachCanTra = new JLabel("Khách cần trả");
+		JLabel lblKhachCanTra = new JLabel("Thanh toán");
 		lblKhachCanTra.setFont(commonFont);
 		lblKhachCanTra.setPreferredSize(lblTienThua.getPreferredSize());
 		txtKhachCanTra = new JTextField("1,000,000d");
@@ -286,35 +368,18 @@ public class OrderPage extends BasePage implements MouseListener{
 		/**
 		 * Khách thanh toán box
 		 */
-
+		Box ptttBox = Box.createHorizontalBox();
 		JLabel lblpttt = new JLabel("Phương thức thanh toán");
+		JLabel lblspace = new JLabel();
+		lblspace.setPreferredSize(new Dimension(270,0));
 		lblpttt.setFont(commonFont);
 		lblpttt.setPreferredSize(lblTienThua.getPreferredSize());
-
-		tienMatRdBtn = new JRadioButton("Tiền mặt");
-		nganHangRdBtn = new JRadioButton("Ngân hàng");
-		viDienTuRdBtn = new JRadioButton("Ví điện tử");
-		
-		tienMatRdBtn.setBackground(Color.decode(ColorConsts.ForegroundColor));
-		nganHangRdBtn.setBackground(Color.decode(ColorConsts.ForegroundColor));
-		viDienTuRdBtn.setBackground(Color.decode(ColorConsts.ForegroundColor));
-		
-		ButtonGroup btnGroup = new ButtonGroup();
-		btnGroup.add(tienMatRdBtn);
-		btnGroup.add(nganHangRdBtn);
-		btnGroup.add(viDienTuRdBtn);
-		
-		Box ptttBtns = Box.createHorizontalBox();
-		ptttBtns.setBorder(new EmptyBorder(0, 15, 0, 15));
-		ptttBtns.setBackground(Color.decode(ColorConsts.ForegroundColor));
-		ptttBtns.add(tienMatRdBtn);
-		ptttBtns.add(nganHangRdBtn);
-		ptttBtns.add(viDienTuRdBtn);
-		
-		Box ptttBox = Box.createHorizontalBox();
+		txtPttt = new JTextField("Tiền mặt");
+		txtPttt.setHorizontalAlignment(JTextField.CENTER);
+		txtPttt.setEditable(false);
 		ptttBox.add(lblpttt);
-		ptttBox.add(ptttBtns);
-		
+		ptttBox.add(txtPttt);
+		ptttBox.add(lblspace);
 		/**
 		 * Ghi chú Box
 		 */
@@ -323,6 +388,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		lblGhiChu.setFont(commonFont);
 		lblGhiChu.setPreferredSize(lblTienThua.getPreferredSize());
 		ghiChuTextArea = new JTextArea();
+		ghiChuTextArea.setEditable(false);
 		ghiChuTextArea.setPreferredSize(new Dimension(
 					ghiChuTextArea.getPreferredSize().width,
 					100
@@ -333,14 +399,15 @@ public class OrderPage extends BasePage implements MouseListener{
 		/**
 		 * Tiêu đề
 		 */
-		tieuDeLabel = new JLabel("Đơn hàng");
+		tieuDeLabel = new JLabel("Chi tiết đơn hàng");
 		tieuDeLabel.setFont(new Font("Arials", Font.BOLD, 30));
 		tieuDeLabel.setBorder(new EmptyBorder(20, 0, 20, 0));
 		
 		
 		btnXuatHoaDon = new JButton("Xuất hóa đơn");
 		btnXuatHoaDon.setBackground(Color.decode(ColorConsts.PrimaryColor));
-		btnXuatHoaDon.setFont(commonFont);
+		btnXuatHoaDon.setFont(new Font("Arial", Font.BOLD, 16));
+		btnXuatHoaDon.setPreferredSize(new Dimension(200,50));
 		btnXuatHoaDon.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btnXuatHoaDon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -351,42 +418,38 @@ public class OrderPage extends BasePage implements MouseListener{
 		right.setBorder(new EmptyBorder(10, 10, 10, 10));
 		right.setBackground(Color.decode(ColorConsts.ForegroundColor));
 		right.setMinimumSize(new Dimension(500, right.getPreferredSize().height));
-		right.add(tieuDeLabel);
 		right.add(donHangGroup);
 		right.add(Box.createVerticalStrut(10));
 		right.add(ngayGioDonHangGroup);
-		right.add(Box.createVerticalStrut(10));
+		right.add(Box.createVerticalStrut(0));
 		right.add(lblTimKH);
-		right.add(Box.createVerticalStrut(10));
+		right.add(Box.createVerticalStrut(0));
 		right.add(tenKHBox);
 		right.add(Box.createVerticalStrut(10));
 		right.add(sdtKHBox);
-		right.add(Box.createVerticalStrut(30));
+		right.add(Box.createVerticalStrut(20));
+		
+		JScrollPane ctHDCroll = new  JScrollPane(chiTietHoaDonTable);
+		ctHDCroll.setPreferredSize(new Dimension(540,200));
+		right.add(ctHDCroll);
 		
 		
-		right.add(new JScrollPane(chiTietHoaDonTable));
-		
-		
-		right.add(Box.createVerticalStrut(30));
+		right.add(Box.createVerticalStrut(10));
 		right.add(tongTiengHangBox);
 		right.add(Box.createVerticalStrut(10));
 		right.add(tongGiamGiaBox);
 		right.add(Box.createVerticalStrut(10));
 		right.add(khachCanTraBox);
-		right.add(Box.createVerticalStrut(10));
-		right.add(khachThanhToanBox);
-		right.add(Box.createVerticalStrut(10));
-		right.add(tienThuaBox);
 		right.add(Box.createVerticalStrut(20));
 		right.add(ptttBox);
 		right.add(Box.createVerticalStrut(20));
 		right.add(ghiChuBox);
-		right.add(Box.createVerticalStrut(30));
+		right.add(Box.createVerticalStrut(40));
 		right.add(btnXuatHoaDon);
 
 		
 		contentPane.add(left, BorderLayout.CENTER);
-		contentPane.add(new JScrollPane(right, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.EAST);
+		contentPane.add(right, BorderLayout.EAST);
 		
 		
 		chiTietHoaDonModel.addRow(new String[] {
@@ -402,7 +465,7 @@ public class OrderPage extends BasePage implements MouseListener{
 
 	@Override
 	protected JPanel onCreateHeader() {
-		return new Header().addTitle("Đơn hàng").createView();
+		return new Header().addTitle("Danh sách đơn hàng").createView();
 	}
 
 	@Override

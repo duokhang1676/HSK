@@ -25,6 +25,7 @@ import components.ColorConsts;
 import dao.NhaCungCapDao;
 import dao.NhomThuocDao;
 import dao.ThuocDao;
+import entity.MaGiamGia;
 import entity.NhaCungCap;
 import entity.NhomThuoc;
 import entity.Thuoc;
@@ -315,7 +316,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		String tenThuoc = txt_tenThuoc.getText();
 
 		int maNCC = txt_maNCC.getSelectedIndex();
-		NhaCungCap nhaCC = new NhaCungCap(maNCC + 1);
+		NhaCungCap nhaCC = new NhaCungCap(maNCC);
 
 		String donViTinh = txt_donViTinh.getText();
 		String thanhPhanChinh = txt_thanhPhan.getText();
@@ -330,12 +331,13 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		double giaBanChan = Double.parseDouble(txt_giaNhapChan.getText());
 
 		int maNhomThuoc = txt_maNhom.getSelectedIndex();
-		NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc + 1);
+		NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc);
 
-		Thuoc t = new Thuoc(tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan,
-				donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+		
+		Thuoc thuoc = new Thuoc(0, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
+				dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, null);
 		try {
-			thuoc_dao.themThuoc(t);
+			thuoc_dao.themThuoc(thuoc);
 			showMessage("Thêm thành công");
 		} catch (Exception e) {
 			// TODO: handle exception

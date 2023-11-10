@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import db.ConnectDB;
+import entity.MaGiamGia;
 import entity.NhaCungCap;
 import entity.NhanVien;
 import entity.NhomThuoc;
@@ -19,6 +20,7 @@ public class ThuocDao {
 	public ThuocDao() {
 		// TODO Auto-generated constructor stub
 	}
+
 	public ArrayList<Thuoc> getAllData() {
 		ArrayList<Thuoc> dsThuoc = new ArrayList<Thuoc>();
 		ConnectDB.getInstance();
@@ -44,29 +46,31 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
+				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
 				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
+						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
 				dsThuoc.add(thuoc);
-				
+
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		
+
 		return dsThuoc;
 	}
+
 	public boolean themThuoc(Thuoc t) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
-			stmt = con.prepareStatement("insert into"
-					+ " Thuoc values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			stmt = con.prepareStatement("insert into" + " Thuoc values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 //			stmt.setInt(1,t.getMaThuoc());
-			stmt.setString(1,t.getTenThuoc());
-			stmt.setInt(2,t.getNhaCungCap().getMaNhaCungCap());
+			stmt.setString(1, t.getTenThuoc());
+			stmt.setInt(2, t.getNhaCungCap().getMaNhaCungCap());
 			stmt.setString(3, t.getDonViTinh());
 			stmt.setString(4, t.getThanhPhanChinh());
 			stmt.setString(5, t.getDonViTinhLe());
@@ -80,11 +84,10 @@ public class ThuocDao {
 			stmt.setDouble(13, t.getGiaBanChan());
 			stmt.setInt(14, t.getNhomThuoc().getMaNhomThuoc());
 			stmt.setInt(15, 1);
-			n = stmt.executeUpdate();						
-		} catch (SQLException e) {			
+			n = stmt.executeUpdate();
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			try {
 				stmt.close();
 			} catch (SQLException e) {
@@ -92,8 +95,9 @@ public class ThuocDao {
 				e.printStackTrace();
 			}
 		}
-		return n > 0; 
+		return n > 0;
 	}
+
 	public boolean xoaTheoMa(int ma) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
@@ -116,35 +120,21 @@ public class ThuocDao {
 				e2.printStackTrace();
 			}
 		}
-		
+
 		return n > 0;
-		
+
 	}
+
 	public Thuoc timThuocTheoTen(String ten) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		try {
-			String sql = "Select \r\n"
-					+ "MaThuoc, \r\n"
-					+ "TenThuoc, \r\n"
-					+ "ThanhPhanChinh, \r\n"
-					+ "HanSuDung, \r\n"
-					+ "DieuKienBaoQuan, \r\n"
-					+ "DonViTinh, \r\n"
-					+ "DonViTinhLe, \r\n"
-					+ "DonViTinhChan, \r\n"
-					+ "GiaNhapLe, \r\n"
-					+ "GiaNhapChan, \r\n"
-					+ "GiaBanLe, \r\n"
-					+ "GiaNhapChan, \r\n"
-					+ "GiaBanChan, \r\n"
-					+ "GhiChu,\r\n"
-					+ "[Thuoc].MaNhomThuoc,\r\n"
-					+ "TenNhomThuoc,\r\n"
-					+ "[Thuoc].MaNhaCungCap,\r\n"
-					+ "[NhaCungCap].[TenNhaCungCap]\r\n"
-					+ "FROM Thuoc \r\n"
+			String sql = "Select \r\n" + "MaThuoc, \r\n" + "TenThuoc, \r\n" + "ThanhPhanChinh, \r\n" + "HanSuDung, \r\n"
+					+ "DieuKienBaoQuan, \r\n" + "DonViTinh, \r\n" + "DonViTinhLe, \r\n" + "DonViTinhChan, \r\n"
+					+ "GiaNhapLe, \r\n" + "GiaNhapChan, \r\n" + "GiaBanLe, \r\n" + "GiaNhapChan, \r\n"
+					+ "GiaBanChan, \r\n" + "GhiChu,\r\n" + "[Thuoc].MaNhomThuoc,\r\n" + "TenNhomThuoc,\r\n"
+					+ "[Thuoc].MaNhaCungCap,\r\n" + "[NhaCungCap].[TenNhaCungCap]\r\n" + "FROM Thuoc \r\n"
 					+ "LEFT JOIN [NhomThuoc] ON [Thuoc].MaNhomThuoc = [NhomThuoc].[MaNhomThuoc] \r\n"
 					+ "LEFT JOIN [NhaCungCap] ON [Thuoc].MaNhaCungCap = [NhaCungCap].MaNhaCungCap\r\n"
 					+ "where TenThuoc = ?";
@@ -165,27 +155,29 @@ public class ThuocDao {
 				double giaNhapChan = rs.getDouble("GiaNhapChan");
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
-				
-				
+
 				int maNhomThuoc = rs.getInt("MaNhomThuoc");
 				String tenNhomThuoc = rs.getString("TenNhomThuoc");
 				NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc, tenNhomThuoc);
-				
+
 				int maNhaCungCap = rs.getInt("MaNhaCungCap");
 				String tenNhaCungCap = rs.getString("TenNhaCungCap");
 				NhaCungCap nhaCC = new NhaCungCap(maNhaCungCap, tenNhaCungCap);
+				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
 				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
+						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
 				return thuoc;
-				
+
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
+
 	public ArrayList<Thuoc> locThuocTheoTenNhom(int ma) {
 		ArrayList<Thuoc> dsThuoc = new ArrayList<Thuoc>();
 		ConnectDB.getInstance();
@@ -213,15 +205,18 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
-				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
+
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
+						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc,
+						maGiamGia);
 				dsThuoc.add(thuoc);
-				
+
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
-		}finally {
+		} finally {
 			try {
 				stmt.close();
 			} catch (Exception e2) {
@@ -229,7 +224,7 @@ public class ThuocDao {
 				e2.printStackTrace();
 			}
 		}
-		
+
 		return dsThuoc;
 	}
 }
