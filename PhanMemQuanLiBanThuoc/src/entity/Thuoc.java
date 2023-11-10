@@ -47,6 +47,26 @@ public class Thuoc {
 		super();
 		MaThuoc = maThuoc;
 	}
+	
+	public Thuoc(String tenThuoc, NhaCungCap nhaCungCap, String donViTinh, String thanhPhanChinh, String donViTinhLe,
+			LocalDate hanSuDung, String dieuKienBaoQuan, String donViTinhChan, String ghiChu, double giaNhapLe,
+			double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc) {
+		super();
+		TenThuoc = tenThuoc;
+		this.nhaCungCap = nhaCungCap;
+		DonViTinh = donViTinh;
+		ThanhPhanChinh = thanhPhanChinh;
+		DonViTinhLe = donViTinhLe;
+		HanSuDung = hanSuDung;
+		DieuKienBaoQuan = dieuKienBaoQuan;
+		DonViTinhChan = donViTinhChan;
+		GhiChu = ghiChu;
+		GiaNhapLe = giaNhapLe;
+		GiaNhapChan = giaNhapChan;
+		GiaBanLe = giaBanLe;
+		GiaBanChan = giaBanChan;
+		this.nhomThuoc = nhomThuoc;
+	}
 	public int getMaThuoc() {
 		return MaThuoc;
 	}

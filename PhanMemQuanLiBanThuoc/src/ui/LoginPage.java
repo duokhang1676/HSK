@@ -101,25 +101,28 @@ public class LoginPage extends JFrame implements ActionListener {
 		btnLogin.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnLogin.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btnLogin.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		btnLogin.setBounds(90, 442, 99, 41);
+//		btnLogin.setBounds(90, 442, 99, 41);
+		btnLogin.setBounds(250, 444, 100, 40);
 		jp_login.add(btnLogin);
 		
-		btnSignUp = new JButton("Sign Up");
-		btnSignUp.setFont(new Font("Tahoma", Font.PLAIN, 15));
-		btnSignUp.setBackground(Color.decode(ColorConsts.PrimaryColor));
-		btnSignUp.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		btnSignUp.setBounds(253, 442, 99, 41);
-		jp_login.add(btnSignUp);
+//		btnSignUp = new JButton("Sign Up");
+//		btnSignUp.setFont(new Font("Tahoma", Font.PLAIN, 15));
+//		btnSignUp.setBackground(Color.decode(ColorConsts.PrimaryColor));
+//		btnSignUp.setForeground(Color.decode(ColorConsts.ForegroundColor));
+//		btnSignUp.setBounds(253, 442, 99, 41);
+//		jp_login.add(btnSignUp);
 		
 		btnExit = new JButton("Exit");
 		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 15));
 		btnExit.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btnExit.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		btnExit.setBounds(425, 442, 99, 41);
+//		btnExit.setBounds(425, 442, 99, 41);
+		btnExit.setBounds(250, 500, 100, 40);
 		jp_login.add(btnExit);
 		
 		//add event
 		btnLogin.addActionListener(this);
+		btnExit.addActionListener(this);
 	}
 
 	@Override
@@ -127,8 +130,19 @@ public class LoginPage extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		Object src = e.getSource();
 		if (src.equals(btnLogin)) {
+//			if (checkLogin()) {
+//				new RootFrame().setVisible(true);
+//				setVisible(false);
+//			}
 			new RootFrame().setVisible(true);
 			setVisible(false);
+		}else if (src.equals(btnExit)) {
+			System.exit(0);
 		}
+	}
+
+	private boolean checkLogin() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

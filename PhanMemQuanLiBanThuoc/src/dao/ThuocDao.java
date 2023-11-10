@@ -31,6 +31,7 @@ public class ThuocDao {
 				int maThuoc = rs.getInt("MaThuoc");
 				String tenThuoc = rs.getString("TenThuoc");
 //				NhaCungCap nhaCC = new Nha
+				NhaCungCap nhaCC = new NhaCungCap(rs.getInt("MaNhaCungCap"));
 				String donViTinh = rs.getString("DonViTinh");
 				String thanhPhanChinh = rs.getString("ThanhPhanChinh");
 				String donViTinhLe = rs.getString("DonViTinhLe");
@@ -44,7 +45,7 @@ public class ThuocDao {
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
 				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, null, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 				dsThuoc.add(thuoc);
 				
 			}
@@ -62,22 +63,22 @@ public class ThuocDao {
 		int n = 0;
 		try {
 			stmt = con.prepareStatement("insert into"
-					+ " Thuoc values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-			stmt.setInt(1,t.getMaThuoc());
-			stmt.setString(2,t.getTenThuoc());
-//			stmt.setInt(3,maNCC);
-			stmt.setString(4, t.getDonViTinh());
-			stmt.setString(5, t.getThanhPhanChinh());
-			stmt.setString(6, t.getDonViTinhLe());
-			stmt.setDate(7, Date.valueOf(t.getHanSuDung()));
-			stmt.setString(8, t.getDieuKienBaoQuan());
-			stmt.setString(9, t.getDonViTinhChan());
-			stmt.setString(10, t.getGhiChu());
-			stmt.setDouble(11, t.getGiaNhapLe());
-			stmt.setDouble(12, t.getGiaNhapChan());
-			stmt.setDouble(13, t.getGiaBanLe());
-			stmt.setDouble(14, t.getGiaBanChan());
-			stmt.setInt(15, t.getNhomThuoc().getMaNhomThuoc());
+					+ " Thuoc values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+//			stmt.setInt(1,t.getMaThuoc());
+			stmt.setString(1,t.getTenThuoc());
+			stmt.setInt(2,t.getNhaCungCap().getMaNhaCungCap());
+			stmt.setString(3, t.getDonViTinh());
+			stmt.setString(4, t.getThanhPhanChinh());
+			stmt.setString(5, t.getDonViTinhLe());
+			stmt.setDate(6, Date.valueOf(t.getHanSuDung()));
+			stmt.setString(7, t.getDieuKienBaoQuan());
+			stmt.setString(8, t.getDonViTinhChan());
+			stmt.setString(9, t.getGhiChu());
+			stmt.setDouble(10, t.getGiaNhapLe());
+			stmt.setDouble(11, t.getGiaNhapChan());
+			stmt.setDouble(12, t.getGiaBanLe());
+			stmt.setDouble(13, t.getGiaBanChan());
+			stmt.setInt(14, t.getNhomThuoc().getMaNhomThuoc());
 			n = stmt.executeUpdate();						
 		} catch (SQLException e) {			
 			e.printStackTrace();
