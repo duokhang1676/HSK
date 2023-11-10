@@ -17,6 +17,7 @@ public class NhomThuoc {
 		super();
 		MaNhomThuoc = maNhomThuoc;
 	}
+	
 	public int getMaNhomThuoc() {
 		return MaNhomThuoc;
 	}

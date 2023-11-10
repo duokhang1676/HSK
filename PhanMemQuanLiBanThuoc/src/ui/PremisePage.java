@@ -307,8 +307,7 @@ public class PremisePage extends BasePage implements MouseListener {
 
 	@Override
 	protected JPanel onCreateHeader() {
-		JPanel jp_test = new JPanel();
-		return new Header().addTitle("Quầy").addInsidePanel(jp_test).createView();
+		return new Header().addTitle("Quầy").createView();
 	}
 
 	private CategoryDataset getIncomeInPeriodDateset() {

@@ -27,6 +27,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 	private BasePage productPage;
 	private BasePage employeeManagerPage;
 	private BasePage myProfilePage;
+	private BasePage warehousePage;
 	
 	public RootFrame() {
 		super("Phần mềm quản lí thuốc nhóm 2");
@@ -43,7 +44,9 @@ public class RootFrame extends JFrame implements WindowStateListener {
 		premisesPage = new PremisePage();
 		productPage = new ProductPage();
 		employeeManagerPage = new EmployeeManagerPage();
+		warehousePage = new WarehousePage();
 		myProfilePage = new MyProfilePage();
+		
 		
 		add(getNavigationBar(), BorderLayout.WEST);
 		add(dashboardPage, BorderLayout.CENTER);
@@ -61,6 +64,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 				.addNaviButton("Khách hàng", "icon\\ic_customer.png")
 				.addNaviButton("Quầy", "")
 				.addNaviButton("Quản lí nhân viên", "")
+				.addNaviButton("Quản lí kho", "")
 				.addNaviButton("Thông tin cá nhân", "")
 				.addNavigateListener(new INavigateListener() {
 					@Override
@@ -72,6 +76,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 						remove(productPage);
 						remove(employeeManagerPage);
 						remove(myProfilePage);
+						remove(warehousePage);
 						
 						if (txt.equals("Trang chủ")) {
 							add(dashboardPage, BorderLayout.CENTER);
@@ -99,6 +104,10 @@ public class RootFrame extends JFrame implements WindowStateListener {
 						
 						if (txt.equals("Thông tin cá nhân")) {
 							add(myProfilePage, BorderLayout.CENTER);
+						}
+						
+						if (txt.equals("Quản lí kho")) {
+							add(warehousePage, BorderLayout.CENTER);
 						}
 
 						SwingUtilities.updateComponentTreeUI(RootFrame.this);
