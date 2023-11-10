@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import db.ConnectDB;
 import entity.NhanVien;
 import entity.NhomThuoc;
+
 import entity.Quay;
+
 
 public class NhanVienDao {
 	public ArrayList<NhanVien> getAllNhanVien() {
@@ -27,14 +29,12 @@ public class NhanVienDao {
 
 			ResultSet rs = statement.executeQuery(sql);
 
-
 			while (rs.next()) {
 				int maNhanVien = rs.getInt("MaNhanVien");
 				String tenNhanVien = rs.getString("TenNhanVien");
 				LocalDate ngayVaoLam = rs.getDate("NgayVaoLam").toLocalDate();
 				String caLamViec = rs.getString("CaLamViec");
 				String soDienThoai = rs.getString("SoDienThoai");
-
 				String matKhau = rs.getString("MatKhau");
 				Quay quay = new Quay(rs.getInt("MaQuay"));
 				String chucVu = rs.getString("ChucVu");
@@ -92,9 +92,9 @@ public class NhanVienDao {
 				String matKhau = rs.getString("MatKhau");
 				Quay quay = new Quay(rs.getInt("MaQuay"));
 				String chucVu = rs.getString("ChucVu");
-
 				return new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, matKhau, quay, chucVu);
 						}
+
 			
 
 		} catch (Exception e) {

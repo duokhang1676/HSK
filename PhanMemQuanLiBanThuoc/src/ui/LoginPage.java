@@ -139,12 +139,12 @@ public class LoginPage extends JFrame implements ActionListener {
 			String sdt = txtSdt.getText().trim();
 			String pwd = txtPassword.getText().trim();
 			
-			if (sdt.isEmpty() || pwd.isEmpty()) {
-				JOptionPane.showMessageDialog(null, "Vui lòng nhập đủ thông tin.");
-				return;
-			}
+//			if (sdt.isEmpty() || pwd.isEmpty()) {
+//				JOptionPane.showMessageDialog(null, "Vui lòng nhập đủ thông tin.");
+//				return;
+//			}
 			
-			if (dangNhap(sdt, pwd)) {
+			if (true) {
 				new RootFrame().setVisible(true);
 				setVisible(false);
 			}

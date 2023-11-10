@@ -30,8 +30,8 @@ public class RootFrame extends JFrame implements WindowStateListener {
 	private BasePage employeeManagerPage;
 
 	private BasePage orderListPage;
-
 	private BasePage myProfilePage;
+
 
 	
 	public RootFrame() {
@@ -95,7 +95,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 						remove(productPage);
 						remove(employeeManagerPage);
 						remove(myProfilePage);
-						
+
 						
 						if (txt.equals("Trang chủ")) {
 							add(dashboardPage, BorderLayout.CENTER);
