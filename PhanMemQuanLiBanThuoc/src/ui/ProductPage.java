@@ -464,34 +464,38 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 
 		Thuoc thuoc = thuoc_dao.timThuocTheoTen(tenThuoc);
 
-		int maNCC = thuoc.getNhaCungCap().getMaNhaCungCap();
-		txt_maNCC.setSelectedItem(thuoc.getNhaCungCap().getTenNhaCungCap());
+		if (thuoc != null) {
+			int maNCC = thuoc.getNhaCungCap().getMaNhaCungCap();
+			txt_maNCC.setSelectedItem(thuoc.getNhaCungCap().getTenNhaCungCap());
 
-		txt_maThuoc.setText(String.valueOf(thuoc.getMaThuoc()));
-		txt_tenThuoc.setText(thuoc.getTenThuoc());
-		txt_thanhPhan.setText(thuoc.getThanhPhanChinh());
+			txt_maThuoc.setText(String.valueOf(thuoc.getMaThuoc()));
+			txt_tenThuoc.setText(thuoc.getTenThuoc());
+			txt_thanhPhan.setText(thuoc.getThanhPhanChinh());
 
-		String hanSuDung = String.valueOf(thuoc.getHanSuDung());
-		txt_hanSuDung.setText(hanSuDung);
+			String hanSuDung = String.valueOf(thuoc.getHanSuDung());
+			txt_hanSuDung.setText(hanSuDung);
 
-		txt_dieuKienBQ.setText(thuoc.getDieuKienBaoQuan());
-		txt_donViTinh.setText(thuoc.getDonViTinh());
-		txt_donViTinhLe.setText(thuoc.getDonViTinhLe());
-		txt_donViTinhChan.setText(thuoc.getDonViTinhChan());
+			txt_dieuKienBQ.setText(thuoc.getDieuKienBaoQuan());
+			txt_donViTinh.setText(thuoc.getDonViTinh());
+			txt_donViTinhLe.setText(thuoc.getDonViTinhLe());
+			txt_donViTinhChan.setText(thuoc.getDonViTinhChan());
 
-		String giaNhapLe = String.valueOf(thuoc.getGiaNhapLe());
-		String giaNhapChan = String.valueOf(thuoc.getGiaNhapChan());
-		String giaBanLe = String.valueOf(thuoc.getGiaBanLe());
-		String giaBanChan = String.valueOf(thuoc.getGiaBanChan());
+			String giaNhapLe = String.valueOf(thuoc.getGiaNhapLe());
+			String giaNhapChan = String.valueOf(thuoc.getGiaNhapChan());
+			String giaBanLe = String.valueOf(thuoc.getGiaBanLe());
+			String giaBanChan = String.valueOf(thuoc.getGiaBanChan());
 
-		txt_giaNhapLe.setText(giaNhapLe);
-		txt_giaNhapChan.setText(giaNhapChan);
-		txt_giaBanLe.setText(giaBanLe);
-		txt_giaBanChan.setText(giaBanChan);
+			txt_giaNhapLe.setText(giaNhapLe);
+			txt_giaNhapChan.setText(giaNhapChan);
+			txt_giaBanLe.setText(giaBanLe);
+			txt_giaBanChan.setText(giaBanChan);
 
-		txt_ghiChu.setText(thuoc.getGhiChu());
+			txt_ghiChu.setText(thuoc.getGhiChu());
 
-		txt_maNhom.setSelectedItem(thuoc.getNhomThuoc().getTenNhomThuoc());
+			txt_maNhom.setSelectedItem(thuoc.getNhomThuoc().getTenNhomThuoc());
+		}
+		
+		
 
 	}
 
