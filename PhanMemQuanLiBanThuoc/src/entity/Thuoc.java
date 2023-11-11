@@ -20,12 +20,13 @@ public class Thuoc {
 	private double GiaBanLe;
 	private double GiaBanChan;
 	private NhomThuoc nhomThuoc;
+	private MaGiamGia MaGiamGia;
 	public Thuoc() {
 		super();
 	}
 	public Thuoc(int maThuoc, String tenThuoc, NhaCungCap nhaCungCap, String donViTinh, String thanhPhanChinh,
 			String donViTinhLe, LocalDate hanSuDung, String dieuKienBaoQuan, String donViTinhChan, String ghiChu,
-			double giaNhapLe, double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc) {
+			double giaNhapLe, double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc, MaGiamGia maGiamGia) {
 		super();
 		MaThuoc = maThuoc;
 		TenThuoc = tenThuoc;
@@ -42,6 +43,7 @@ public class Thuoc {
 		GiaBanLe = giaBanLe;
 		GiaBanChan = giaBanChan;
 		this.nhomThuoc = nhomThuoc;
+		MaGiamGia = maGiamGia;
 	}
 	public Thuoc(int maThuoc) {
 		super();
@@ -50,7 +52,7 @@ public class Thuoc {
 	
 	public Thuoc(String tenThuoc, NhaCungCap nhaCungCap, String donViTinh, String thanhPhanChinh, String donViTinhLe,
 			LocalDate hanSuDung, String dieuKienBaoQuan, String donViTinhChan, String ghiChu, double giaNhapLe,
-			double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc) {
+			double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc, MaGiamGia maGiamGia) {
 		super();
 		TenThuoc = tenThuoc;
 		this.nhaCungCap = nhaCungCap;
@@ -66,6 +68,7 @@ public class Thuoc {
 		GiaBanLe = giaBanLe;
 		GiaBanChan = giaBanChan;
 		this.nhomThuoc = nhomThuoc;
+		MaGiamGia = maGiamGia;
 	}
 	public int getMaThuoc() {
 		return MaThuoc;
@@ -157,13 +160,20 @@ public class Thuoc {
 	public void setNhomThuoc(NhomThuoc nhomThuoc) {
 		this.nhomThuoc = nhomThuoc;
 	}
+	
+	public MaGiamGia getMaGiamGia() {
+		return MaGiamGia;
+	}
+	public void setMaGiamGia(MaGiamGia maGiamGia) {
+		MaGiamGia = maGiamGia;
+	}
 	@Override
 	public String toString() {
 		return "Thuoc [MaThuoc=" + MaThuoc + ", TenThuoc=" + TenThuoc + ", DonViTinh=" + DonViTinh + ", ThanhPhanChinh="
 				+ ThanhPhanChinh + ", DonViTinhLe=" + DonViTinhLe + ", HanSuDung=" + HanSuDung + ", DieuKienBaoQuan="
 				+ DieuKienBaoQuan + ", DonViTinhChan=" + DonViTinhChan + ", GhiChu=" + GhiChu + ", GiaNhapLe="
 				+ GiaNhapLe + ", GiaNhapChan=" + GiaNhapChan + ", GiaBanLe=" + GiaBanLe + ", GiaBanChan=" + GiaBanChan
-				+ ", nhomThuoc=" + nhomThuoc + "]";
+				+ ", nhomThuoc=" + nhomThuoc + ", maGiamGia=" + MaGiamGia +"]";
 	}
 	@Override
 	public int hashCode() {

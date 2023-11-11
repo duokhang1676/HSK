@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 import db.ConnectDB;
+import entity.MaGiamGia;
 import entity.NhaCungCap;
 import entity.NhanVien;
 import entity.NhomThuoc;
@@ -44,8 +45,9 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
+				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
 				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
 				dsThuoc.add(thuoc);
 				
 			}
@@ -79,7 +81,7 @@ public class ThuocDao {
 			stmt.setDouble(12, t.getGiaBanLe());
 			stmt.setDouble(13, t.getGiaBanChan());
 			stmt.setInt(14, t.getNhomThuoc().getMaNhomThuoc());
-			stmt.setInt(15, 1);
+			stmt.setInt(15, t.getMaGiamGia().getMaGiamGia());
 			n = stmt.executeUpdate();						
 		} catch (SQLException e) {			
 			e.printStackTrace();
@@ -140,13 +142,17 @@ public class ThuocDao {
 					+ "GiaNhapChan, \r\n"
 					+ "GiaBanChan, \r\n"
 					+ "GhiChu,\r\n"
+					+ "MaGiamGia,\r\n"
 					+ "[Thuoc].MaNhomThuoc,\r\n"
 					+ "TenNhomThuoc,\r\n"
 					+ "[Thuoc].MaNhaCungCap,\r\n"
 					+ "[NhaCungCap].[TenNhaCungCap]\r\n"
+					+ "[Thuoc].MaGiamGia,\r\n"
+					+ "[MaGiamGia].[MoTa]\r\n"
 					+ "FROM Thuoc \r\n"
 					+ "LEFT JOIN [NhomThuoc] ON [Thuoc].MaNhomThuoc = [NhomThuoc].[MaNhomThuoc] \r\n"
 					+ "LEFT JOIN [NhaCungCap] ON [Thuoc].MaNhaCungCap = [NhaCungCap].MaNhaCungCap\r\n"
+					+ "LEFT JOIN [MaGiamGia] ON [Thuoc].MaGiamGia = [MaGiamGia].MaGiamGia\r\n"
 					+ "where TenThuoc = ?";
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1, ten);
@@ -175,7 +181,11 @@ public class ThuocDao {
 				String tenNhaCungCap = rs.getString("TenNhaCungCap");
 				NhaCungCap nhaCC = new NhaCungCap(maNhaCungCap, tenNhaCungCap);
 				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				int maGG = rs.getInt("MaGiamGia");
+				String moTa = rs.getString("MoTa");
+				MaGiamGia maGiamGia = new MaGiamGia(maGG, moTa);
+				
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
 				return thuoc;
 				
 			}
@@ -213,8 +223,9 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
+				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
 				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, maGiamGia);
 				dsThuoc.add(thuoc);
 				
 			}

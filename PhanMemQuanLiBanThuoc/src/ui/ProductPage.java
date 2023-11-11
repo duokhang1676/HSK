@@ -44,9 +44,11 @@ import org.jfree.ui.RectangleInsets;
 
 import components.ColorConsts;
 import components.Header;
+import dao.MaGiamGiaDao;
 import dao.NhaCungCapDao;
 import dao.NhomThuocDao;
 import dao.ThuocDao;
+import entity.MaGiamGia;
 import entity.NhaCungCap;
 import entity.NhanVien;
 import entity.NhomThuoc;
@@ -86,6 +88,9 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 	private JLabel orderCountLabel;
 	private JLabel productCountLabel;
 	private Object incomeInWeekChart;
+	private JComboBox<String> txt_maGiamGia;
+	private MaGiamGiaDao maGiamGia_dao;
+	private JButton btn_lamMoi;
 
 	public ProductPage() {
 		super();
@@ -96,6 +101,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		nhomThuoc_dao = new NhomThuocDao();
 		thuoc_dao = new ThuocDao();
 		nhaCungCap_dao = new NhaCungCapDao();
+		maGiamGia_dao = new MaGiamGiaDao();
 		
 		JPanel jp_prodBody = new JPanel();
 		jp_prodBody.setLayout(new BorderLayout());
@@ -184,10 +190,15 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		btn_luu.setPreferredSize(new Dimension(width, height));
 		btn_luu.setBackground(Color.decode(ColorConsts.BackgroundColor));
 		
+		btn_lamMoi = new JButton("Làm mới");
+		btn_lamMoi.setPreferredSize(new Dimension(width, height));
+		btn_lamMoi.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		
 		jp_btnRight.add(btn_them);
 		jp_btnRight.add(btn_xoa);
 		jp_btnRight.add(btn_xoaTrang);
 		jp_btnRight.add(btn_luu);
+		jp_btnRight.add(btn_lamMoi);
 		jp_btnRight.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		
 		jp_button.add(jp_btnRight);
@@ -221,6 +232,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		JLabel jl_giaNhapChan = new JLabel("Giá nhập chẵn: ");
 		JLabel jl_giaBanLe = new JLabel("Giá bán lẻ: ");
 		JLabel jl_giaBanChan = new JLabel("Giá bán chẵn: ");
+		JLabel jl_maGiamGia = new JLabel("Giảm giá: ");
 		
 		txt_maThuoc = new JTextField();
 		txt_maThuoc.setEditable(false);
@@ -272,6 +284,9 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		
 		txt_ghiChu.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		
+		txt_maGiamGia = new JComboBox<String>();
+		txt_maGiamGia.setEditable(false);
+		
 		jl_maThuoc.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		jl_maNhom.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		jl_maNCC.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
@@ -286,8 +301,9 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		jl_giaNhapChan.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		jl_giaBanLe.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		jl_giaBanChan.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
+		jl_maGiamGia.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		
-		Box b, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12;
+		Box b, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13;
 		int heightStrut = 10, widthStrut = 10;
 		b = Box.createVerticalBox();
 		b1 = Box.createHorizontalBox();
@@ -302,6 +318,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		b10 = Box.createHorizontalBox();
 		b11 = Box.createHorizontalBox();
 		b12 = Box.createHorizontalBox();
+		b13 = Box.createHorizontalBox();
 		
 		b1.add(jl_maThuoc);
 		b1.add(txt_maThuoc);
@@ -346,8 +363,11 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		b11.add(jl_giaBanChan);
 		b11.add(txt_giaBanChan);
 
-		b12.add(jl_ghiChu);
-		b12.add(txt_ghiChu);
+		b12.add(jl_maGiamGia);
+		b12.add(txt_maGiamGia);
+		
+		b13.add(jl_ghiChu);
+		b13.add(txt_ghiChu);
 		
 		
 		b.add(b1);
@@ -374,6 +394,8 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		b.add(Box.createVerticalStrut(heightStrut));
 		b.add(b12);
 		b.add(Box.createVerticalStrut(heightStrut));
+		b.add(b13);
+		b.add(Box.createVerticalStrut(heightStrut));
 		
 		
 		/**
@@ -389,6 +411,13 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		ArrayList<NhaCungCap> listNhaCungCap = nhaCungCap_dao.getAllNhaCungCap();
 		for (NhaCungCap nhaCungCap : listNhaCungCap) {
 			txt_maNCC.addItem(nhaCungCap.getTenNhaCungCap());
+		}
+		/**
+		 * doc du lieu ma giam gia
+		 */
+		ArrayList<MaGiamGia> listMaGiamGias = maGiamGia_dao.getAllTbMaGiamGia();
+		for (MaGiamGia maGiamGia : listMaGiamGias) {
+			txt_maGiamGia.addItem(maGiamGia.getMoTa());
 		}
 		
 		/*
@@ -479,16 +508,12 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
 		int row = prod_table.getSelectedRow();
-		
 		String tenThuoc = prod_model.getValueAt(row, 1).toString();
-		
-		
 		Thuoc thuoc = thuoc_dao.timThuocTheoTen(tenThuoc);
+		
 		
 		int maNCC = thuoc.getNhaCungCap().getMaNhaCungCap();
 		txt_maNCC.setSelectedItem(thuoc.getNhaCungCap().getTenNhaCungCap());
-		
-		
 		
 		txt_maThuoc.setText(String.valueOf(thuoc.getMaThuoc()));
 		txt_tenThuoc.setText(thuoc.getTenThuoc());
@@ -515,7 +540,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		txt_ghiChu.setText(thuoc.getGhiChu());
 		
 		txt_maNhom.setSelectedItem(thuoc.getNhomThuoc().getTenNhomThuoc());
-	
+		txt_maGiamGia.setSelectedItem(thuoc.getMaGiamGia().getMoTa());
 		
 	}
 
@@ -558,6 +583,8 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 			groupByName();
 		}else if (src.equals(btn_timKiem)) {
 			searchData();
+		}else if (src.equals(btn_lamMoi)) {
+			docDuLieuVaoTable();
 		}
 	}
 
@@ -625,38 +652,6 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		}
 	}
 
-	private void addRow() {
-		// TODO Auto-generated method stub
-		int maThuoc = Integer.parseInt(txt_maThuoc.getText());
-		String tenThuoc = txt_tenThuoc.getText();
-		int maNCC = Integer.parseInt((String) txt_maNCC.getSelectedItem());
-		NhaCungCap nhaCC = new NhaCungCap(maNCC);
-		String donViTinh = txt_donViTinh.getText();
-		String thanhPhanChinh = txt_thanhPhan.getText();
-		String donViTinhLe = txt_donViTinh.getText();
-		LocalDate hanSuDung = LocalDate.parse(txt_hanSuDung.getText());
-		String dkBaoQuan = txt_dieuKienBQ.getText();
-		String donViTinhChan = txt_donViTinhChan.getText();
-		String ghiChu = txt_ghiChu.getText();
-		double giaNhapLe = Double.parseDouble(txt_giaNhapLe.getText());
-		double giaNhapChan = Double.parseDouble(txt_giaNhapChan.getText());
-		double giaBanLe = Double.parseDouble(txt_giaBanLe.getText());
-		double giaBanChan = Double.parseDouble(txt_giaNhapChan.getText());
-		int maNhomThuoc = Integer.parseInt((String) txt_maNhom.getSelectedItem());
-		NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc);
-		
-		Thuoc t = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
-		try {
-			thuoc_dao.themThuoc(t);
-			prod_model.addRow(new Object[] {t.getMaThuoc(), t.getTenThuoc(), t.getHanSuDung(), t.getDonViTinh(), t.getDonViTinhLe(),
-					t.getDonViTinhChan(), t.getGiaNhapLe(), t.getGiaNhapChan(), t.getGiaBanLe(), t.getGiaBanChan()});
-			showMessage("Thêm thành công");
-		} catch (Exception e) {
-			// TODO: handle exception
-			showMessage("Thêm không thành công");
-		}
-		
-	}
 	private void showMessage(String string) {
 		// TODO Auto-generated method stub
 		JOptionPane.showMessageDialog(this, string);
