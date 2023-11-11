@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import db.ConnectDB;
 import entity.MaGiamGia;
+import entity.Thuoc;
 
 
 public class MaGiamGiaDao {
@@ -25,7 +26,10 @@ public class MaGiamGiaDao {
 				LocalDate ngayKT = LocalDate.parse(rs.getString("NgayKetThuc"));
 				double ptGiamGia = rs.getDouble("PhanTramGiamGia");
 				String mota = rs.getString("MoTa");
-				MaGiamGia giamgia = new MaGiamGia(ma ,  ngayBD , ngayKT , ptGiamGia , mota);
+				
+				Thuoc thuoc = new Thuoc(rs.getInt("MaThuoc"));
+				
+				MaGiamGia giamgia = new MaGiamGia(ma ,  ngayBD , ngayKT , ptGiamGia , mota, thuoc);
 				dsGG.add(giamgia);
 			}
 		} catch (Exception e) {

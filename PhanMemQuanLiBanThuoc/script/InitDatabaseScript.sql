@@ -73,7 +73,6 @@ CREATE TABLE Thuoc (
 	GiaBanLe REAL NOT NULL,
 	GiaBanChan REAL NOT NULL,
 	MaNhomThuoc INT FOREIGN KEY REFERENCES NhomThuoc(MaNhomThuoc),
-	MaGiamGia INT FOREIGN KEY REFERENCES MaGiamGia(MaGiamGia)
 )
 
 GO
@@ -103,7 +102,8 @@ CREATE TABLE MaGiamGia (
 	NgayBatDau DATE NOT NULL,
 	NgayKetThuc DATE NOT NULL,
 	PhanTramGiamGia REAL DEFAULT 0.05,
-	MoTa NVARCHAR(255)
+	MoTa NVARCHAR(255),
+	MaThuoc INT FOREIGN KEY REFERENCES Thuoc(MaThuoc),
 )
 
 GO

@@ -8,30 +8,37 @@ public class MaGiamGia {
 	private LocalDate ngayKetThuc;
 	private double phanTramGiamGia;
 	private String moTa;
-	
+	private Thuoc thuoc;
+
 	public MaGiamGia(int maGiamGia) {
 		super();
 		this.maGiamGia = maGiamGia;
 	}
 
-	public MaGiamGia(int maGiamGia, LocalDate ngayBatDau, LocalDate ngayKetThuc, double phanTramGiamGia, String moTa) {
+	public MaGiamGia(int maGiamGia, LocalDate ngayBatDau, LocalDate ngayKetThuc, double phanTramGiamGia, String moTa,
+			Thuoc thuoc) {
 		super();
 		this.maGiamGia = maGiamGia;
 		this.ngayBatDau = ngayBatDau;
 		this.ngayKetThuc = ngayKetThuc;
 		this.phanTramGiamGia = phanTramGiamGia;
 		this.moTa = moTa;
+		this.thuoc = thuoc;
 	}
-	
-	
+
+	public Thuoc getThuoc() {
+		return thuoc;
+	}
+
+	public void setThuoc(Thuoc thuoc) {
+		this.thuoc = thuoc;
+	}
 
 	public MaGiamGia(int maGiamGia, double phanTramGiamGia) {
 		super();
 		this.maGiamGia = maGiamGia;
 		this.phanTramGiamGia = phanTramGiamGia;
 	}
-	
-	
 
 	public MaGiamGia(int maGiamGia, String moTa) {
 		super();
