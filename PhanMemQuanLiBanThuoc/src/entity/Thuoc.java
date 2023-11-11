@@ -20,12 +20,13 @@ public class Thuoc {
 	private double GiaBanLe;
 	private double GiaBanChan;
 	private NhomThuoc nhomThuoc;
-	private MaGiamGia maGiamGia;
-
+	
+	public Thuoc() {
+		super();
+	}
 	public Thuoc(int maThuoc, String tenThuoc, NhaCungCap nhaCungCap, String donViTinh, String thanhPhanChinh,
 			String donViTinhLe, LocalDate hanSuDung, String dieuKienBaoQuan, String donViTinhChan, String ghiChu,
-			double giaNhapLe, double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc,
-			MaGiamGia maGiamGia) {
+			double giaNhapLe, double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc) {
 		super();
 		MaThuoc = maThuoc;
 		TenThuoc = tenThuoc;
@@ -42,16 +43,31 @@ public class Thuoc {
 		GiaBanLe = giaBanLe;
 		GiaBanChan = giaBanChan;
 		this.nhomThuoc = nhomThuoc;
-		this.maGiamGia = maGiamGia;
 	}
 
 	public Thuoc(int maThuoc) {
 		super();
 		MaThuoc = maThuoc;
 	}
-
-	public Thuoc() {
+	
+	public Thuoc(String tenThuoc, NhaCungCap nhaCungCap, String donViTinh, String thanhPhanChinh, String donViTinhLe,
+			LocalDate hanSuDung, String dieuKienBaoQuan, String donViTinhChan, String ghiChu, double giaNhapLe,
+			double giaNhapChan, double giaBanLe, double giaBanChan, NhomThuoc nhomThuoc) {
 		super();
+		TenThuoc = tenThuoc;
+		this.nhaCungCap = nhaCungCap;
+		DonViTinh = donViTinh;
+		ThanhPhanChinh = thanhPhanChinh;
+		DonViTinhLe = donViTinhLe;
+		HanSuDung = hanSuDung;
+		DieuKienBaoQuan = dieuKienBaoQuan;
+		DonViTinhChan = donViTinhChan;
+		GhiChu = ghiChu;
+		GiaNhapLe = giaNhapLe;
+		GiaNhapChan = giaNhapChan;
+		GiaBanLe = giaBanLe;
+		GiaBanChan = giaBanChan;
+		this.nhomThuoc = nhomThuoc;
 	}
 
 	public int getMaThuoc() {
@@ -173,14 +189,17 @@ public class Thuoc {
 	public void setNhomThuoc(NhomThuoc nhomThuoc) {
 		this.nhomThuoc = nhomThuoc;
 	}
+	
 
-	public MaGiamGia getMaGiamGia() {
-		return maGiamGia;
+	@Override
+	public String toString() {
+		return "Thuoc [MaThuoc=" + MaThuoc + ", TenThuoc=" + TenThuoc + ", DonViTinh=" + DonViTinh + ", ThanhPhanChinh="
+				+ ThanhPhanChinh + ", DonViTinhLe=" + DonViTinhLe + ", HanSuDung=" + HanSuDung + ", DieuKienBaoQuan="
+				+ DieuKienBaoQuan + ", DonViTinhChan=" + DonViTinhChan + ", GhiChu=" + GhiChu + ", GiaNhapLe="
+				+ GiaNhapLe + ", GiaNhapChan=" + GiaNhapChan + ", GiaBanLe=" + GiaBanLe + ", GiaBanChan=" + GiaBanChan
+				+ ", nhomThuoc=" + nhomThuoc + ", maGiamGia=" +"]";
 	}
 
-	public void setMaGiamGia(MaGiamGia maGiamGia) {
-		this.maGiamGia = maGiamGia;
-	}
 
 	@Override
 	public int hashCode() {
@@ -198,14 +217,4 @@ public class Thuoc {
 		Thuoc other = (Thuoc) obj;
 		return MaThuoc == other.MaThuoc;
 	}
-
-	@Override
-	public String toString() {
-		return "Thuoc [MaThuoc=" + MaThuoc + ", TenThuoc=" + TenThuoc + ", nhaCungCap=" + nhaCungCap + ", DonViTinh="
-				+ DonViTinh + ", ThanhPhanChinh=" + ThanhPhanChinh + ", DonViTinhLe=" + DonViTinhLe + ", HanSuDung="
-				+ HanSuDung + ", DieuKienBaoQuan=" + DieuKienBaoQuan + ", DonViTinhChan=" + DonViTinhChan + ", GhiChu="
-				+ GhiChu + ", GiaNhapLe=" + GiaNhapLe + ", GiaNhapChan=" + GiaNhapChan + ", GiaBanLe=" + GiaBanLe
-				+ ", GiaBanChan=" + GiaBanChan + ", nhomThuoc=" + nhomThuoc + ", maGiamGia=" + maGiamGia + "]";
-	}
-
 }

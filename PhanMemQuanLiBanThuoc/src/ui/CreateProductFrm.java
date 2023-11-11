@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import components.ColorConsts;
+import dao.MaGiamGiaDao;
 import dao.NhaCungCapDao;
 import dao.NhomThuocDao;
 import dao.ThuocDao;
@@ -52,10 +53,12 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 	private JButton btn_them;
 	private JButton btn_xoaTrang;
 
+
+
 	public CreateProductFrm() {
 		// TODO Auto-generated constructor stub
 		this.setTitle("Tạo sản phẩm");
-		this.setSize(1000, 450);
+		this.setSize(1000, 500);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setResizable(false);
@@ -71,6 +74,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		nhomThuoc_dao = new NhomThuocDao();
 		thuoc_dao = new ThuocDao();
 		nhaCungCap_dao = new NhaCungCapDao();
+		
 
 		/**
 		 * infomation panel
@@ -113,6 +117,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		JLabel jl_giaBanLe = new JLabel("Giá bán lẻ: ");
 		JLabel jl_giaBanChan = new JLabel("Giá bán chẵn: ");
 		JLabel jl_maNhom = new JLabel("Mã nhóm thuốc: ");
+		JLabel jl_maGiamGia = new JLabel("Giảm giá: ");
 
 		txt_maThuoc = new JTextField();
 		txt_maThuoc.setEditable(false);
@@ -140,6 +145,8 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		txt_maNhom.setEditable(true);
 
 		txt_ghiChu.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		
 
 		jl_maThuoc.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		jl_maNhom.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
@@ -155,8 +162,9 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		jl_giaNhapChan.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		jl_giaBanLe.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		jl_giaBanChan.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
+		jl_maGiamGia.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 
-		Box b, b1, b2, b3, b4, b5, b6, b7;
+		Box b, b1, b2, b3, b4, b5, b6, b7, b8;
 		int heightStrut = 10, widthStrut = 10;
 		b = Box.createVerticalBox();
 		b1 = Box.createHorizontalBox();
@@ -166,6 +174,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		b5 = Box.createHorizontalBox();
 		b6 = Box.createHorizontalBox();
 		b7 = Box.createHorizontalBox();
+		b8 = Box.createHorizontalBox();
 
 		b1.add(jl_maNhom);
 		b1.add(txt_maNhom);
@@ -207,8 +216,9 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		b6.add(jl_giaBanChan);
 		b6.add(txt_giaBanChan);
 
-		b7.add(jl_ghiChu);
-		b7.add(txt_ghiChu);
+		
+		b8.add(jl_ghiChu);
+		b8.add(txt_ghiChu);
 
 		b.add(b1);
 		b.add(Box.createVerticalStrut(heightStrut));
@@ -223,6 +233,8 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		b.add(b6);
 		b.add(Box.createVerticalStrut(heightStrut));
 		b.add(b7);
+		b.add(Box.createVerticalStrut(heightStrut));
+		b.add(b8);
 		b.add(Box.createVerticalStrut(heightStrut));
 
 //		jp_txtProd.add(jp_hinhAnh, BorderLayout.WEST);
@@ -244,7 +256,6 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		for (NhaCungCap nhaCungCap : listNhaCungCap) {
 			txt_maNCC.addItem(nhaCungCap.getTenNhaCungCap());
 		}
-
 		/**
 		 * button panel
 		 */
@@ -286,6 +297,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		Object src = e.getSource();
 		if (src.equals(btn_them)) {
 			addRow();
+			dispose();
 		} else if (src.equals(btn_xoaTrang)) {
 			clearData();
 		}
@@ -331,13 +343,11 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		double giaBanChan = Double.parseDouble(txt_giaNhapChan.getText());
 
 		int maNhomThuoc = txt_maNhom.getSelectedIndex();
-		NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc);
-
-		
-		Thuoc thuoc = new Thuoc(0, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
-				dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, null);
+		NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc + 1);
+		Thuoc t = new Thuoc(tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan,
+				donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 		try {
-			thuoc_dao.themThuoc(thuoc);
+			thuoc_dao.themThuoc(t);
 			showMessage("Thêm thành công");
 		} catch (Exception e) {
 			// TODO: handle exception
