@@ -313,14 +313,9 @@ public class PremisePage extends BasePage implements MouseListener {
 	private CategoryDataset getIncomeInPeriodDateset() {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
-		dataset.addValue(1000000, "Doanh thu", "T2");
-		dataset.addValue(500000, "Doanh thu", "T3");
-		dataset.addValue(200000, "Doanh thu", "T4");
-
-		dataset.addValue(2000000, "Doanh thu", "T5");
-		dataset.addValue(300000, "Doanh thu", "T6");
-		dataset.addValue(500000, "Doanh thu", "T7");
-		dataset.addValue(2000000, "Doanh thu", "CN");
+		for (int i = 0; i < 31; i++) {
+			dataset.addValue(1000000, "Doanh thu", String.valueOf(i + 1));
+		}
 
 		return dataset;
 	}

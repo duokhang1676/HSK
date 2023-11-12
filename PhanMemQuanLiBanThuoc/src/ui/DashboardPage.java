@@ -43,6 +43,10 @@ import com.github.lgooddatepicker.components.DatePicker;
 import components.ColorConsts;
 import components.Header;
 import components.TopSaleProductView;
+import dao.HoaDonDao;
+import dao.QuayDao;
+import model.PercentagePaymentMethod;
+import model.TopSaleInPremises;
 
 public class DashboardPage extends BasePage {
 
@@ -61,8 +65,21 @@ public class DashboardPage extends BasePage {
 	private JList topSaleProductList;
 	private DefaultListModel<Object> topSaleProductModel;
 	
+	private QuayDao quayDao;
+	private HoaDonDao hoaDonDao;
+	
+	
+	private DefaultCategoryDataset topSaleInPremisDateset;
+	private DefaultPieDataset paymentMethodDataset;
+	
 	public DashboardPage() {
 		super();
+		
+		quayDao = new QuayDao();
+		hoaDonDao = new HoaDonDao();
+		
+		getTopSaleInPremisDateset();
+		getPaymentMethodPercentDataset();
 	}
 
 	@Override
@@ -140,15 +157,12 @@ public class DashboardPage extends BasePage {
 		
 		//
 		
-		categoryTopSaleChart = ChartFactory.createPieChart(
-				"Top 5 danh mục thuốc bán chạy nhất", getTopSaleInCategory(), true, true, true);
+		categoryTopSaleChart = ChartFactory.createPieChart("Top 5 danh mục thuốc bán chạy nhất", getTopSaleInCategory(), true, true, true);
 		categoryTopSaleChart.setPadding(new RectangleInsets(15, 15, 15, 15));
 		categoryTopSaleChart.setBackgroundPaint(Color.white);
 		
 		ChartPanel categoryChartPanel = new ChartPanel(categoryTopSaleChart);
 		categoryChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		
-		
 		
 		// 
 		
@@ -179,12 +193,12 @@ public class DashboardPage extends BasePage {
 		
 		//
 		
-		
+		topSaleInPremisDateset = new DefaultCategoryDataset();
 		premisSaleChart = ChartFactory.createBarChart(
 				"Top quầy thuốc bán chạy nhất", 
 				"Quầy thuốc",
 				"Doanh thu", 
-				getTopSaleInPremisDateset(), 
+				topSaleInPremisDateset, 
 				PlotOrientation.HORIZONTAL,
 				false, 
 				false,
@@ -200,11 +214,9 @@ public class DashboardPage extends BasePage {
 		
 		ChartPanel premisSaleChartPanel =new ChartPanel(premisSaleChart);
 		premisSaleChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		
-		///
-		
-		paymentMethodChart = ChartFactory.createPieChart(
-				"Phương thức thanh toán", getPaymentMethodPercentDataset(), true, true, true);
+
+		paymentMethodDataset = new DefaultPieDataset();
+		paymentMethodChart = ChartFactory.createPieChart("Phương thức thanh toán", paymentMethodDataset, true, true, true);
 		paymentMethodChart.setPadding(new RectangleInsets(15, 15, 15, 15));
 		paymentMethodChart.setBackgroundPaint(Color.white);
 		
@@ -218,10 +230,6 @@ public class DashboardPage extends BasePage {
 		chartGridGroup.add(topSaleProductPanel);
 		chartGridGroup.add(premisSaleChartPanel);
 		chartGridGroup.add(paymentMethodChartPanel);
-		
-		
-		
-
 		
 		panel.add(boxGroup, BorderLayout.NORTH);
 		panel.add(chartGridGroup, BorderLayout.CENTER);
@@ -249,7 +257,10 @@ public class DashboardPage extends BasePage {
 
 		insidePane.add(datePickerGroup);
 
-		return new Header().addTitle("Trang chủ").addInsidePanel(insidePane).createView();
+		return new Header()
+				.addTitle("Trang chủ")
+				.addInsidePanel(insidePane)
+				.createView();
 	}
 	
 	
@@ -270,38 +281,24 @@ public class DashboardPage extends BasePage {
 	
 	private PieDataset getTopSaleInCategory() {
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		
-		
 		dataset.setValue("Thuốc kháng sinh", 60.0);
 		dataset.setValue("Thuốc giảm đau, hạ sốt", 20.0);
 		dataset.setValue("Thuốc kháng viêm", 10.0);
 		dataset.setValue("Thuốc ho và long đờm", 5.0);
 		dataset.setValue("Thuốc trị tiêu chảy", 5.0);
 		
-		
 		return dataset;
 	}
 
-	private CategoryDataset getTopSaleInPremisDateset() {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		
-		dataset.addValue(200000, "Doanh thu", "312 Tân Bình");
-		dataset.addValue(300000, "Doanh thu", "1 Nguyễn Thị Minh Khai");
-		dataset.addValue(1000000, "Doanh thu", "2 Nhà H IUH");
-		
-		dataset.addValue(700000, "Doanh thu", "405 Điện Biên Phủ");
-		dataset.addValue(200000, "Doanh thu", "14 Nguyễn Văn Bảo");
-		
-		return dataset;
+	private void getTopSaleInPremisDateset() {
+		for (TopSaleInPremises item : quayDao.getTopSaleInPremises()) {
+			topSaleInPremisDateset.addValue(item.getDoanhThu(), "Doanh thu", item.getTenQuay());
+		}
 	} 
 	
-	private PieDataset getPaymentMethodPercentDataset() {
-		DefaultPieDataset dataset = new DefaultPieDataset();
-		
-		dataset.setValue("Tiền mặt", 60.0);
-		dataset.setValue("Chuyển khoản ngân hàng", 25.0);
-		dataset.setValue("Chuyển khoản ví Momo", 15.0);
-		
-		return dataset;
+	private void getPaymentMethodPercentDataset() {
+		for (PercentagePaymentMethod item : hoaDonDao.getPercentageOfMethodPayment()) {
+			paymentMethodDataset.setValue(item.getPhuongThucThanhToan(), item.getSoLuongDonHang());
+		}
 	} 
 }
