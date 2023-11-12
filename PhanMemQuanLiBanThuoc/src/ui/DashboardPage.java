@@ -214,8 +214,6 @@ public class DashboardPage extends BasePage {
 		
 		ChartPanel premisSaleChartPanel =new ChartPanel(premisSaleChart);
 		premisSaleChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		
-		///
 
 		paymentMethodDataset = new DefaultPieDataset();
 		paymentMethodChart = ChartFactory.createPieChart("Phương thức thanh toán", paymentMethodDataset, true, true, true);
@@ -232,10 +230,6 @@ public class DashboardPage extends BasePage {
 		chartGridGroup.add(topSaleProductPanel);
 		chartGridGroup.add(premisSaleChartPanel);
 		chartGridGroup.add(paymentMethodChartPanel);
-		
-		
-		
-
 		
 		panel.add(boxGroup, BorderLayout.NORTH);
 		panel.add(chartGridGroup, BorderLayout.CENTER);
@@ -287,14 +281,11 @@ public class DashboardPage extends BasePage {
 	
 	private PieDataset getTopSaleInCategory() {
 		DefaultPieDataset dataset = new DefaultPieDataset();
-		
-		
 		dataset.setValue("Thuốc kháng sinh", 60.0);
 		dataset.setValue("Thuốc giảm đau, hạ sốt", 20.0);
 		dataset.setValue("Thuốc kháng viêm", 10.0);
 		dataset.setValue("Thuốc ho và long đờm", 5.0);
 		dataset.setValue("Thuốc trị tiêu chảy", 5.0);
-		
 		
 		return dataset;
 	}
