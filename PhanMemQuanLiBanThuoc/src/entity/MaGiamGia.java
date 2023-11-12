@@ -25,6 +25,14 @@ public class MaGiamGia {
 	
 	
 
+	public MaGiamGia(LocalDate ngayBatDau, LocalDate ngayKetThuc, double phanTramGiamGia, String moTa) {
+		super();
+		this.ngayBatDau = ngayBatDau;
+		this.ngayKetThuc = ngayKetThuc;
+		this.phanTramGiamGia = phanTramGiamGia;
+		this.moTa = moTa;
+	}
+
 	public MaGiamGia(int maGiamGia, double phanTramGiamGia) {
 		super();
 		this.maGiamGia = maGiamGia;

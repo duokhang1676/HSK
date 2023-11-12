@@ -328,11 +328,11 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		String tenThuoc = txt_tenThuoc.getText();
 
 		int maNCC = txt_maNCC.getSelectedIndex();
-		NhaCungCap nhaCC = new NhaCungCap(maNCC);
+		NhaCungCap nhaCC = new NhaCungCap(maNCC+1);
 
 		String donViTinh = txt_donViTinh.getText();
 		String thanhPhanChinh = txt_thanhPhan.getText();
-		String donViTinhLe = txt_donViTinh.getText();
+		String donViTinhLe = txt_donViTinhLe.getText();
 		LocalDate hanSuDung = LocalDate.parse(txt_hanSuDung.getText());
 		String dkBaoQuan = txt_dieuKienBQ.getText();
 		String donViTinhChan = txt_donViTinhChan.getText();
@@ -340,7 +340,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		double giaNhapLe = Double.parseDouble(txt_giaNhapLe.getText());
 		double giaNhapChan = Double.parseDouble(txt_giaNhapChan.getText());
 		double giaBanLe = Double.parseDouble(txt_giaBanLe.getText());
-		double giaBanChan = Double.parseDouble(txt_giaNhapChan.getText());
+		double giaBanChan = Double.parseDouble(txt_giaBanChan.getText());
 
 		int maNhomThuoc = txt_maNhom.getSelectedIndex();
 		NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc + 1);

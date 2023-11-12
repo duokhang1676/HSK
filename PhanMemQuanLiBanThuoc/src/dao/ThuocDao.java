@@ -149,7 +149,6 @@ public class ThuocDao {
 					+ "FROM Thuoc \r\n"
 					+ "LEFT JOIN [NhomThuoc] ON [Thuoc].MaNhomThuoc = [NhomThuoc].[MaNhomThuoc] \r\n"
 					+ "LEFT JOIN [NhaCungCap] ON [Thuoc].MaNhaCungCap = [NhaCungCap].MaNhaCungCap\r\n"
-					+ "LEFT JOIN [MaGiamGia] ON [Thuoc].MaGiamGia = [MaGiamGia].MaGiamGia\r\n"
 					+ "where TenThuoc = ?";
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1, ten);

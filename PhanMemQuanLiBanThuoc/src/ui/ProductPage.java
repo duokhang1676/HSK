@@ -429,6 +429,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		btn_xoaTrang.addActionListener(this);
 		btn_luu.addActionListener(this);
 		btn_timKiem.addActionListener(this);
+		btn_lamMoi.addActionListener(this);
 
 		jp_prodBody.add(jp_tableProd, BorderLayout.CENTER);
 		jp_prodBody.add(jp_txtProd, BorderLayout.EAST);
@@ -454,8 +455,10 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 
 	private void docDuLieuVaoTable() {
 		// TODO Auto-generated method stub
+		prod_model.setRowCount(0);
 		List<Thuoc> dsThuoc = thuoc_dao.getAllData();
 		for (Thuoc t : dsThuoc) {
+		
 			prod_model.addRow(new Object[] { t.getMaThuoc(), t.getTenThuoc(), t.getHanSuDung(), t.getDonViTinh(),
 					t.getDonViTinhLe(), t.getDonViTinhChan(), t.getGiaNhapLe(), t.getGiaNhapChan(), t.getGiaBanLe(),
 					t.getGiaBanChan() });
@@ -607,7 +610,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		if (row == -1) {
 			showMessage("Phải chọn dòng xóa!");
 		}
-		if (JOptionPane.showConfirmDialog(this, "Ban co chac xoa dong nay khong?", "Canh bao",
+		if (JOptionPane.showConfirmDialog(this, "Bạn có chắc là muốn xóa dòng này không??", "Warning!!!",
 				JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
 			int ma = (int) prod_model.getValueAt(row, 0);
 			thuoc_dao.xoaTheoMa(ma);
