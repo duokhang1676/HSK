@@ -183,7 +183,6 @@ public class ThuocDao {
 
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 
@@ -203,7 +202,6 @@ public class ThuocDao {
 			while (rs.next()) {
 				int maThuoc = rs.getInt("MaThuoc");
 				String tenThuoc = rs.getString("TenThuoc");
-//				NhaCungCap nhaCC = new Nha
 				NhaCungCap nhaCC = new NhaCungCap(rs.getInt("MaNhaCungCap"));
 				String donViTinh = rs.getString("DonViTinh");
 				String thanhPhanChinh = rs.getString("ThanhPhanChinh");
@@ -220,7 +218,6 @@ public class ThuocDao {
 				
 				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 				dsThuoc.add(thuoc);
-
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

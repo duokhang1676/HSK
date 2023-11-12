@@ -1,0 +1,4 @@
+INSERT [dbo].[NhanVien] ( [TenNhanVien], [NgayVaoLam], [CaLamViec], [SoDienThoai], [MatKhau], [MaQuay], [ChucVu]) VALUES (N'Khang', CAST(N'2023-01-01' AS Date), N'Sang', N'0356972399', N'123456789', 1, N'baove')
+INSERT [dbo].[NhanVien] ( [TenNhanVien], [NgayVaoLam], [CaLamViec], [SoDienThoai], [MatKhau], [MaQuay], [ChucVu]) VALUES (N'Huy', CAST(N'2022-02-02' AS Date), N'Trua', N'0123455678', N'123456789', 2, N'tapvu')
+INSERT [dbo].[NhanVien] ( [TenNhanVien], [NgayVaoLam], [CaLamViec], [SoDienThoai], [MatKhau], [MaQuay], [ChucVu]) VALUES (N'Tinh', CAST(N'2021-03-03' AS Date), N'Chieu', N'0987654321', N'123456789', 3, N'chutich')
+INSERT [dbo].[NhanVien] ( [TenNhanVien], [NgayVaoLam], [CaLamViec], [SoDienThoai], [MatKhau], [MaQuay], [ChucVu]) VALUES (N'Dung', CAST(N'2020-04-04' AS Date), N'Toi', N'0456789123', N'123456789', 4, N'ketoan')

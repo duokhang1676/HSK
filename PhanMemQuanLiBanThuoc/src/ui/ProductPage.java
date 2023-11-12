@@ -430,7 +430,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		btn_luu.addActionListener(this);
 		btn_timKiem.addActionListener(this);
 		btn_lamMoi.addActionListener(this);
-
+		
 		jp_prodBody.add(jp_tableProd, BorderLayout.CENTER);
 		jp_prodBody.add(jp_txtProd, BorderLayout.EAST);
 		return jp_prodBody;
@@ -454,8 +454,10 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 	}
 
 	private void docDuLieuVaoTable() {
-		// TODO Auto-generated method stub
-		prod_model.setRowCount(0);
+		while (prod_model.getRowCount() > 0) {
+			prod_model.removeRow(0);
+		}
+		
 		List<Thuoc> dsThuoc = thuoc_dao.getAllData();
 		for (Thuoc t : dsThuoc) {
 		
