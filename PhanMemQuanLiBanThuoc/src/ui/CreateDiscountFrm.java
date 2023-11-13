@@ -3,6 +3,7 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -46,7 +47,9 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		magiamgia_dao = new MaGiamGiaDao();
-		
+		Font titleFont = new Font("Arial", Font.BOLD, 30);
+		JLabel title = new JLabel("Thêm mã giảm giá mới");
+		title.setFont(titleFont);
 		/**
 		 * Panel Information
 		 */

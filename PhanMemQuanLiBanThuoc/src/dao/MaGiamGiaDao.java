@@ -73,7 +73,7 @@ public class MaGiamGiaDao {
 		int n = 0;
 		try {
 			stmt = con.prepareStatement("insert into" + " MaGiamGia values( ?, ?, ?, ?)");
-//			stmt.setInt(1,t.getMaThuoc());
+
 			stmt.setDate(1, Date.valueOf(mgg.getNgayBatDau()));
 			stmt.setDate(2, Date.valueOf(mgg.getNgayKetThuc()));
 			stmt.setDouble(3, mgg.getPhanTramGiamGia());
