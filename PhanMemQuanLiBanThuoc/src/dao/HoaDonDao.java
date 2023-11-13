@@ -94,4 +94,8 @@ public class HoaDonDao {
 		}
 		return dsPers;
 	}
+	
+	public int getTongSoDonHang() {
+		return 0;
+	}
 }

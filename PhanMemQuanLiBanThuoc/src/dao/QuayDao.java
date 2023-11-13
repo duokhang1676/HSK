@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -61,7 +62,7 @@ public class QuayDao {
 		return false;
 	}
 
-	public List<TopSaleInPremises> getTopSaleInPremises() {
+	public List<TopSaleInPremises> getTopSaleInPremises(LocalDate from, LocalDate to) {
 		List topSales = new  ArrayList<TopSaleInPremises>();
 		try {
 			ConnectDB.getInstance();
@@ -71,9 +72,12 @@ public class QuayDao {
 					.prepareStatement("SELECT TOP 5 Quay.MaQuay, TenQuay, SUM(TongTien) AS DoanhThu\r\n"
 							+ "  FROM HoaDon\r\n"
 							+ "  LEFT JOIN Quay ON Quay.MaQuay = HoaDon.MaQuay \r\n"
+							+ "  WHERE [NgayLapHoaDon] BETWEEN ? AND ? \r\n"	
 							+ "  GROUP BY Quay.MaQuay, TenQuay\r\n" + "  ORDER BY DoanhThu DESC");
 			
-
+			statement.setDate(1, Date.valueOf(from));
+			statement.setDate(2, Date.valueOf(to));
+			
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				int maQuay = rs.getInt("MaQuay");
