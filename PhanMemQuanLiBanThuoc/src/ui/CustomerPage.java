@@ -96,7 +96,7 @@ public class CustomerPage extends BasePage  implements MouseListener{
 		btn_them.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btn_them.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new CreatePremisesFrm().setVisible(true);
+				new CreateCustomerFrm().setVisible(true);
 			}
 		});
 		btn_xoa = new JButton("Xóa");

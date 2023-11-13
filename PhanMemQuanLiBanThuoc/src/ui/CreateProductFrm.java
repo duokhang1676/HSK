@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -22,6 +23,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import components.ColorConsts;
+import dao.MaGiamGiaDao;
 import dao.NhaCungCapDao;
 import dao.NhomThuocDao;
 import dao.ThuocDao;
@@ -46,16 +48,21 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 	private JTextField txt_giaBanLe;
 	private JTextField txt_giaBanChan;
 	private JComboBox<String> txt_maNhom;
+	
+
 	private NhomThuocDao nhomThuoc_dao;
 	private ThuocDao thuoc_dao;
 	private NhaCungCapDao nhaCungCap_dao;
 	private JButton btn_them;
 	private JButton btn_xoaTrang;
 
+	private List<NhomThuoc> dsNhomThuoc;
+	private List<NhaCungCap> dsNhaCungCap;
+
 	public CreateProductFrm() {
 		// TODO Auto-generated constructor stub
 		this.setTitle("Tạo sản phẩm");
-		this.setSize(1000, 450);
+		this.setSize(1000, 500);
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setResizable(false);
@@ -71,7 +78,9 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		nhomThuoc_dao = new NhomThuocDao();
 		thuoc_dao = new ThuocDao();
 		nhaCungCap_dao = new NhaCungCapDao();
-
+		
+		dsNhomThuoc = nhomThuoc_dao.getAllData();
+		dsNhaCungCap = nhaCungCap_dao.getAllNhaCungCap();
 		/**
 		 * infomation panel
 		 * 
@@ -113,6 +122,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		JLabel jl_giaBanLe = new JLabel("Giá bán lẻ: ");
 		JLabel jl_giaBanChan = new JLabel("Giá bán chẵn: ");
 		JLabel jl_maNhom = new JLabel("Mã nhóm thuốc: ");
+		JLabel jl_maGiamGia = new JLabel("Giảm giá: ");
 
 		txt_maThuoc = new JTextField();
 		txt_maThuoc.setEditable(false);
@@ -140,6 +150,8 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		txt_maNhom.setEditable(true);
 
 		txt_ghiChu.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		
 
 		jl_maThuoc.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		jl_maNhom.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
@@ -155,8 +167,9 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		jl_giaNhapChan.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		jl_giaBanLe.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 		jl_giaBanChan.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
+		jl_maGiamGia.setPreferredSize(jl_dieuKienBQ.getPreferredSize());
 
-		Box b, b1, b2, b3, b4, b5, b6, b7;
+		Box b, b1, b2, b3, b4, b5, b6, b7, b8;
 		int heightStrut = 10, widthStrut = 10;
 		b = Box.createVerticalBox();
 		b1 = Box.createHorizontalBox();
@@ -166,6 +179,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		b5 = Box.createHorizontalBox();
 		b6 = Box.createHorizontalBox();
 		b7 = Box.createHorizontalBox();
+		b8 = Box.createHorizontalBox();
 
 		b1.add(jl_maNhom);
 		b1.add(txt_maNhom);
@@ -207,8 +221,9 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		b6.add(jl_giaBanChan);
 		b6.add(txt_giaBanChan);
 
-		b7.add(jl_ghiChu);
-		b7.add(txt_ghiChu);
+		
+		b8.add(jl_ghiChu);
+		b8.add(txt_ghiChu);
 
 		b.add(b1);
 		b.add(Box.createVerticalStrut(heightStrut));
@@ -224,6 +239,8 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		b.add(Box.createVerticalStrut(heightStrut));
 		b.add(b7);
 		b.add(Box.createVerticalStrut(heightStrut));
+		b.add(b8);
+		b.add(Box.createVerticalStrut(heightStrut));
 
 //		jp_txtProd.add(jp_hinhAnh, BorderLayout.WEST);
 		jp_txtProd.add(jp_title, BorderLayout.NORTH);
@@ -233,18 +250,13 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		/**
 		 * doc du lieu nhom thuoc
 		 */
-		ArrayList<NhomThuoc> listNhomThuoc = nhomThuoc_dao.getAllData();
-		for (NhomThuoc nhomThuoc : listNhomThuoc) {
+		for (NhomThuoc nhomThuoc : dsNhomThuoc) {
 			txt_maNhom.addItem(nhomThuoc.getTenNhomThuoc());
 		}
-		/**
-		 * doc du lieu nhom nha cung cap
-		 */
-		ArrayList<NhaCungCap> listNhaCungCap = nhaCungCap_dao.getAllNhaCungCap();
-		for (NhaCungCap nhaCungCap : listNhaCungCap) {
+
+		for (NhaCungCap nhaCungCap : dsNhaCungCap) {
 			txt_maNCC.addItem(nhaCungCap.getTenNhaCungCap());
 		}
-
 		/**
 		 * button panel
 		 */
@@ -286,16 +298,17 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		Object src = e.getSource();
 		if (src.equals(btn_them)) {
 			addRow();
-		} else if (src.equals(btn_xoaTrang)) {
+			dispose();
+		} 
+		
+		if (src.equals(btn_xoaTrang)) {
 			clearData();
 		}
 	}
 
 	private void clearData() {
-		// TODO Auto-generated method stub
 		txt_maThuoc.setText("");
 		txt_tenThuoc.setText("");
-//		txt_maNCC.setSelectedIndex(0);
 		txt_donViTinh.setText("");
 		txt_thanhPhan.setText("");
 		txt_donViTinhLe.setText("");
@@ -307,20 +320,14 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		txt_giaNhapChan.setText("");
 		txt_giaBanLe.setText("");
 		txt_giaBanChan.setText("");
-//		txt_maNhom.setSelectedIndex(0);
 	}
 
 	private void addRow() {
-		// TODO Auto-generated method stub
-
 		String tenThuoc = txt_tenThuoc.getText();
-
-		int maNCC = txt_maNCC.getSelectedIndex();
-		NhaCungCap nhaCC = new NhaCungCap(maNCC);
 
 		String donViTinh = txt_donViTinh.getText();
 		String thanhPhanChinh = txt_thanhPhan.getText();
-		String donViTinhLe = txt_donViTinh.getText();
+		String donViTinhLe = txt_donViTinhLe.getText();
 		LocalDate hanSuDung = LocalDate.parse(txt_hanSuDung.getText());
 		String dkBaoQuan = txt_dieuKienBQ.getText();
 		String donViTinhChan = txt_donViTinhChan.getText();
@@ -329,18 +336,16 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		double giaNhapChan = Double.parseDouble(txt_giaNhapChan.getText());
 		double giaBanLe = Double.parseDouble(txt_giaBanLe.getText());
 		double giaBanChan = Double.parseDouble(txt_giaNhapChan.getText());
-
-		int maNhomThuoc = txt_maNhom.getSelectedIndex();
-		NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc);
-
 		
-		Thuoc thuoc = new Thuoc(0, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
-				dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc, null);
+		NhomThuoc nhomThuoc = dsNhomThuoc.get(txt_maNhom.getSelectedIndex());
+		NhaCungCap nhaCC = dsNhaCungCap.get(txt_maNCC.getSelectedIndex());
+		
+		Thuoc t = new Thuoc(tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan,
+				donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 		try {
-			thuoc_dao.themThuoc(thuoc);
+			thuoc_dao.themThuoc(t);
 			showMessage("Thêm thành công");
 		} catch (Exception e) {
-			// TODO: handle exception
 			showMessage("Thêm không thành công");
 		}
 	}

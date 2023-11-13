@@ -63,4 +63,35 @@ public class ChiTietHoaDonDao {
 
 		return n>0;
 	}
+	
+	private ArrayList<ChiTietHoaDon> getAllChiTietHoaDonByMaDonHang(int maDonHang) {
+		ArrayList<ChiTietHoaDon> dsCTHD = new ArrayList<ChiTietHoaDon>();
+		try {
+			db.ConnectDB.getInstance();
+			Connection con = db.ConnectDB.getConnection();
+			String sql = "SELECT * FROM ChiTietHoaDon WHERE [MaHoaDon] = ?";
+			
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, maDonHang);
+			
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				int ma = rs.getInt(0);
+				int soLuong = rs.getInt(1);
+				String donViTinh = rs.getString(2);
+				double donGgia = rs.getDouble(3);
+				Thuoc sp = new Thuoc(rs.getInt(4));
+				double thue = rs.getDouble(5);
+				double thanhTien = rs.getDouble(6);
+				double giamGia = rs.getDouble(7);
+				HoaDon hd = new HoaDon(rs.getInt(8));
+				int maGiamGia = rs.getInt(9);
+				ChiTietHoaDon ctHD = new ChiTietHoaDon(ma, soLuong, donViTinh, donGgia, sp, thue, thanhTien, giamGia, hd, maGiamGia);
+				dsCTHD.add(ctHD);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dsCTHD;
+	}
 }

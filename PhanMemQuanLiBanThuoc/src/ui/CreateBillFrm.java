@@ -201,15 +201,16 @@ public class CreateBillFrm extends JFrame {
 						if(!dsMaThuoc.contains(dsThuocTemp.get(i).getMaThuoc()))
 						{
 							dsSoLuong.add(1);
-							double thanhTien = (dsThuocTemp.get(i).getGiaBanLe())*(dsSoLuong.get(stt))*(1-(dsThuocTemp.get(i).getMaGiamGia().getPhanTramGiamGia()/100));
+						//	double thanhTien = (dsThuocTemp.get(i).getGiaBanLe())*(dsSoLuong.get(stt))*(1-(dsThuocTemp.get(i).getMaGiamGia().getPhanTramGiamGia()/100));
 							dsMaThuoc.add(dsThuocTemp.get(i).getMaThuoc());
 							orderTableModel.addRow(new Object[] {++stt,
 								list.getSelectedValue().toString(),
 								dsThuocTemp.get(i).getDonViTinh(),
 								dsSoLuong.get(i),
 								dsThuocTemp.get(i).getGiaBanLe(),
-								dsThuocTemp.get(i).getMaGiamGia().getPhanTramGiamGia(),
-								thanhTien});
+								//dsThuocTemp.get(i).getMaGiamGia().getPhanTramGiamGia(),
+								0.1,
+								100000});
 						}// Khi thêm trùng thuốc thì số lượng tăng thêm 1
 						else {
 							int index = dsMaThuoc.indexOf(dsThuocTemp.get(i).getMaThuoc());

@@ -14,6 +14,7 @@ import entity.HoaDon;
 import entity.KhachHang;
 import entity.NhanVien;
 import entity.Quay;
+import model.PercentagePaymentMethod;
 
 public class HoaDonDao {
 	public ArrayList<HoaDon> getAllTBHoaDon() {
@@ -68,5 +69,29 @@ public class HoaDonDao {
 		n = statement.executeUpdate();
 
 		return n > 0;
+	}
+	
+	public ArrayList<PercentagePaymentMethod> getPercentageOfMethodPayment() {
+		ArrayList<PercentagePaymentMethod> dsPers = new ArrayList<PercentagePaymentMethod>();
+		try {
+			db.ConnectDB.getInstance();
+			Connection con = db.ConnectDB.getConnection();
+			String sql =
+					"SELECT [PhuongThucThanhToan], COUNT([PhuongThucThanhToan]) AS SoLuongDonHang\r\n" + 
+					"FROM [dbo].[HoaDon]\r\n" + 
+					"GROUP BY [PhuongThucThanhToan]";
+			
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				String phuongThucThanhToan = rs.getString("PhuongThucThanhToan");
+				int soLuongDonHang = rs.getInt("SoLuongDonHang");
+				
+				dsPers.add(new PercentagePaymentMethod(phuongThucThanhToan, soLuongDonHang));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dsPers;
 	}
 }

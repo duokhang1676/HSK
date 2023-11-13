@@ -46,11 +46,8 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
-				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
-
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
-						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc,
-						maGiamGia);
+				
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 				dsThuoc.add(thuoc);
 
 			}
@@ -68,7 +65,7 @@ public class ThuocDao {
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
-			stmt = con.prepareStatement("insert into" + " Thuoc values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			stmt = con.prepareStatement("insert into" + " Thuoc values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 //			stmt.setInt(1,t.getMaThuoc());
 			stmt.setString(1, t.getTenThuoc());
 			stmt.setInt(2, t.getNhaCungCap().getMaNhaCungCap());
@@ -84,7 +81,6 @@ public class ThuocDao {
 			stmt.setDouble(12, t.getGiaBanLe());
 			stmt.setDouble(13, t.getGiaBanChan());
 			stmt.setInt(14, t.getNhomThuoc().getMaNhomThuoc());
-			stmt.setInt(15, 1);
 			n = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -131,26 +127,25 @@ public class ThuocDao {
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		try {
-			String sql = "Select \r\n" 
-					+ "MaThuoc, \r\n" 
-					+ "TenThuoc, \r\n" 
+			String sql = "Select \r\n"
+					+ "MaThuoc, \r\n"
+					+ "TenThuoc, \r\n"
 					+ "ThanhPhanChinh, \r\n"
 					+ "HanSuDung, \r\n"
-					+ "DieuKienBaoQuan, \r\n" 
-					+ "DonViTinh, \r\n" 
-					+ "DonViTinhLe, \r\n" 
+					+ "DieuKienBaoQuan, \r\n"
+					+ "DonViTinh, \r\n"
+					+ "DonViTinhLe, \r\n"
 					+ "DonViTinhChan, \r\n"
-					+ "GiaNhapLe, \r\n" 
-					+ "GiaNhapChan, \r\n" 
-					+ "GiaBanLe, \r\n" 
+					+ "GiaNhapLe, \r\n"
 					+ "GiaNhapChan, \r\n"
-					+ "GiaBanChan, \r\n" 
-					+ "GhiChu,\r\n" 
+					+ "GiaBanLe, \r\n"
+					+ "GiaNhapChan, \r\n"
+					+ "GiaBanChan, \r\n"
+					+ "GhiChu,\r\n"
 					+ "[Thuoc].MaNhomThuoc,\r\n"
 					+ "TenNhomThuoc,\r\n"
-					+ "[Thuoc].MaNhaCungCap,\r\n" 
-					+ "[NhaCungCap].[TenNhaCungCap], \r\n"
-					+ "MaGiamGia\r\n"
+					+ "[Thuoc].MaNhaCungCap,\r\n"
+					+ "[NhaCungCap].[TenNhaCungCap]\r\n"
 					+ "FROM Thuoc \r\n"
 					+ "LEFT JOIN [NhomThuoc] ON [Thuoc].MaNhomThuoc = [NhomThuoc].[MaNhomThuoc] \r\n"
 					+ "LEFT JOIN [NhaCungCap] ON [Thuoc].MaNhaCungCap = [NhaCungCap].MaNhaCungCap\r\n"
@@ -180,16 +175,14 @@ public class ThuocDao {
 				int maNhaCungCap = rs.getInt("MaNhaCungCap");
 				String tenNhaCungCap = rs.getString("TenNhaCungCap");
 				NhaCungCap nhaCC = new NhaCungCap(maNhaCungCap, tenNhaCungCap);
-				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
 
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
-						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc,
-						maGiamGia);
+			
+				
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 				return thuoc;
 
 			}
 		} catch (Exception e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 
@@ -209,7 +202,6 @@ public class ThuocDao {
 			while (rs.next()) {
 				int maThuoc = rs.getInt("MaThuoc");
 				String tenThuoc = rs.getString("TenThuoc");
-//				NhaCungCap nhaCC = new Nha
 				NhaCungCap nhaCC = new NhaCungCap(rs.getInt("MaNhaCungCap"));
 				String donViTinh = rs.getString("DonViTinh");
 				String thanhPhanChinh = rs.getString("ThanhPhanChinh");
@@ -223,13 +215,9 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
-				MaGiamGia maGiamGia = new MaGiamGia(rs.getInt("MaGiamGia"));
-
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
-						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc,
-						maGiamGia);
+				
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 				dsThuoc.add(thuoc);
-
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
