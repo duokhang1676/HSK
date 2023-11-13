@@ -480,16 +480,6 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		int row = prod_table.getSelectedRow();
 		String tenThuoc = prod_model.getValueAt(row, 1).toString();
 		Thuoc thuoc = thuoc_dao.timThuocTheoTen(tenThuoc);
-<<<<<<< HEAD
-
-		if (thuoc != null) {
-			int maNCC = thuoc.getNhaCungCap().getMaNhaCungCap();
-			txt_maNCC.setSelectedItem(thuoc.getNhaCungCap().getTenNhaCungCap());
-
-			txt_maThuoc.setText(String.valueOf(thuoc.getMaThuoc()));
-			txt_tenThuoc.setText(thuoc.getTenThuoc());
-			txt_thanhPhan.setText(thuoc.getThanhPhanChinh());
-=======
 		
 		
 		int maNCC = thuoc.getNhaCungCap().getMaNhaCungCap();
@@ -498,7 +488,6 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		txt_maThuoc.setText(String.valueOf(thuoc.getMaThuoc()));
 		txt_tenThuoc.setText(thuoc.getTenThuoc());
 		txt_thanhPhan.setText(thuoc.getThanhPhanChinh());
->>>>>>> TinhBranch
 
 			String hanSuDung = String.valueOf(thuoc.getHanSuDung());
 			txt_hanSuDung.setText(hanSuDung);
@@ -520,16 +509,8 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 
 			txt_ghiChu.setText(thuoc.getGhiChu());
 
-<<<<<<< HEAD
-			txt_maNhom.setSelectedItem(thuoc.getNhomThuoc().getTenNhomThuoc());
-		}
-		
-		
-
-=======
 		txt_maNhom.setSelectedItem(thuoc.getNhomThuoc().getTenNhomThuoc());
 		
->>>>>>> TinhBranch
 	}
 
 	@Override
