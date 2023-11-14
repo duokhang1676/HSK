@@ -32,6 +32,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.data.DefaultKeyedValues;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
@@ -39,6 +40,8 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.ui.RectangleInsets;
 
 import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
+import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 
 import components.ColorConsts;
 import components.Header;
@@ -48,7 +51,7 @@ import dao.QuayDao;
 import model.PercentagePaymentMethod;
 import model.TopSaleInPremises;
 
-public class DashboardPage extends BasePage {
+public class DashboardPage extends BasePage implements DateChangeListener {
 
 	private DatePicker datePickerFrom;
 	private DatePicker datePickerTo;
@@ -251,6 +254,9 @@ public class DashboardPage extends BasePage {
 		datePickerTo = new DatePicker();
 		datePickerTo.setDateToToday();
 
+		datePickerTo.addDateChangeListener(this);
+		datePickerFrom.addDateChangeListener(this);
+		
 		datePickerGroup.add(datePickerFrom);
 		datePickerGroup.add(datePickerTo);
 		datePickerGroup.setBackground(Color.decode(ColorConsts.ForegroundColor));
@@ -291,14 +297,34 @@ public class DashboardPage extends BasePage {
 	}
 
 	private void getTopSaleInPremisDateset() {
-		for (TopSaleInPremises item : quayDao.getTopSaleInPremises()) {
+		LocalDate from = datePickerFrom.getDate();
+		LocalDate to = datePickerTo.getDate();
+		
+		for (TopSaleInPremises item : quayDao.getTopSaleInPremises(from, to)) {
 			topSaleInPremisDateset.addValue(item.getDoanhThu(), "Doanh thu", item.getTenQuay());
 		}
 	} 
 	
 	private void getPaymentMethodPercentDataset() {
+		LocalDate from = datePickerFrom.getDate();
+		LocalDate to = datePickerTo.getDate();
+		
+		while (!paymentMethodDataset.getKeys().isEmpty()) {
+			paymentMethodDataset.remove((Comparable) paymentMethodDataset.getKeys().get(0));
+		}
+		
+		paymentMethodDataset.remove("Tiền mặt");
+		paymentMethodDataset.remove("Ngân hàng");
+		paymentMethodDataset.remove("Ví điện tử");
+
 		for (PercentagePaymentMethod item : hoaDonDao.getPercentageOfMethodPayment()) {
 			paymentMethodDataset.setValue(item.getPhuongThucThanhToan(), item.getSoLuongDonHang());
 		}
+	}
+
+	@Override
+	public void dateChanged(DateChangeEvent e) {
+		getTopSaleInPremisDateset();
+		getPaymentMethodPercentDataset();
 	} 
 }

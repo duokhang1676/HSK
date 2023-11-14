@@ -32,8 +32,6 @@ public class KhachHangDao {
 				String tenKhachHang = rs.getString("TenKhachHang");
 				String soDienThoai = rs.getString("SoDienThoai");
 				LocalDate ngayTao = rs.getDate("NgayTao").toLocalDate();
-				
-				
 				dsKhachHang.add(new KhachHang(maKhachHang, tenKhachHang, soDienThoai, ngayTao));
 			}
 		} catch (Exception e) {
