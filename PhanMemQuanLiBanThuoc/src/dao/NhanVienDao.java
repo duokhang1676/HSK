@@ -58,7 +58,6 @@ public class NhanVienDao {
 			stmt.setDate(2, Date.valueOf(nv.getNgayVaoLam()));
 			stmt.setString(4, nv.getCaLamViec());
 			stmt.setString(5, nv.getSoDienThoai());
-			;
 			n = stmt.executeUpdate();
 
 			stmt.close();

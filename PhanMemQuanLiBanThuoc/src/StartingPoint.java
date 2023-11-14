@@ -10,7 +10,6 @@ public class StartingPoint {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-//				RootFrame frm = new RootFrame();
 				LoginPage login = new LoginPage();
 				login.setVisible(true);
 			}
@@ -19,7 +18,6 @@ public class StartingPoint {
 		try {
 			ConnectDB.getInstance().connect();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println("khong ket noi");
 		}
