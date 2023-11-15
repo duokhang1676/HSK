@@ -316,7 +316,6 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		paymentMethodDataset.remove("Tiền mặt");
 		paymentMethodDataset.remove("Ngân hàng");
 		paymentMethodDataset.remove("Ví điện tử");
-		paymentMethodDataset.notifyAll();
 		
 		for (PercentagePaymentMethod item : hoaDonDao.getPercentageOfMethodPayment()) {
 		

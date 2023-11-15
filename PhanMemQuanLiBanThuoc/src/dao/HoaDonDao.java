@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -47,28 +48,42 @@ public class HoaDonDao {
 		return dsHD;
 	}
 
-	public boolean themHoaDon(HoaDon hd) throws Exception {
-		int n = 0;
+	public HoaDon themHoaDon(HoaDon hd)  {
+		int affectedRows  = 0;
 		PreparedStatement statement = null;
 
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
-		String sql = "Insert into HoaDon values(?,?,?,?,?,?,?,?,?,?,?)";
-		statement = con.prepareStatement(sql);
-		statement.setInt(1, hd.getMaHD());
-		statement.setDate(2, Date.valueOf(hd.getNgayLapHD()));
-		statement.setString(3, hd.getTrangThai());
-		statement.setString(4, hd.getPhuongThucThanhToan());
-		statement.setDouble(5, hd.getTienNhan());
-		statement.setDouble(6, hd.getTienDu());
-		statement.setInt(7, hd.getKhachHang().getMaKhachHang());
-		statement.setInt(8, hd.getNhanVien().getMaNhanVien());
-		statement.setInt(9, hd.getQuay().getMaQuay());
-		statement.setDouble(10, hd.getTongTienGiam());
-		statement.setDouble(11, hd.getTongTien());
-		n = statement.executeUpdate();
+		try {
+			String sql = "Insert into HoaDon values(?,?,?,?,?,?,?,?,?,?)";
+			statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			statement.setDate(1, Date.valueOf(hd.getNgayLapHD()));
+			statement.setString(2, hd.getTrangThai());
+			statement.setString(3, hd.getPhuongThucThanhToan());
+			statement.setDouble(4, hd.getTienNhan());
+			statement.setDouble(5, hd.getTienDu());
+			statement.setInt(6, hd.getKhachHang().getMaKhachHang());
+			statement.setInt(7, hd.getNhanVien().getMaNhanVien());
+			statement.setInt(8, hd.getQuay().getMaQuay());
+			statement.setDouble(9, hd.getTongTienGiam());
+			statement.setDouble(10, hd.getTongTien());
+			affectedRows = statement.executeUpdate();
 
-		return n > 0;
+			if (affectedRows > 0) {
+				ResultSet generatedKeys = statement.getGeneratedKeys();
+				if (generatedKeys.next()) {
+	            	hd.setMaHD(generatedKeys.getInt(1));
+	            	return hd;
+	            }
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public ArrayList<PercentagePaymentMethod> getPercentageOfMethodPayment() {
@@ -97,5 +112,22 @@ public class HoaDonDao {
 	
 	public int getTongSoDonHang() {
 		return 0;
+	}
+	public int getMaHoaDonLast() {
+		int maHoaDonLast = -1;
+		try {
+			db.ConnectDB.getInstance();
+			Connection con = db.ConnectDB.getConnection();
+			String sql = "SELECT Top 1 MaHoaDon\r\n"
+					+ "FROM HoaDon\r\n"
+					+ "ORDER BY MaHoaDon DESC";
+			Statement statement = con.createStatement();
+			ResultSet rs = statement.executeQuery(sql);
+			rs.next();
+			maHoaDonLast = rs.getInt("MaHoaDon");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return maHoaDonLast;
 	}
 }
