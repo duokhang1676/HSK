@@ -46,8 +46,9 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
-				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
+						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 				dsThuoc.add(thuoc);
 
 			}
@@ -59,13 +60,14 @@ public class ThuocDao {
 		return dsThuoc;
 	}
 
-	public boolean themThuoc(Thuoc t) {
+	public Thuoc themThuoc(Thuoc t) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
-		int n = 0;
+		int affectedRows = 0;
 		try {
-			stmt = con.prepareStatement("insert into" + " Thuoc values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+			stmt = con.prepareStatement("insert into" + " Thuoc values( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
 //			stmt.setInt(1,t.getMaThuoc());
 			stmt.setString(1, t.getTenThuoc());
 			stmt.setInt(2, t.getNhaCungCap().getMaNhaCungCap());
@@ -81,18 +83,19 @@ public class ThuocDao {
 			stmt.setDouble(12, t.getGiaBanLe());
 			stmt.setDouble(13, t.getGiaBanChan());
 			stmt.setInt(14, t.getNhomThuoc().getMaNhomThuoc());
-			n = stmt.executeUpdate();
+			affectedRows = stmt.executeUpdate();
+
+			if (affectedRows > 0) {
+				ResultSet generatedKeys = stmt.getGeneratedKeys();
+				if (generatedKeys.next()) {
+					t.setMaThuoc(generatedKeys.getInt(1));
+					return t;
+				}
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
-		return n > 0;
+		return null;
 	}
 
 	public boolean xoaTheoMa(int ma) {
@@ -127,26 +130,11 @@ public class ThuocDao {
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		try {
-			String sql = "Select \r\n"
-					+ "MaThuoc, \r\n"
-					+ "TenThuoc, \r\n"
-					+ "ThanhPhanChinh, \r\n"
-					+ "HanSuDung, \r\n"
-					+ "DieuKienBaoQuan, \r\n"
-					+ "DonViTinh, \r\n"
-					+ "DonViTinhLe, \r\n"
-					+ "DonViTinhChan, \r\n"
-					+ "GiaNhapLe, \r\n"
-					+ "GiaNhapChan, \r\n"
-					+ "GiaBanLe, \r\n"
-					+ "GiaNhapChan, \r\n"
-					+ "GiaBanChan, \r\n"
-					+ "GhiChu,\r\n"
-					+ "[Thuoc].MaNhomThuoc,\r\n"
-					+ "TenNhomThuoc,\r\n"
-					+ "[Thuoc].MaNhaCungCap,\r\n"
-					+ "[NhaCungCap].[TenNhaCungCap]\r\n"
-					+ "FROM Thuoc \r\n"
+			String sql = "Select \r\n" + "MaThuoc, \r\n" + "TenThuoc, \r\n" + "ThanhPhanChinh, \r\n" + "HanSuDung, \r\n"
+					+ "DieuKienBaoQuan, \r\n" + "DonViTinh, \r\n" + "DonViTinhLe, \r\n" + "DonViTinhChan, \r\n"
+					+ "GiaNhapLe, \r\n" + "GiaNhapChan, \r\n" + "GiaBanLe, \r\n" + "GiaNhapChan, \r\n"
+					+ "GiaBanChan, \r\n" + "GhiChu,\r\n" + "[Thuoc].MaNhomThuoc,\r\n" + "TenNhomThuoc,\r\n"
+					+ "[Thuoc].MaNhaCungCap,\r\n" + "[NhaCungCap].[TenNhaCungCap]\r\n" + "FROM Thuoc \r\n"
 					+ "LEFT JOIN [NhomThuoc] ON [Thuoc].MaNhomThuoc = [NhomThuoc].[MaNhomThuoc] \r\n"
 					+ "LEFT JOIN [NhaCungCap] ON [Thuoc].MaNhaCungCap = [NhaCungCap].MaNhaCungCap\r\n"
 					+ "where TenThuoc = ?";
@@ -176,9 +164,8 @@ public class ThuocDao {
 				String tenNhaCungCap = rs.getString("TenNhaCungCap");
 				NhaCungCap nhaCC = new NhaCungCap(maNhaCungCap, tenNhaCungCap);
 
-			
-				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
+						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 				return thuoc;
 
 			}
@@ -215,8 +202,9 @@ public class ThuocDao {
 				double giaBanLe = rs.getDouble("GiaBanLe");
 				double giaBanChan = rs.getDouble("GiaBanChan");
 				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
-				
-				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
+						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 				dsThuoc.add(thuoc);
 			}
 		} catch (Exception e) {
@@ -233,14 +221,14 @@ public class ThuocDao {
 
 		return dsThuoc;
 	}
+
 	public boolean suaThuoc(Thuoc t, int maThuoc) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
-			stmt = con.prepareStatement("UPDATE Thuoc" + " SET "+
-					"TenThuoc = ?, MaNhaCungCap = ?, DonViTinh = ?,"
+			stmt = con.prepareStatement("UPDATE Thuoc" + " SET " + "TenThuoc = ?, MaNhaCungCap = ?, DonViTinh = ?,"
 					+ "ThanhPhanChinh = ?, DonViTinhLe = ?, HanSuDung = ?, DieuKienBaoQuan = ?, DonViTinhChan = ?,"
 					+ "GhiChu = ?, GiaNhapLe = ?, GiaNhapChan = ?, GiaBanLe = ?, GiaBanChan = ?, MaNhomThuoc = ?"
 					+ " where MaThuoc = ?");
@@ -259,7 +247,7 @@ public class ThuocDao {
 			stmt.setDouble(12, t.getGiaBanLe());
 			stmt.setDouble(13, t.getGiaBanChan());
 			stmt.setInt(14, t.getNhomThuoc().getMaNhomThuoc());
-			stmt.setInt(15,maThuoc);
+			stmt.setInt(15, maThuoc);
 			n = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -23,10 +23,12 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import components.ColorConsts;
+import dao.KhoDao;
 import dao.MaGiamGiaDao;
 import dao.NhaCungCapDao;
 import dao.NhomThuocDao;
 import dao.ThuocDao;
+import entity.Kho;
 import entity.MaGiamGia;
 import entity.NhaCungCap;
 import entity.NhomThuoc;
@@ -58,6 +60,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 
 	private List<NhomThuoc> dsNhomThuoc;
 	private List<NhaCungCap> dsNhaCungCap;
+	private KhoDao kho_dao;
 
 	public CreateProductFrm() {
 		// TODO Auto-generated constructor stub
@@ -78,6 +81,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		nhomThuoc_dao = new NhomThuocDao();
 		thuoc_dao = new ThuocDao();
 		nhaCungCap_dao = new NhaCungCapDao();
+		kho_dao = new KhoDao();
 		
 		dsNhomThuoc = nhomThuoc_dao.getAllData();
 		dsNhaCungCap = nhaCungCap_dao.getAllNhaCungCap();
@@ -89,13 +93,6 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		Font titleFont = new Font("Arial", Font.BOLD, 30);
 		JPanel jp_txtProd = new JPanel();
 		jp_txtProd.setLayout(new BorderLayout());
-//		JPanel jp_hinhAnh = new JPanel();
-//		jp_hinhAnh.setBackground(Color.decode(ColorConsts.ForegroundColor));
-//		jp_hinhAnh.setBorder(BorderFactory.createTitledBorder("Hình ảnh"));
-//		JLabel jl_hinhAnh = new JLabel();
-//		jl_hinhAnh.setIcon(new ImageIcon("img\\img_logo.png"));
-//		
-//		jp_hinhAnh.add(jl_hinhAnh);
 
 		JPanel jp_title = new JPanel();
 		jp_title.setLayout(new BorderLayout());
@@ -340,10 +337,15 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		NhomThuoc nhomThuoc = dsNhomThuoc.get(txt_maNhom.getSelectedIndex());
 		NhaCungCap nhaCC = dsNhaCungCap.get(txt_maNCC.getSelectedIndex());
 		
-		Thuoc t = new Thuoc(tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan,
+		Thuoc thuocMoi = new Thuoc(tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan,
 				donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+		
 		try {
-			thuoc_dao.themThuoc(t);
+			thuocMoi = thuoc_dao.themThuoc(thuocMoi);
+			System.out.println(thuocMoi);
+			Kho kho = new Kho(0, thuocMoi);
+			System.out.println(kho);
+			kho_dao.themThuocKho(kho);
 			showMessage("Thêm thành công");
 		} catch (Exception e) {
 			showMessage("Thêm không thành công");

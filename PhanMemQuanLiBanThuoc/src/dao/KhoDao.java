@@ -114,4 +114,27 @@ public class KhoDao {
 		}
 		return n > 0;
 	}
+	
+	public boolean themThuocKho(Kho k) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		int n = 0;
+		try {
+			stmt = con.prepareStatement("insert into" + " Kho(SoLuong, MaThuoc) values(?, ?)");
+			stmt.setInt(1, k.getSoLuong());
+			stmt.setInt(2, k.getThuoc().getMaThuoc());
+			n = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return n > 0;
+	}
 }
