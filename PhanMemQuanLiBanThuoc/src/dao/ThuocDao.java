@@ -233,4 +233,45 @@ public class ThuocDao {
 
 		return dsThuoc;
 	}
+	public boolean suaThuoc(Thuoc t, int maThuoc) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		int n = 0;
+		try {
+			stmt = con.prepareStatement("UPDATE Thuoc" + " SET "+
+					"TenThuoc = ?, MaNhaCungCap = ?, DonViTinh = ?,"
+					+ "ThanhPhanChinh = ?, DonViTinhLe = ?, HanSuDung = ?, DieuKienBaoQuan = ?, DonViTinhChan = ?,"
+					+ "GhiChu = ?, GiaNhapLe = ?, GiaNhapChan = ?, GiaBanLe = ?, GiaBanChan = ?, MaNhomThuoc = ?"
+					+ " where MaThuoc = ?");
+
+			stmt.setString(1, t.getTenThuoc());
+			stmt.setInt(2, t.getNhaCungCap().getMaNhaCungCap());
+			stmt.setString(3, t.getDonViTinh());
+			stmt.setString(4, t.getThanhPhanChinh());
+			stmt.setString(5, t.getDonViTinhLe());
+			stmt.setDate(6, Date.valueOf(t.getHanSuDung()));
+			stmt.setString(7, t.getDieuKienBaoQuan());
+			stmt.setString(8, t.getDonViTinhChan());
+			stmt.setString(9, t.getGhiChu());
+			stmt.setDouble(10, t.getGiaNhapLe());
+			stmt.setDouble(11, t.getGiaNhapChan());
+			stmt.setDouble(12, t.getGiaBanLe());
+			stmt.setDouble(13, t.getGiaBanChan());
+			stmt.setInt(14, t.getNhomThuoc().getMaNhomThuoc());
+			stmt.setInt(15,maThuoc);
+			n = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return n > 0;
+	}
+
 }
