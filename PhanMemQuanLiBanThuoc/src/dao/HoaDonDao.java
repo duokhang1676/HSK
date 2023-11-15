@@ -9,7 +9,6 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-
 import db.ConnectDB;
 import entity.HoaDon;
 import entity.KhachHang;
@@ -48,8 +47,8 @@ public class HoaDonDao {
 		return dsHD;
 	}
 
-	public HoaDon themHoaDon(HoaDon hd)  {
-		int affectedRows  = 0;
+	public HoaDon themHoaDon(HoaDon hd) {
+		int affectedRows = 0;
 		PreparedStatement statement = null;
 
 		ConnectDB.getInstance();
@@ -72,36 +71,32 @@ public class HoaDonDao {
 			if (affectedRows > 0) {
 				ResultSet generatedKeys = statement.getGeneratedKeys();
 				if (generatedKeys.next()) {
-	            	hd.setMaHD(generatedKeys.getInt(1));
-	            	return hd;
-	            }
+					hd.setMaHD(generatedKeys.getInt(1));
+					return hd;
+				}
 			}
-		}
-		catch (SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public ArrayList<PercentagePaymentMethod> getPercentageOfMethodPayment() {
 		ArrayList<PercentagePaymentMethod> dsPers = new ArrayList<PercentagePaymentMethod>();
 		try {
 			db.ConnectDB.getInstance();
 			Connection con = db.ConnectDB.getConnection();
-			String sql =
-					"SELECT [PhuongThucThanhToan], COUNT([PhuongThucThanhToan]) AS SoLuongDonHang\r\n" + 
-					"FROM [dbo].[HoaDon]\r\n" + 
-					"GROUP BY [PhuongThucThanhToan]";
-			
+			String sql = "SELECT [PhuongThucThanhToan], COUNT([PhuongThucThanhToan]) AS SoLuongDonHang\r\n"
+					+ "FROM [dbo].[HoaDon]\r\n" + "GROUP BY [PhuongThucThanhToan]";
+
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
 			while (rs.next()) {
 				String phuongThucThanhToan = rs.getString("PhuongThucThanhToan");
 				int soLuongDonHang = rs.getInt("SoLuongDonHang");
-				
+
 				dsPers.add(new PercentagePaymentMethod(phuongThucThanhToan, soLuongDonHang));
 			}
 		} catch (Exception e) {
@@ -109,25 +104,47 @@ public class HoaDonDao {
 		}
 		return dsPers;
 	}
-	
-	public int getTongSoDonHang() {
-		return 0;
-	}
-	public int getMaHoaDonLast() {
-		int maHoaDonLast = -1;
+
+	public int getTongSoDonHang(LocalDate from, LocalDate to) {
 		try {
 			db.ConnectDB.getInstance();
 			Connection con = db.ConnectDB.getConnection();
-			String sql = "SELECT Top 1 MaHoaDon\r\n"
-					+ "FROM HoaDon\r\n"
-					+ "ORDER BY MaHoaDon DESC";
-			Statement statement = con.createStatement();
+			String sql = "SELECT COUNT(*) AS TongSoHoaDon FROM HoaDon " + "WHERE NgayLapHoaDon BETWEEN ? AND ?";
+
+			PreparedStatement statement = con.prepareStatement(sql);
+			
+			statement.setDate(1, Date.valueOf(from));
+			statement.setDate(2, Date.valueOf(to));
+			
 			ResultSet rs = statement.executeQuery(sql);
-			rs.next();
-			maHoaDonLast = rs.getInt("MaHoaDon");
+			while (rs.next()) {
+				return rs.getInt("TongSoHoaDon");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return maHoaDonLast;
-	}
+		return 0;
+	} 
+
+	
+	public long getTongDoanhThu(LocalDate from, LocalDate to) {
+		try {
+			db.ConnectDB.getInstance();
+			Connection con = db.ConnectDB.getConnection();
+			String sql = "SELECT SUM(TongTien) AS TongDoanhThu FROM HoaDon " + "WHERE NgayLapHoaDon BETWEEN ? AND ?";
+
+			PreparedStatement statement = con.prepareStatement(sql);
+			
+			statement.setDate(1, Date.valueOf(from));
+			statement.setDate(2, Date.valueOf(to));
+			
+			ResultSet rs = statement.executeQuery(sql);
+			while (rs.next()) {
+				return rs.getLong("TongDoanhThu");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
+	} 
 }

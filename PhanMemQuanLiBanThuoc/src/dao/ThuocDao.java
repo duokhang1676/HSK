@@ -233,4 +233,8 @@ public class ThuocDao {
 
 		return dsThuoc;
 	}
+	
+	public long getTongSoThuoc() {
+		return getAllData().size();
+	}
 }
