@@ -36,8 +36,9 @@ public class NhanVienDao {
 
 				int maQuay = rs.getInt("MaQuay");
 				String tenQuay = rs.getString("TenQuay");
+				String chucVu =rs.getString("ChucVu");
 				
-				dsNhanVien.add(new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, new Quay(maQuay, tenQuay)));
+				dsNhanVien.add(new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, new Quay(maQuay, tenQuay), chucVu));
 			}
 
 		} catch (Exception e) {
@@ -53,11 +54,15 @@ public class NhanVienDao {
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
-			stmt = con.prepareStatement("insert into" + " NhanVien values(?, ?, ?, ?)");
+			stmt = con.prepareStatement("insert into" + " NhanVien values(?, ?, ?, ?, ?, ?, ?)");
 			stmt.setString(1, nv.getTenNhanVien());
 			stmt.setDate(2, Date.valueOf(nv.getNgayVaoLam()));
-			stmt.setString(4, nv.getCaLamViec());
-			stmt.setString(5, nv.getSoDienThoai());
+			stmt.setString(3, nv.getCaLamViec());
+			stmt.setString(4, nv.getSoDienThoai());
+			stmt.setString(5, nv.getMatKhau());	
+			stmt.setInt(6, nv.getQuay().getMaQuay());
+			stmt.setString(7, nv.getChucVu());
+			
 			n = stmt.executeUpdate();
 
 			stmt.close();
@@ -73,7 +78,9 @@ public class NhanVienDao {
 			Connection con = ConnectDB.getConnection();
 
 			PreparedStatement stmt = con
-					.prepareStatement("SELECT * FROM [NhanVien] WHERE [SoDienThoai] = ? AND [MatKhau] = ?");
+					.prepareStatement("  SELECT * FROM [NhanVien] \r\n"
+							+ "  INNER JOIN Quay ON Quay.MaQuay = NhanVien.MaQuay\r\n"
+							+ "  WHERE [SoDienThoai] = ? AND [MatKhau] = ?");
 			stmt.setString(1, sdt);
 			stmt.setString(2, ma);
 
@@ -84,8 +91,14 @@ public class NhanVienDao {
 				LocalDate ngayVaoLam = rs.getDate("NgayVaoLam").toLocalDate();
 				String caLamViec = rs.getString("CaLamViec");
 				String soDienThoai = rs.getString("SoDienThoai");
+				String matKhau = rs.getString("MatKhau");
+				String chucVu = rs.getString("ChucVu");
 
-				return new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, new Quay(0));
+				int maQuay = rs.getInt("MaQuay");
+				String tenQuay = rs.getString("TenQuay");
+				Quay quay = new Quay(maQuay, tenQuay);
+			
+				return new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, matKhau, quay , chucVu);
 			}
 			
 

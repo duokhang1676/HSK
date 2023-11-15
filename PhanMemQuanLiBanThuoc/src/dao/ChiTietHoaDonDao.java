@@ -41,27 +41,30 @@ public class ChiTietHoaDonDao {
 		return dsCTHD;
 	}
 
-	public boolean themChiTietHoaDon(ChiTietHoaDon ctHD) throws Exception{
+	public boolean themChiTietHoaDon(ChiTietHoaDon ctHD){
+		
 		int n = 0;
+		try {
 		PreparedStatement statement = null;
-
 			ConnectDB.getInstance();
 			Connection con = ConnectDB.getConnection();
-			String sql = "Insert into ChiTietHoaDon values(?,?,?,?,?,?,?,?,?,?)";
+			String sql = "Insert into ChiTietHoaDon values(?,?,?,?,?,?,?,?,?)";
 			statement = con.prepareStatement(sql);
-			statement.setInt(1, ctHD.getMaCTHD());
-			statement.setDouble(2, ctHD.getSoLuong());
-			statement.setString(3, ctHD.getDonViTinh());
-			statement.setDouble(4, ctHD.getDonGia());
-			statement.setInt(5, ctHD.getSanPham().getMaThuoc());
-			statement.setDouble(6, ctHD.getThue());
-			statement.setDouble(7, ctHD.getThanhTien());
-			statement.setDouble(8, ctHD.getGiamGia());
-			statement.setInt(9, ctHD.getHoaDon().getMaHD());
-			statement.setInt(10, ctHD.getMaGiamGia());
+			statement.setDouble(1, ctHD.getSoLuong());
+			statement.setString(2, ctHD.getDonViTinh());
+			statement.setDouble(3, ctHD.getDonGia());
+			statement.setInt(4, ctHD.getSanPham().getMaThuoc());
+			statement.setDouble(5, ctHD.getThue());
+			statement.setDouble(6, ctHD.getThanhTien());
+			statement.setDouble(7, ctHD.getGiamGia());
+			statement.setInt(8, ctHD.getHoaDon().getMaHD());
+			statement.setInt(9, ctHD.getMaGiamGia());
 			n = statement.executeUpdate();
-
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return n>0;
+		
 	}
 	
 	private ArrayList<ChiTietHoaDon> getAllChiTietHoaDonByMaDonHang(int maDonHang) {

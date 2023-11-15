@@ -734,9 +734,10 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		}else if (JOptionPane.showConfirmDialog(this, "Bạn có chắc là muốn xóa dòng này không??", "Warning!!!",
 				JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
 			int ma = (int) prod_model.getValueAt(row, 0);
-			thuoc_dao.xoaTheoMa(ma);
-			prod_model.removeRow(row);
-			showMessage("Xóa thành công!");
+			if (thuoc_dao.xoaTheoMa(ma)) {
+				prod_model.removeRow(row);
+				showMessage("Xóa thành công!");
+			}
 
 		}
 		

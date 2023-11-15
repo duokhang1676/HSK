@@ -49,12 +49,12 @@ import entity.NhanVien;
 
 public class EmployeeManagerPage extends BasePage implements MouseListener {
 
-	private JTextField maQuayTxt;
-	private JTextField tenQuayTxt;
-	private JTextField diaChiTxt;
-	private JTextField phuongTxt;
-	private JTextField thanhPhoTxt;
-	private JTextField tinhTxt;
+	private JTextField txtManv;
+	private JTextField txtTennv;
+	private JTextField txtNgayVaoLam;
+	private JTextField txtCaLamViec;
+	private JTextField txtSdt;
+	private JTextField txtQuay;
 
 	private JButton timBtn;
 	private JButton luuBtn;
@@ -123,7 +123,7 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		themBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		themBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new CreateUpdateEmployeeFrm().setVisible(true);
+				new CreateEmployeeFrm().setVisible(true);
 			}
 		});
 
@@ -201,75 +201,73 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		tieuDeLabel.setFont(new Font("Arials", Font.BOLD, 30));
 		tieuDeLabel.setBorder(new EmptyBorder(20, 0, 20, 0));
 
-		Box maQuayBox = Box.createHorizontalBox();
-		JLabel maQuayLb = new JLabel("Mã nhân viên  ");
+		Box maNVBox = Box.createHorizontalBox();
+		JLabel lblManv = new JLabel("Mã nhân viên  ");
 
-		maQuayLb.setFont(commonFont);
-		maQuayTxt = new JTextField("");
-		maQuayTxt.setEditable(false);
-		maQuayBox.add(maQuayLb);
-		maQuayBox.add(maQuayTxt);
+		lblManv.setFont(commonFont);
+		txtManv = new JTextField("");
+		txtManv.setEditable(false);
+		maNVBox.add(lblManv);
+		maNVBox.add(txtManv);
 
-		Box tpBox = Box.createHorizontalBox();
-		JLabel tbLb = new JLabel("Phái");
-		tbLb.setPreferredSize(maQuayLb.getPreferredSize());
-		tbLb.setFont(commonFont);
-		thanhPhoTxt = new JTextField("");
-		thanhPhoTxt.setEditable(false);
-		tpBox.add(tbLb);
-		tpBox.add(thanhPhoTxt);
-
-
-		Box tenQuayBox = Box.createHorizontalBox();
-		JLabel tenQuayLb = new JLabel("Họ");
-
-		tenQuayLb.setFont(commonFont);
-		tenQuayLb.setPreferredSize(maQuayLb.getPreferredSize());
-		tenQuayTxt = new JTextField("");
-		tenQuayTxt.setEditable(false);
-		tenQuayBox.add(tenQuayLb);
-		tenQuayBox.add(tenQuayTxt);
+		Box sdtBox = Box.createHorizontalBox();
+		JLabel lblSdt = new JLabel("Số điện thoại");
+		lblSdt.setPreferredSize(lblManv.getPreferredSize());
+		lblSdt.setFont(commonFont);
+		txtSdt = new JTextField("");
+		txtSdt.setEditable(false);
+		sdtBox.add(lblSdt);
+		sdtBox.add(txtSdt);
 
 
-		Box diaChiBox = Box.createHorizontalBox();
-		JLabel diaChiLb = new JLabel("Tên");
+		Box tenNVBox = Box.createHorizontalBox();
+		JLabel lblTennv = new JLabel("Tên nhân viên");
 
-		diaChiLb.setFont(commonFont);
-		diaChiLb.setPreferredSize(maQuayLb.getPreferredSize());
-		diaChiTxt = new JTextField("");
-		diaChiTxt.setEditable(false);
-		diaChiBox.add(diaChiLb);
-		diaChiBox.add(diaChiTxt);
-
-
-		Box phuongBox = Box.createHorizontalBox();
-		JLabel phuongLb = new JLabel("Tuổi");
-
-		phuongLb.setFont(commonFont);
-		phuongLb.setPreferredSize(maQuayLb.getPreferredSize());
-		phuongTxt = new JTextField();
-		phuongTxt.setEditable(false);
-		phuongBox.add(phuongLb);
-		phuongBox.add(phuongTxt);
+		lblTennv.setFont(commonFont);
+		lblTennv.setPreferredSize(lblManv.getPreferredSize());
+		txtTennv = new JTextField("");
+		txtTennv.setEditable(false);
+		tenNVBox.add(lblTennv);
+		tenNVBox.add(txtTennv);
 
 
+		Box ngayVaoLamBox = Box.createHorizontalBox();
+		JLabel lblNgayVaoLam = new JLabel("Ngày vào làm");
 
-		Box tinhBox = Box.createHorizontalBox();
-		JLabel tinhLb = new JLabel("Tiền lương");
-
-		tinhLb.setFont(commonFont);
-		tinhLb.setPreferredSize(maQuayLb.getPreferredSize());
-		tinhTxt = new JTextField("");
-		tinhTxt.setEditable(false);
-		tinhBox.add(tinhLb);
-		tinhBox.add(tinhTxt);
+		lblNgayVaoLam.setFont(commonFont);
+		lblNgayVaoLam.setPreferredSize(lblManv.getPreferredSize());
+		txtNgayVaoLam = new JTextField("");
+		txtNgayVaoLam.setEditable(false);
+		ngayVaoLamBox.add(lblNgayVaoLam);
+		ngayVaoLamBox.add(txtNgayVaoLam);
 
 
+		Box caLamViecBox = Box.createHorizontalBox();
+		JLabel lblCaLamViec = new JLabel("Ca làm việc");
+
+		lblCaLamViec.setFont(commonFont);
+		lblCaLamViec.setPreferredSize(lblManv.getPreferredSize());
+		txtCaLamViec = new JTextField();
+		txtCaLamViec.setEditable(false);
+		caLamViecBox.add(lblCaLamViec);
+		caLamViecBox.add(txtCaLamViec);
+
+
+
+		Box quayBox = Box.createHorizontalBox();
+		JLabel lblQuay = new JLabel("Quầy");
+
+		lblQuay.setFont(commonFont);
+		lblQuay.setPreferredSize(lblManv.getPreferredSize());
+		txtQuay = new JTextField("");
+		txtQuay.setEditable(false);
+		quayBox.add(lblQuay);
+		quayBox.add(txtQuay);
 
 		JLabel doanhThuTheoThangLb = new JLabel("Doanh thu theo tháng");
 		doanhThuTheoThangLb.setFont(new Font("Arials", Font.BOLD, 20));
 		doanhThuTheoThangLb.setBorder(new EmptyBorder(20, 0, 20, 0));
-		doanhThuTheoThangLb.setPreferredSize(new Dimension(500, 500));
+		doanhThuTheoThangLb.setPreferredSize(new Dimension(500, 100));
 
 		incomeIPeriodChart = ChartFactory.createBarChart(
 				"Doanh Thu chi nhánh trong 1 tháng", 
@@ -292,17 +290,17 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 
 
 		right.add(tieuDeLabel);
-		right.add(maQuayBox);
+		right.add(maNVBox);
 		right.add(Box.createVerticalStrut(20));
-		right.add(tenQuayBox);
+		right.add(tenNVBox);
 		right.add(Box.createVerticalStrut(20));
-		right.add(diaChiBox);
+		right.add(ngayVaoLamBox);
 		right.add(Box.createVerticalStrut(20));
-		right.add(phuongBox);
+		right.add(caLamViecBox);
 		right.add(Box.createVerticalStrut(20));
-		right.add(tpBox);
+		right.add(sdtBox);
 		right.add(Box.createVerticalStrut(20));
-		right.add(tinhBox);
+		right.add(quayBox);
 		right.add(doanhThuTheoThangLb); 
 		right.add(incomeIPeriodChartPanel);
 
@@ -365,12 +363,12 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		int row = nhanVienTable.getSelectedRow();
 
 
-		maQuayTxt.setText(nhanVienModel.getValueAt(row, 0).toString());
-		tenQuayTxt.setText(nhanVienModel.getValueAt(row, 1).toString());
-		diaChiTxt.setText(nhanVienModel.getValueAt(row, 2).toString());
-		phuongTxt.setText(nhanVienModel.getValueAt(row, 3).toString());
-		thanhPhoTxt.setText(nhanVienModel.getValueAt(row, 4).toString());
-
+		txtManv.setText(nhanVienModel.getValueAt(row, 0).toString());
+		txtTennv.setText(nhanVienModel.getValueAt(row, 1).toString());
+		txtNgayVaoLam.setText(nhanVienModel.getValueAt(row, 2).toString());
+		txtCaLamViec.setText(nhanVienModel.getValueAt(row, 3).toString());
+		txtSdt.setText(nhanVienModel.getValueAt(row, 4).toString());
+		txtQuay.setText(nhanVienModel.getValueAt(row, 5).toString());
 		incomeIPeriodChartPanel.setVisible(true);
 	}
 

@@ -88,4 +88,9 @@ public class Quay {
 		this.tinh = tinh;
 	}
 
+	
+	@Override
+	public String toString() {
+		return tenQuay;
+	}
 }

@@ -197,8 +197,11 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 	private void docDuLieuVaoTable() {
 		// TODO Auto-generated method stub
 		ArrayList<MaGiamGia> listMaGiamGias = maGiamGia_dao.getAllTbMaGiamGia();
+		while (model_discount.getRowCount() > 0) {
+			model_discount.removeRow(0);
+		}
 		for (MaGiamGia maGiamGia : listMaGiamGias) {
-			model_discount.setRowCount(0);
+			
 			model_discount.addRow(new Object[] {maGiamGia.getMaGiamGia(), maGiamGia.getNgayBatDau(), maGiamGia.getNgayKetThuc(),
 					maGiamGia.getPhanTramGiamGia(), maGiamGia.getMoTa()});
 		}
@@ -243,10 +246,10 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		if (JOptionPane.showConfirmDialog(this, "Bạn có chắc là muốn xóa dòng này không?", "Warning!!!",
 				JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
 			int ma = (int) model_discount.getValueAt(row, 0);
-			maGiamGia_dao.xoaTheoMa(ma);
-			model_discount.removeRow(row);
-			showMessage("Xóa thành công!");
-
+			if (maGiamGia_dao.xoaTheoMa(ma)) {
+				model_discount.removeRow(row);
+				showMessage("Xóa thành công!");
+			}
 		}
 	}
 
