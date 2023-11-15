@@ -143,7 +143,7 @@ public class LoginPage extends JFrame implements ActionListener {
 //				return;
 //			}
 			
-			if (true) {
+			if (dangNhap(sdt, pwd)) {
 				new RootFrame().setVisible(true);
 				setVisible(false);
 			} else {

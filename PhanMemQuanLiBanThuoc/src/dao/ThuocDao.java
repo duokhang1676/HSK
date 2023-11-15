@@ -28,7 +28,7 @@ public class ThuocDao {
 		try {
 			String sql = "Select * from Thuoc";
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);
+			ResultSet rs = stmt.executeQuery(sql);	
 			while (rs.next()) {
 				int maThuoc = rs.getInt("MaThuoc");
 				String tenThuoc = rs.getString("TenThuoc");

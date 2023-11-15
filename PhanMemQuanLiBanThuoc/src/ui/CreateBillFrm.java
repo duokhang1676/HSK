@@ -430,7 +430,7 @@ public class CreateBillFrm extends JFrame {
 		right.add(txtDH);
 		txtDH.setColumns(10);
 
-		JLabel lblQuay = new JLabel("Quầy số 1");
+		JLabel lblQuay = new JLabel("Quầy số 2");
 		lblQuay.setBounds(315, y1, 80, h2);
 		right.add(lblQuay);
 
@@ -790,7 +790,7 @@ public class CreateBillFrm extends JFrame {
 				}
 				KhachHang khachHang = new KhachHang(maKhachHang);
 				int maNhanVien = 5;
-				int maQuay = 1;
+				int maQuay = 2;
 				double tongTienGiam = Double.parseDouble(txtTongGiamGia.getText());
 				double tongTien = Double.parseDouble(txtKhachCanTra.getText());
 

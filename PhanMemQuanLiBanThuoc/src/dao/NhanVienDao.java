@@ -62,7 +62,7 @@ public class NhanVienDao {
 			stmt.setString(5, nv.getMatKhau());	
 			stmt.setInt(6, nv.getQuay().getMaQuay());
 			stmt.setString(7, nv.getChucVu());
-			;
+			
 			n = stmt.executeUpdate();
 
 			stmt.close();
@@ -78,7 +78,9 @@ public class NhanVienDao {
 			Connection con = ConnectDB.getConnection();
 
 			PreparedStatement stmt = con
-					.prepareStatement("SELECT * FROM [NhanVien] WHERE [SoDienThoai] = ? AND [MatKhau] = ?");
+					.prepareStatement("  SELECT * FROM [NhanVien] \r\n"
+							+ "  INNER JOIN Quay ON Quay.MaQuay = NhanVien.MaQuay\r\n"
+							+ "  WHERE [SoDienThoai] = ? AND [MatKhau] = ?");
 			stmt.setString(1, sdt);
 			stmt.setString(2, ma);
 
@@ -92,7 +94,11 @@ public class NhanVienDao {
 				String matKhau = rs.getString("MatKhau");
 				String chucVu = rs.getString("ChucVu");
 
-				return new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, matKhau, new Quay(0), chucVu);
+				int maQuay = rs.getInt("MaQuay");
+				String tenQuay = rs.getString("TenQuay");
+				Quay quay = new Quay(maQuay, tenQuay);
+			
+				return new NhanVien(maNhanVien, tenNhanVien, ngayVaoLam, caLamViec, soDienThoai, matKhau, quay , chucVu);
 			}
 			
 
