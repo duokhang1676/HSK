@@ -44,12 +44,12 @@ public class MaGiamGiaDao {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
-		String sql = "delete from Thuoc where MaGiamGia = ?";
+		String sql = "delete from MaGiamGia where MaGiamGia = ?";
 		int n = 0;
 		try {
 			stmt = con.prepareStatement(sql);
 			stmt.setInt(1, ma);
-			stmt.executeUpdate();
+			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -63,7 +63,7 @@ public class MaGiamGiaDao {
 			}
 		}
 
-		return n > 0;
+		return false;
 
 	}
 	public boolean themMaGiamGia(MaGiamGia mgg) {
@@ -72,12 +72,13 @@ public class MaGiamGiaDao {
 		PreparedStatement stmt = null;
 		int n = 0;
 		try {
-			stmt = con.prepareStatement("insert into" + " MaGiamGia values( ?, ?, ?, ?)");
-//			stmt.setInt(1,t.getMaThuoc());
+			stmt = con.prepareStatement("insert into" + " MaGiamGia values( ?, ?, ?, ?, ?)");
+
 			stmt.setDate(1, Date.valueOf(mgg.getNgayBatDau()));
 			stmt.setDate(2, Date.valueOf(mgg.getNgayKetThuc()));
 			stmt.setDouble(3, mgg.getPhanTramGiamGia());
 			stmt.setString(4, mgg.getMoTa());
+			stmt.setInt(5, mgg.getThuoc().getMaThuoc());
 			n = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

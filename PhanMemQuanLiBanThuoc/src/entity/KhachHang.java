@@ -27,6 +27,13 @@ public class KhachHang {
 		this.ngayTao = ngayTao;
 	}
 
+	public KhachHang(int maKhachHang, String tenKhachHang, String soDienThoai) {
+		super();
+		this.maKhachHang = maKhachHang;
+		this.tenKhachHang = tenKhachHang;
+		this.soDienThoai = soDienThoai;
+	}
+
 	public KhachHang(String tenKhachHang, String soDienThoai, LocalDate ngayTao) {
 		super();
 		this.tenKhachHang = tenKhachHang;

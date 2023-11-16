@@ -29,6 +29,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -90,6 +91,10 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 	private Object incomeInWeekChart;
 	private MaGiamGiaDao maGiamGia_dao;
 	private JButton btn_lamMoi;
+	private JButton btn_sua;
+	private JButton btn_hoanThanh;
+	private ArrayList<NhomThuoc> listNhomThuoc;
+	private ArrayList<NhaCungCap> listNhaCungCap;
 
 	public ProductPage() {
 		super();
@@ -151,6 +156,16 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 				"Đơn vị tính chẵn", "Giá nhập lẻ", "Giá nhập chẵn", "Giá bán lẻ", "Giá bán chẵn" };
 		prod_model = new DefaultTableModel(cols_name, 0);
 		prod_table = new JTable(prod_model);
+		
+		JTableHeader headerTable =  prod_table.getTableHeader();
+		headerTable.setPreferredSize(new Dimension(headerTable.getPreferredSize().width, 40));
+
+		prod_table.setShowVerticalLines(false);
+		prod_table.setRowHeight(40);
+		prod_table.setFont(new Font("Arial", Font.PLAIN, 14));
+		prod_table.setIntercellSpacing(new Dimension(0, 0));
+		prod_table.setGridColor(Color.decode("#696969"));
+		prod_table.setTableHeader(headerTable);
 		JScrollPane js_prodTable = new JScrollPane(prod_table);
 
 		docDuLieuVaoTable();
@@ -183,14 +198,25 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		btn_luu.setPreferredSize(new Dimension(width, height));
 		btn_luu.setBackground(Color.decode(ColorConsts.BackgroundColor));
 		
+		btn_sua = new JButton("Sửa");
+		btn_sua.setPreferredSize(new Dimension(width, height));
+		btn_sua.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		
 		btn_lamMoi = new JButton("Làm mới");
 		btn_lamMoi.setPreferredSize(new Dimension(width, height));
 		btn_lamMoi.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		
+		btn_hoanThanh = new JButton("Hoàn thành");
+		btn_hoanThanh.setPreferredSize(new Dimension(width, height));
+		btn_hoanThanh.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		btn_hoanThanh.setForeground(Color.decode(ColorConsts.BackgroundColor));
+		btn_hoanThanh.setVisible(false);
 		
 		jp_btnRight.add(btn_them);
 		jp_btnRight.add(btn_xoa);
 		jp_btnRight.add(btn_xoaTrang);
 		jp_btnRight.add(btn_luu);
+		jp_btnRight.add(btn_sua);
 		jp_btnRight.add(btn_lamMoi);
 		jp_btnRight.setBackground(Color.decode(ColorConsts.PrimaryColor));
 
@@ -384,21 +410,31 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		b.add(b13);
 		b.add(Box.createVerticalStrut(heightStrut));
 		
+		JPanel jp_hoanThanh = new JPanel();
+		jp_hoanThanh.setPreferredSize(new Dimension(width, height ));
+		jp_hoanThanh.setBackground(Color.decode(ColorConsts.ForegroundColor));
+		jp_hoanThanh.add(btn_hoanThanh);
+		
+		b.add(jp_hoanThanh);
+		
+		
 		
 		/**
 		 * doc du lieu nhom thuoc
 		 */
-		ArrayList<NhomThuoc> listNhomThuoc = nhomThuoc_dao.getAllData();
+		listNhomThuoc = nhomThuoc_dao.getAllData();
 		for (NhomThuoc nhomThuoc : listNhomThuoc) {
 			txt_maNhom.addItem(nhomThuoc.getTenNhomThuoc());
 		}
 		/**
 		 * doc du lieu nhom nha cung cap
 		 */
-		ArrayList<NhaCungCap> listNhaCungCap = nhaCungCap_dao.getAllNhaCungCap();
+		listNhaCungCap = nhaCungCap_dao.getAllNhaCungCap();
 		for (NhaCungCap nhaCungCap : listNhaCungCap) {
 			txt_maNCC.addItem(nhaCungCap.getTenNhaCungCap());
 		}
+		
+		
 
 
 		incomeInWeekChart = ChartFactory.createBarChart("Doanh Thu 7 Ngày Gần Nhất", "Ngày trong tuần", "Doanh thu",
@@ -429,7 +465,9 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		btn_xoaTrang.addActionListener(this);
 		btn_luu.addActionListener(this);
 		btn_timKiem.addActionListener(this);
+		btn_sua.addActionListener(this);
 		btn_lamMoi.addActionListener(this);
+		btn_hoanThanh.addActionListener(this);
 		
 		jp_prodBody.add(jp_tableProd, BorderLayout.CENTER);
 		jp_prodBody.add(jp_txtProd, BorderLayout.EAST);
@@ -554,6 +592,88 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 			searchData();
 		}else if (src.equals(btn_lamMoi)) {
 			docDuLieuVaoTable();
+		}else if (src.equals(btn_sua)) {
+			setEditTextField();
+		}else if (src.equals(btn_hoanThanh)) {
+			updateData();
+		}
+	}
+
+	private void updateData() {
+		// TODO Auto-generated method stub
+		int selectedRow = prod_table.getSelectedRow();
+		int maThuoc = (int) prod_model.getValueAt(selectedRow, 0);
+		
+		String tenThuoc = txt_tenThuoc.getText();
+
+		String donViTinh = txt_donViTinh.getText();
+		String thanhPhanChinh = txt_thanhPhan.getText();
+		String donViTinhLe = txt_donViTinhLe.getText();
+		LocalDate hanSuDung = LocalDate.parse(txt_hanSuDung.getText());
+		String dkBaoQuan = txt_dieuKienBQ.getText();
+		String donViTinhChan = txt_donViTinhChan.getText();
+		String ghiChu = txt_ghiChu.getText();
+		double giaNhapLe = Double.parseDouble(txt_giaNhapLe.getText());
+		double giaNhapChan = Double.parseDouble(txt_giaNhapChan.getText());
+		double giaBanLe = Double.parseDouble(txt_giaBanLe.getText());
+		double giaBanChan = Double.parseDouble(txt_giaNhapChan.getText());
+		
+		NhomThuoc nhomThuoc = listNhomThuoc.get(txt_maNhom.getSelectedIndex());
+		NhaCungCap nhaCC = listNhaCungCap.get(txt_maNCC.getSelectedIndex());
+		
+		Thuoc t = new Thuoc(tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung, dkBaoQuan,
+				donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+		try {
+			thuoc_dao.suaThuoc(t, maThuoc);
+			showMessage("Sửa thành công");
+			setUneditable();
+		} catch (Exception e) {
+			showMessage("Sửa không thành công");
+		}
+	}
+
+	private void setUneditable() {
+		// TODO Auto-generated method stub
+		txt_maNCC.setEditable(false);
+		txt_maNhom.setEditable(false);
+		txt_tenThuoc.setEditable(false);
+		txt_thanhPhan.setEditable(false);
+		txt_dieuKienBQ.setEditable(false);
+		txt_donViTinh.setEditable(false);
+		txt_donViTinhChan.setEditable(false);
+		txt_donViTinhLe.setEditable(false);
+		txt_ghiChu.setEditable(false);
+		txt_giaBanChan.setEditable(false);
+		txt_giaBanLe.setEditable(false);
+		txt_giaNhapChan.setEditable(false);
+		txt_giaNhapLe.setEditable(false);
+		txt_hanSuDung.setEditable(false);
+		
+		btn_hoanThanh.setVisible(false);
+	}
+
+	private void setEditTextField() {
+		// TODO Auto-generated method stub
+		int selectedRow = prod_table.getSelectedRow();
+		if (selectedRow == -1) {
+			showMessage("Phải chọn dòng để sửa!");
+		}else {
+			txt_maNCC.setEditable(true);
+			txt_maNhom.setEditable(true);
+			txt_tenThuoc.setEditable(true);
+			txt_thanhPhan.setEditable(true);
+			txt_dieuKienBQ.setEditable(true);
+			txt_donViTinh.setEditable(true);
+			txt_donViTinhChan.setEditable(true);
+			txt_donViTinhLe.setEditable(true);
+			txt_ghiChu.setEditable(true);
+			txt_giaBanChan.setEditable(true);
+			txt_giaBanLe.setEditable(true);
+			txt_giaNhapChan.setEditable(true);
+			txt_giaNhapLe.setEditable(true);
+			txt_hanSuDung.setEditable(true);
+			
+			btn_hoanThanh.setVisible(true);
 		}
 	}
 
@@ -611,15 +731,16 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		int row = prod_table.getSelectedRow();
 		if (row == -1) {
 			showMessage("Phải chọn dòng xóa!");
-		}
-		if (JOptionPane.showConfirmDialog(this, "Bạn có chắc là muốn xóa dòng này không??", "Warning!!!",
+		}else if (JOptionPane.showConfirmDialog(this, "Bạn có chắc là muốn xóa dòng này không??", "Warning!!!",
 				JOptionPane.YES_NO_CANCEL_OPTION) == JOptionPane.YES_OPTION) {
 			int ma = (int) prod_model.getValueAt(row, 0);
-			thuoc_dao.xoaTheoMa(ma);
-			prod_model.removeRow(row);
-			showMessage("Xóa thành công!");
+			if (thuoc_dao.xoaTheoMa(ma)) {
+				prod_model.removeRow(row);
+				showMessage("Xóa thành công!");
+			}
 
 		}
+		
 	}
 
 	private void showMessage(String string) {

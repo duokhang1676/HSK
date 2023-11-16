@@ -76,4 +76,24 @@ public class KhachHangDao {
 		}
 		return n > 0;
 	} 
+	
+	public boolean suaThongTinKhachHang(KhachHang khachHang) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		try {
+			stmt = con.prepareStatement("UPDATE KhachHang "
+					+ "SET TenKhachHang = ?, SoDienThoai = ?"
+					+ " WHERE MaKhachHang = ?");
+
+			stmt.setString(1, khachHang.getTenKhachHang());
+			stmt.setString(2, khachHang.getSoDienThoai());
+			stmt.setInt(3, khachHang.getMaKhachHang());
+			
+			return stmt.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

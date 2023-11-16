@@ -453,6 +453,7 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		txt_donViTinhChan.setText("");
 		txt_giaNhapLe.setText("");
 		txt_giaNhapChan.setText("");
+		txt_soLuongTrongKho.setText("");
 	}
 
 	private void showMessage(String string) {

@@ -11,6 +11,7 @@ public class StartingPoint {
 			@Override
 			public void run() {
 				LoginPage login = new LoginPage();
+				login.setLocationRelativeTo(null);
 				login.setVisible(true);
 			}
 		});
