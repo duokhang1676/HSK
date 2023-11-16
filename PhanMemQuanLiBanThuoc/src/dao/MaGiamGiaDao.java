@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 import db.ConnectDB;
 import entity.MaGiamGia;
+import entity.NhaCungCap;
+import entity.NhomThuoc;
 import entity.Thuoc;
 
 
@@ -92,5 +94,38 @@ public class MaGiamGiaDao {
 		}
 		return n > 0;
 	}
+	
+	public MaGiamGia getMaGiamGiaTheoMaThuoc(int maThuoc) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		try {
+			String sql = "SELECT * \r\n"
+					+ "FROM MaGiamGia \r\n"
+					+ "WHERE MaThuoc = ? \r\n"
+					+ "    AND NgayBatDau <= GETDATE() \r\n"
+					+ "    AND NgayKetThuc >= GETDATE();";
+			stmt = con.prepareStatement(sql);
+			stmt.setInt(1, maThuoc);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				int ma = rs.getInt("MaGiamGia");
+				LocalDate ngayBD = LocalDate.parse(rs.getString("NgayBatDau"));
+				LocalDate ngayKT = LocalDate.parse(rs.getString("NgayKetThuc"));
+				double ptGiamGia = rs.getDouble("PhanTramGiamGia");
+				String mota = rs.getString("MoTa");
+				
+				Thuoc thuoc = new Thuoc(rs.getInt("MaThuoc"));
+				
+				MaGiamGia maGiamGia = new MaGiamGia(ma ,  ngayBD , ngayKT , ptGiamGia , mota, thuoc);
+				return maGiamGia;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
 
 }

@@ -41,7 +41,41 @@ public class ChiTietHoaDonDao {
 		return dsCTHD;
 	}
 
-	public boolean themChiTietHoaDon(ChiTietHoaDon ctHD){
+	public boolean themChiTietHoaDonKhongGG(ChiTietHoaDon ctHD){
+		
+		int n = 0;
+		try {
+		PreparedStatement statement = null;
+			ConnectDB.getInstance();
+			Connection con = ConnectDB.getConnection();
+			String sql = "INSERT INTO [dbo].[ChiTietHoaDon]([SoLuong]\r\n"
+					+ "      ,[DonViTinh]\r\n"
+					+ "      ,[DonGia]\r\n"
+					+ "      ,[MaSanPham]\r\n"
+					+ "      ,[Thue]\r\n"
+					+ "      ,[ThanhTien]\r\n"
+					+ "      ,[GiamGia]\r\n"
+					+ "      ,[MaHoaDon])\r\n"
+					+ "VALUES \r\n"
+					+ "	(?,?,?,?,?,?,?,?)";
+			statement = con.prepareStatement(sql);
+			statement.setDouble(1, ctHD.getSoLuong());
+			statement.setString(2, ctHD.getDonViTinh());
+			statement.setDouble(3, ctHD.getDonGia());
+			statement.setInt(4, ctHD.getSanPham().getMaThuoc());
+			statement.setDouble(5, ctHD.getThue());
+			statement.setDouble(6, ctHD.getThanhTien());
+			statement.setDouble(7, ctHD.getGiamGia());
+			statement.setInt(8, ctHD.getHoaDon().getMaHD());
+			n = statement.executeUpdate();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return n>0;
+		
+	}
+	
+public boolean themChiTietHoaDon(ChiTietHoaDon ctHD){
 		
 		int n = 0;
 		try {
