@@ -53,11 +53,13 @@ import components.TaiKhoanDangNhap;
 import dao.ChiTietHoaDonDao;
 import dao.HoaDonDao;
 import dao.KhachHangDao;
+import dao.KhoDao;
 import dao.NhanVienDao;
 import dao.ThuocDao;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.KhachHang;
+import entity.Kho;
 import entity.NhanVien;
 import entity.Quay;
 import entity.Thuoc;
@@ -99,7 +101,8 @@ public class CreateBillFrm extends JFrame {
 	private JButton btn500k;
 	private JList list;
 
-
+	
+	private KhoDao khoDao;
 	private ThuocDao thuocDao;
 	private NhanVienDao nhanVienDao;
 	private KhachHangDao khachHangDao;
@@ -131,6 +134,8 @@ public class CreateBillFrm extends JFrame {
 	private boolean temp;
 	private JLabel lblTK;
 	private JLabel lblQuay;
+	
+	private boolean isUserInteraction = true;
 
 	public CreateBillFrm() {
 		super();
@@ -140,6 +145,8 @@ public class CreateBillFrm extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		build();
+		
+		khoDao = new KhoDao();
 		thuocDao = new ThuocDao();
 		khachHangDao = new KhachHangDao();
 		hoaDonDao = new HoaDonDao();
@@ -205,10 +212,29 @@ public class CreateBillFrm extends JFrame {
 		
 		//Cập nhật lại số lượng bằng tableModel
 		orderTableModel.addTableModelListener(new TableModelListener() {
-			@Override
-			public void tableChanged(TableModelEvent e) {
-				capNhapSoLuong();
-			}
+		    @Override
+		    public void tableChanged(TableModelEvent e) {
+//		        if (!isUserInteraction) return; // Nếu không phải là tương tác người dùng, không xử lý
+//
+//		        int i = tb.getSelectedRow();
+//		        if (i == -1) return;
+//		        int ma = dsMaThuoc.get(i);
+//		        int soLuong = Integer.parseInt(orderTableModel.getValueAt(i, 3).toString());
+//		        if (!kiemTraTonKho(ma, soLuong)) {
+//		            JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+//		                    orderTableModel.getValueAt(i, 1) + " không đủ số lượng!");
+//		            isUserInteraction = false;
+//		            tb.setValueAt(soLuong, i, 3);
+//		         // Ngừng lắng nghe sự kiện
+//			       
+//		        } else {
+//		            capNhapSoLuong();
+//		            
+//		        }
+//		     // Kích hoạt lại lắng nghe sự kiện
+//		        isUserInteraction = true;
+		   
+		    }
 		});
 		
 		//Xóa dòng trên table bằng phím delete
@@ -268,18 +294,27 @@ public class CreateBillFrm extends JFrame {
 					if (!list.getSelectedValue().toString().equals("Không tìm thấy sản phẩm :(")) {
 						if (!dsMaThuoc.contains(dsThuocTemp.get(i).getMaThuoc()))// Không thêm trùng
 						{
+							if(!kiemTraTonKho(dsThuocTemp.get(i).getMaThuoc(), 1)) {
+								JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+										dsThuocTemp.get(i).getTenThuoc() +" đã hết hàng!");
+								return;
+							}
 							dsSoLuong.add(1);
-							// double thanhTien =
-							// (dsThuocTemp.get(i).getGiaBanLe())*(dsSoLuong.get(stt))*(1-(dsThuocTemp.get(i).getm().getPhanTramGiamGia()/100));
+							
 							dsMaThuoc.add(dsThuocTemp.get(i).getMaThuoc());
 							orderTableModel.addRow(new Object[] { 0, dsThuocTemp.get(i).getTenThuoc(),
 									dsThuocTemp.get(i).getDonViTinh(), 1,
-									dsThuocTemp.get(i).getGiaBanLe(), 50, // dsThuocTemp.get(i).getMaGiamGia().getPhanTramGiamGia(),
+									dsThuocTemp.get(i).getGiaBanLe(), 50,//giảm giá
 									0 });
 							capNhatSTT();
 						} // Khi thêm trùng thuốc thì số lượng tăng thêm 1
 						else {
 							int index = dsMaThuoc.indexOf(dsThuocTemp.get(i).getMaThuoc());
+							if(!kiemTraTonKho(dsThuocTemp.get(i).getMaThuoc(), dsSoLuong.get(index)+1)) {
+								JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+										dsThuocTemp.get(i).getTenThuoc()+ " không đủ số lượng!");
+								return;
+							}
 							dsSoLuong.set(index, dsSoLuong.get(index) + 1);
 							orderTableModel.setValueAt(dsSoLuong.get(index), index, 3);
 							Double giaBan = Double.valueOf(orderTableModel.getValueAt(index, 4).toString());
@@ -386,7 +421,12 @@ public class CreateBillFrm extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int i = tb.getSelectedRow();
 				if (i != -1) {
-					int sl = Integer.parseInt(orderTableModel.getValueAt(i, 3).toString());
+				int sl = Integer.parseInt(orderTableModel.getValueAt(i, 3).toString());
+				if(!kiemTraTonKho(dsMaThuoc.get(i), sl+1)) {
+					JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+							orderTableModel.getValueAt(i, 1)+ " không đủ số lượng!"); 
+					return;
+				}
 					orderTableModel.setValueAt(sl + 1, i, 3);
 					capNhapSoLuong();
 					capNhatThanhTien();
@@ -1120,6 +1160,12 @@ public class CreateBillFrm extends JFrame {
 	private void setNVandQuay() {
 		lblQuay.setText(TaiKhoanDangNhap.getNV().getQuay().getTenQuay());
 		lblTK.setText(TaiKhoanDangNhap.getNV().getTenNhanVien());
+	}
+	private boolean kiemTraTonKho(int maThuoc, int soLuong) {
+		Kho kho = khoDao.getTonKhoTheoThuoc(maThuoc);
+		if(kho.getSoLuong()<soLuong)
+			return false;
+		return true;
 	}
 
 }

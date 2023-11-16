@@ -85,8 +85,8 @@ GO
 CREATE TABLE HoaDon (
 	MaHoaDon INT PRIMARY KEY IDENTITY (1, 1),
 	NgayLapHoaDon Date NOT NULL,
-	TrangThai NVARCHAR(10) NOT NULL,
-	PhuongThucThanhToan NVARCHAR(10) DEFAULT 'Tiền mặt',
+	TrangThai NVARCHAR(50) NOT NULL,
+	PhuongThucThanhToan NVARCHAR(50) DEFAULT 'Tiền mặt',
 	TienNhan REAL NOT NULL,
 	TienDu REAL DEFAULT 0,
 	MaKhachHang INT FOREIGN KEY REFERENCES KhachHang(MaKhachHang),
