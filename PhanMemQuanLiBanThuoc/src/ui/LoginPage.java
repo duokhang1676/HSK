@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import components.ColorConsts;
+import components.TaiKhoanDangNhap;
 import dao.NhanVienDao;
 import entity.NhanVien;
 
@@ -42,7 +43,9 @@ public class LoginPage extends JFrame implements ActionListener {
 	private JButton btnExit;
 	
 	
+	
 	private NhanVienDao nhanVienDao;
+	
 	/**
 	 * Create the frame.
 	 */
@@ -138,10 +141,10 @@ public class LoginPage extends JFrame implements ActionListener {
 			String sdt = txtSdt.getText().trim();
 			String pwd = txtPassword.getText().trim();
 			
-//			if (sdt.isEmpty() || pwd.isEmpty()) {
-//				JOptionPane.showMessageDialog(null, "Vui lòng nhập đủ thông tin.");
-//				return;
-//			}
+			if (sdt.isEmpty() || pwd.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Vui lòng nhập đủ thông tin.");
+				return;
+			}
 			
 			if (dangNhap(sdt, pwd)) {
 				new RootFrame().setVisible(true);
@@ -155,7 +158,7 @@ public class LoginPage extends JFrame implements ActionListener {
 	
 	private boolean dangNhap(String sdt, String pwd) {
 		NhanVien nv = nhanVienDao.getNhanVienBySdtPwd(sdt, pwd);
-		
+		TaiKhoanDangNhap.setNV(nv);
 		if (nv == null) {
 			return false;
 		}
@@ -163,4 +166,6 @@ public class LoginPage extends JFrame implements ActionListener {
 		System.out.println(nv.getTenNhanVien());
 		return true;
 	}
+	
+	
 }
