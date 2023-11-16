@@ -9,6 +9,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -35,12 +36,20 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
 
 import components.ColorConsts;
 import components.Header;
+import components.TaiKhoanDangNhap;
 import dao.ChiTietHoaDonDao;
 import dao.HoaDonDao;
 import dao.KhachHangDao;
@@ -53,7 +62,9 @@ import entity.NhanVien;
 import entity.Quay;
 import entity.Thuoc;
 
+import javax.swing.AbstractAction;
 import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultCellEditor;
@@ -61,7 +72,9 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
 public class CreateBillFrm extends JFrame {
@@ -86,7 +99,6 @@ public class CreateBillFrm extends JFrame {
 	private JButton btn500k;
 	private JList list;
 
-	private int stt = 0;
 
 	private ThuocDao thuocDao;
 	private NhanVienDao nhanVienDao;
@@ -112,6 +124,13 @@ public class CreateBillFrm extends JFrame {
 	private JButton btnGiam;
 	private JButton btnXoa;
 	private ArrayList<KhachHang> dsKhachHang;
+	private JButton btnXoaTatCa;
+	private JRadioButton tienMat;
+	private JRadioButton nganHang;
+	private JRadioButton viDienTu;
+	private boolean temp;
+	private JLabel lblTK;
+	private JLabel lblQuay;
 
 	public CreateBillFrm() {
 		super();
@@ -165,25 +184,15 @@ public class CreateBillFrm extends JFrame {
 		txtTim.setColumns(10);
 		left.add(txtTim);
 
-		JButton btnHoaDonDaTao = new JButton("Đơn hàng đã tạo");
-		btnHoaDonDaTao.setBounds(630, 10, 170, 25);
-		left.add(btnHoaDonDaTao);
-		btnHoaDonDaTao.setBackground(Color.decode(ColorConsts.PrimaryColor));
-		btnHoaDonDaTao.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		JButton btnTaoDonHang = new JButton("(+) Tạo đơn hàng");
+		btnTaoDonHang.setBounds(630, 10, 170, 25);
+		left.add(btnTaoDonHang);
+		btnTaoDonHang.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		btnTaoDonHang.setForeground(Color.decode(ColorConsts.ForegroundColor));
 
-		btnHoaDonDaTao.addActionListener(new ActionListener() {
+		btnTaoDonHang.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//		        // Lấy thể hiện của RootFrame
-//		        RootFrame rootFrame = (RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this);
-//		        // Lấy trang OrderPage
-//		        BasePage orderListPage = rootFrame.getOrderListPage();
-//		        Container container = getParent(); 
-//		        container.remove(CreateBillFrm.this); 
-//		        // Thêm trang OrderPage vào trung tâm của RootFrame
-//		        rootFrame.add(orderListPage, BorderLayout.CENTER);
-//		        // Yêu cầu RootFrame vẽ lại
-//		        rootFrame.revalidate();
-//		        rootFrame.repaint();
+		       new CreateBillFrm().setVisible(true);
 			}
 		});
 
@@ -192,7 +201,33 @@ public class CreateBillFrm extends JFrame {
 		tb = new JTable(orderTableModel);
 		setCellEditable();
 		JScrollPane croll = new JScrollPane(tb);
-		croll.setBounds(0, 0, w, h - 60);
+		croll.setBounds(0, 0, w, h - 50);
+		
+		//Cập nhật lại số lượng bằng tableModel
+		orderTableModel.addTableModelListener(new TableModelListener() {
+			@Override
+			public void tableChanged(TableModelEvent e) {
+				capNhapSoLuong();
+			}
+		});
+		
+		//Xóa dòng trên table bằng phím delete
+		tb.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "deleteRow");
+        tb.getActionMap().put("deleteRow", (Action) new AbstractAction() {
+            public void actionPerformed(ActionEvent e) {
+            	int i = tb.getSelectedRow();
+				if (i != -1) {
+					orderTableModel.removeRow(i);
+					capNhatSTT();
+					capNhapSoLuong();
+					dsMaThuoc.remove(i);
+				} else {
+					JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+							"Chọn sản phẩm muốn xóa!");
+					return;
+				}
+            }
+        });
 
 		TableColumnModel columnModel = tb.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(10);
@@ -237,11 +272,11 @@ public class CreateBillFrm extends JFrame {
 							// double thanhTien =
 							// (dsThuocTemp.get(i).getGiaBanLe())*(dsSoLuong.get(stt))*(1-(dsThuocTemp.get(i).getm().getPhanTramGiamGia()/100));
 							dsMaThuoc.add(dsThuocTemp.get(i).getMaThuoc());
-							orderTableModel.addRow(new Object[] { ++stt, dsThuocTemp.get(i).getTenThuoc(),
-									dsThuocTemp.get(i).getDonViTinh(), dsSoLuong.get(stt - 1),
+							orderTableModel.addRow(new Object[] { 0, dsThuocTemp.get(i).getTenThuoc(),
+									dsThuocTemp.get(i).getDonViTinh(), 1,
 									dsThuocTemp.get(i).getGiaBanLe(), 50, // dsThuocTemp.get(i).getMaGiamGia().getPhanTramGiamGia(),
-									10000 });
-
+									0 });
+							capNhatSTT();
 						} // Khi thêm trùng thuốc thì số lượng tăng thêm 1
 						else {
 							int index = dsMaThuoc.indexOf(dsThuocTemp.get(i).getMaThuoc());
@@ -271,7 +306,7 @@ public class CreateBillFrm extends JFrame {
 				listPane.setVisible(true);
 				listModel.removeAllElements();
 				for (int i = 0; i < dsThuoc.size(); i++) {
-					if (dsThuoc.get(i).getTenThuoc().toLowerCase().contains(txtTim.getText().trim().toLowerCase()))
+					if (matchesTxt(dsThuoc.get(i).getTenThuoc().toLowerCase(), txtTim.getText().trim().toLowerCase())||(dsThuoc.get(i).getMaThuoc()+"").equals(txtTim.getText()))
 						listModel.addElement(dsThuoc.get(i).getTenThuoc() + "  -  " + dsThuoc.get(i).getDonViTinh());
 				}
 				if (txtTim.getText().trim().equals("")) {
@@ -291,7 +326,7 @@ public class CreateBillFrm extends JFrame {
 				listModel.removeAllElements();
 				dsThuocTemp.clear();
 				for (int i = 0; i < dsThuoc.size(); i++) {
-					if (dsThuoc.get(i).getTenThuoc().toLowerCase().contains(txtTim.getText().trim().toLowerCase())) {
+					if (matchesTxt(dsThuoc.get(i).getTenThuoc().toLowerCase(), txtTim.getText().trim().toLowerCase())||(dsThuoc.get(i).getMaThuoc()+"").equals(txtTim.getText())) {
 						listModel.addElement(dsThuoc.get(i).getTenThuoc() + "  -  " + dsThuoc.get(i).getDonViTinh());
 						dsThuocTemp.add(dsThuoc.get(i));
 					}
@@ -312,7 +347,7 @@ public class CreateBillFrm extends JFrame {
 				listModel.removeAllElements();
 				dsThuocTemp.clear();
 				for (int i = 0; i < dsThuoc.size(); i++) {
-					if (dsThuoc.get(i).getTenThuoc().toLowerCase().contains(txtTim.getText().trim().toLowerCase())) {
+					if (matchesTxt(dsThuoc.get(i).getTenThuoc().toLowerCase(), txtTim.getText().trim().toLowerCase())||(dsThuoc.get(i).getMaThuoc()+"").equals(txtTim.getText())) {
 						listModel.addElement(dsThuoc.get(i).getTenThuoc() + "  -  " + dsThuoc.get(i).getDonViTinh());
 						dsThuocTemp.add(dsThuoc.get(i));
 					}
@@ -333,20 +368,19 @@ public class CreateBillFrm extends JFrame {
 
 		// --------------------
 		JLayeredPane layeredPane = new JLayeredPane();
-		layeredPane.setBounds(0, 39, w, h - 60);
+		layeredPane.setBounds(0, 39, w, h - 50);
 		layeredPane.add(croll, JLayeredPane.DEFAULT_LAYER);
 		layeredPane.add(listPane, JLayeredPane.PALETTE_LAYER);
 		left.add(layeredPane);
 		JPanel footer = new JPanel();
-		footer.setLayout(null);
+		footer.setLayout(new GridLayout(1, 4));
 		left.add(footer);
-		footer.setBounds(0, 640, 1000, 100);
-		footer.add(btnTang = new JButton("+"));
-		Font f = new Font("Arial", Font.BOLD, 30);
-		btnTang.setFont(f);
+		footer.setBounds(0, 645, 800, 50);
+		footer.add(btnTang = new JButton("Tăng"));
+		//Font f = new Font("Arial", Font.BOLD, 30);
+		btnTang.setFont(font);
 		btnTang.setBackground(Color.decode(ColorConsts.PrimaryColor));
-		btnTang.setForeground(Color.decode(ColorConsts.BackgroundColor));
-		btnTang.setBounds(150, 0, 100, 40);
+		btnTang.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btnTang.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -363,11 +397,10 @@ public class CreateBillFrm extends JFrame {
 				}
 			}
 		});
-		footer.add(btnGiam = new JButton("-"));
-		btnGiam.setBounds(250, 0, 100, 40);
-		btnGiam.setFont(f);
-		btnGiam.setBackground(Color.decode(ColorConsts.BackgroundColor));
-		btnGiam.setForeground(Color.decode(ColorConsts.PrimaryColor));
+		footer.add(btnGiam = new JButton("Giảm"));
+		btnGiam.setFont(font);
+		btnGiam.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		btnGiam.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btnGiam.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -381,25 +414,22 @@ public class CreateBillFrm extends JFrame {
 					capNhatThanhTien();
 				} else {
 					JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
-							"Chọn sản phẩm muốn tăng số lượng!");
+							"Chọn sản phẩm muốn giảm số lượng!");
 					return;
 				}
 			}
 		});
 		footer.add(btnXoa = new JButton("Xoá"));
-		btnXoa.setBounds(450, 0, 200, 40);
 		btnXoa.setFont(font);
 		btnXoa.setBackground(Color.decode(ColorConsts.PrimaryColor));
-		btnXoa.setForeground(Color.decode(ColorConsts.BackgroundColor));
+		btnXoa.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btnXoa.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int i = tb.getSelectedRow();
 				if (i != -1) {
 					orderTableModel.removeRow(i);
-					for (int j = 0; j < orderTableModel.getRowCount(); j++) {
-						orderTableModel.setValueAt(j + 1, j, 0);
-					}
+					capNhatSTT();
 					capNhapSoLuong();
 					dsMaThuoc.remove(i);
 				} else {
@@ -407,6 +437,21 @@ public class CreateBillFrm extends JFrame {
 							"Chọn sản phẩm muốn xóa!");
 					return;
 				}
+			}
+		});
+		footer.add(btnXoaTatCa = new JButton("Xoá tất cả"));
+		btnXoaTatCa.setFont(font);
+		btnXoaTatCa.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		btnXoaTatCa.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		btnXoaTatCa.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(orderTableModel.getRowCount()==0)
+					return;
+				DefaultTableModel model = (DefaultTableModel) tb.getModel();
+				model.setRowCount(0); 
+				dsMaThuoc.clear();
+				capNhapSoLuong();
 			}
 		});
 
@@ -419,24 +464,20 @@ public class CreateBillFrm extends JFrame {
 		contentPane.add(right);
 		right.setLayout(null);
 
-		JLabel lblDonHang = new JLabel("Đơn hàng");
+		JLabel lblDonHang = new JLabel("Thông tin đơn hàng");
 		lblDonHang.setBounds(0, y1, 150, h2);
 		right.add(lblDonHang);
 		lblDonHang.setFont(font);
 
-		txtDH = new JTextField("DH123456");
-		txtDH.setEditable(false);
-		txtDH.setBounds(150, y1 + 5, 150, 20);
-		right.add(txtDH);
-		txtDH.setColumns(10);
-
-		JLabel lblQuay = new JLabel("Quầy số 2");
+		lblQuay = new JLabel("");
 		lblQuay.setBounds(315, y1, 80, h2);
 		right.add(lblQuay);
 
-		JLabel lblTK = new JLabel("Dương Khang");
+		lblTK = new JLabel("");
 		lblTK.setBounds(0, y1 += y2 + 10, 200, 13);
 		right.add(lblTK);
+		
+		setNVandQuay();
 
 		ngayLapHD = new JLabel("05/11/2023");
 		ngayLapHD.setBounds(315, y1, 60, 13);
@@ -446,7 +487,7 @@ public class CreateBillFrm extends JFrame {
 		gioLapHD.setBounds(270, y1, 40, 13);
 		right.add(gioLapHD);
 
-		JLabel lblTimKH = new JLabel("Tìm khách hàng");
+		JLabel lblTimKH = new JLabel("Tìm khách hàng (SDT)");
 		lblTimKH.setBounds(0, y1 += y2, 125, 13);
 		right.add(lblTimKH);
 
@@ -468,27 +509,54 @@ public class CreateBillFrm extends JFrame {
 		// right.add(txtTenKH);
 		txtTenKH.setEditable(false);
 
-		JButton btnThemKH = new JButton("+");
-		btnThemKH.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				txtTenKH.setText("");
-				txtTenKH.requestFocus();
-				txtTenKH.setEditable(true);
-				txtSDT.setVisible(false);
-				txtSDTNhap.setVisible(true);
-				khPane.setVisible(false);
-				if (!txtSDT.getText().equals("Nhập số điện thoại..."))
-					txtSDTNhap.setText(txtSDT.getText());
-				else
-					txtSDTNhap.setText("");
-			}
-		});
+		temp = false;
+		JButton btnThemKH = new JButton("Thêm");
 		btnThemKH.setBounds(310, y1 - 25, 70, 21);
 		right.add(btnThemKH);
 
-		JButton btnThem = new JButton("Thêm");
+		JButton btnThem = new JButton("OK");
+		btnThem.setVisible(false);
+		btnThemKH.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(!temp) {
+					btnThemKH.setText("Tìm");
+					txtTenKH.setText("");
+					txtTenKH.requestFocus();
+					txtTenKH.setEditable(true);
+					txtSDT.setVisible(false);
+					txtSDTNhap.setVisible(true);
+					khPane.setVisible(false);
+					if (!txtSDT.getText().equals("Nhập số điện thoại..."))
+						txtSDTNhap.setText(txtSDT.getText());
+					else
+						txtSDTNhap.setText("");
+					btnThemKH.setText("Tìm");
+					btnThem.setVisible(true);
+				}else {
+					txtTenKH.setText("");
+					btnThemKH.setText("Thêm");
+					txtTenKH.setEditable(false);
+					txtSDTNhap.setVisible(false);
+					txtSDT.setVisible(true);
+					btnThem.setVisible(false);
+				}
+				
+				temp = !temp;
+			}
+		});
+		
 		btnThem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(txtTenKH.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+							"Tên khách hàng không được rỗng!");
+					return;
+				}
+				if(txtSDTNhap.getText().trim().isEmpty()) {
+					JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+							"Số điện thoại không được rỗng!");
+					return;
+				}
 				txtTenKH.setEditable(false);
 				txtSDTNhap.setVisible(false);
 				txtSDT.setVisible(true);
@@ -639,25 +707,26 @@ public class CreateBillFrm extends JFrame {
 		lblNewLabel_7.setBounds(0, 110 + y2, 125, 15);
 		right2.add(lblNewLabel_7);
 
-		txtTongTienHang = new JTextField();
+		txtTongTienHang = new JTextField("0");
 		txtTongTienHang.setBounds(150, 15 + y2, 230, 19);
 		right2.add(txtTongTienHang);
 		txtTongTienHang.setColumns(10);
 		txtTongTienHang.setEditable(false);
 
-		txtTongGiamGia = new JTextField();
+		txtTongGiamGia = new JTextField("0");
 		txtTongGiamGia.setBounds(150, 38 + y2, 230, 19);
 		right2.add(txtTongGiamGia);
 		txtTongGiamGia.setColumns(10);
 		txtTongGiamGia.setEditable(false);
 
-		txtKhachCanTra = new JTextField();
+		txtKhachCanTra = new JTextField("0");
 		txtKhachCanTra.setBounds(150, 61 + y2, 230, 19);
 		right2.add(txtKhachCanTra);
 		txtKhachCanTra.setColumns(10);
 		txtKhachCanTra.setEditable(false);
 
 		txtKhachThanhToan = new JTextField();
+		 ((AbstractDocument) txtKhachThanhToan.getDocument()).setDocumentFilter(new NumberOnlyFilter());
 		txtKhachThanhToan.setBounds(150, 84 + y2, 230, 19);
 		right2.add(txtKhachThanhToan);
 		txtKhachThanhToan.setColumns(10);
@@ -667,8 +736,23 @@ public class CreateBillFrm extends JFrame {
 				capNhatTienThuaTraKhach();
 			}
 		});
+		
+		txtKhachThanhToan.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				capNhatTienThuaTraKhach();
+			}
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				capNhatTienThuaTraKhach();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				capNhatTienThuaTraKhach();
+			}
+		});
 
-		txtTienThua = new JTextField();
+		txtTienThua = new JTextField("0");
 		txtTienThua.setBounds(150, 107 + y2, 230, 19);
 		right2.add(txtTienThua);
 		txtTienThua.setColumns(10);
@@ -678,15 +762,15 @@ public class CreateBillFrm extends JFrame {
 		lblNewLabel_12.setBounds(0, y1 += 150 + y2, 141, 13);
 		right.add(lblNewLabel_12);
 
-		JRadioButton tienMat = new JRadioButton("Tiền mặt");
+		tienMat = new JRadioButton("Tiền mặt");
 		tienMat.setBounds(0, y1 += y2, 75, 21);
 		right.add(tienMat);
 
-		JRadioButton nganHang = new JRadioButton("Ngân hàng");
+		nganHang = new JRadioButton("Ngân hàng");
 		nganHang.setBounds(130, y1, 104, 21);
 		right.add(nganHang);
 
-		JRadioButton viDienTu = new JRadioButton("Ví điện tử");
+		viDienTu = new JRadioButton("Ví điện tử");
 		viDienTu.setBounds(265, y1, 91, 21);
 		right.add(viDienTu);
 
@@ -698,7 +782,7 @@ public class CreateBillFrm extends JFrame {
 
 		JPanel pnlTienMat = new JPanel();
 		right.add(pnlTienMat);
-		pnlTienMat.setBounds(0, y1 += y2 + 20, 380, 100);
+		pnlTienMat.setBounds(0, y1 += y2 + 10, 380, 90);
 		pnlTienMat.add(btn10k = new JButton("10.000"));
 		pnlTienMat.add(btn20k = new JButton("20.000"));
 		pnlTienMat.add(btn50k = new JButton("50.000"));
@@ -721,6 +805,8 @@ public class CreateBillFrm extends JFrame {
 
 		btn10k.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				//if()
 				txtKhachThanhToan.setText("10000");
 				capNhatTienThuaTraKhach();
 			}
@@ -760,57 +846,48 @@ public class CreateBillFrm extends JFrame {
 		textArea.setBounds(10, 322, 283, 69);
 
 		JLabel lblGhiChu = new JLabel("Ghi chú");
-		lblGhiChu.setBounds(0, y1 += y2 + 80, 45, 13);
+		lblGhiChu.setBounds(0, y1 += y2 + 70, 45, 13);
 		right.add(lblGhiChu);
 		JScrollPane scrollPane = new JScrollPane(textArea);
-		scrollPane.setBounds(0, y1 += y2, 380, 100);
+		scrollPane.setBounds(0, (y1 += y2), 380, 90);
 		right.add(scrollPane);
-
-		JButton btnThanhToan = new JButton("THANH TOÁN");
-		btnThanhToan.addActionListener(new ActionListener() {
-
+		
+		JButton btnLuuTam = new JButton("LƯU TẠM");
+		btnLuuTam.setBounds(0, y1 + 115, 380, 50);
+		right.add(btnLuuTam);
+		btnLuuTam.setFont(font);
+		btnLuuTam.setBackground(Color.decode(ColorConsts.ForegroundColor));
+		btnLuuTam.setForeground(Color.decode(ColorConsts.PrimaryColor));
+		btnLuuTam.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-
-				LocalDate ngayLapHoaDon = LocalDate.now();
-				String trangThai = "True";
-				String phuongThucThanhToan = "";
-				if (tienMat.isSelected())
-					phuongThucThanhToan = "Tiền mặt";
-				else if (nganHang.isSelected())
-					phuongThucThanhToan = "Ngân hàng";
-				else if (viDienTu.isSelected())
-					phuongThucThanhToan = "Ví điện tử";
-				double tienNhan = Double.parseDouble(txtKhachThanhToan.getText());
-				double tienDu = Double.parseDouble(txtTienThua.getText());
-				int maKhachHang = 0;
-				String sdtKH = txtSDT.getText().trim();
-				for (KhachHang khachHang : dsKhachHang) {
-					if (sdtKH.equals(khachHang.getSoDienThoai()))
-						maKhachHang = khachHang.getMaKhachHang();
-				}
-				KhachHang khachHang = new KhachHang(maKhachHang);
-				int maNhanVien = 5;
-				int maQuay = 2;
-				double tongTienGiam = Double.parseDouble(txtTongGiamGia.getText());
-				double tongTien = Double.parseDouble(txtKhachCanTra.getText());
-
-				HoaDon hoaDon = new HoaDon(0, ngayLapHoaDon, trangThai, phuongThucThanhToan, tienNhan, tienDu,
-						khachHang, new NhanVien(maNhanVien), new Quay(maQuay), tongTienGiam, tongTien);
-
-				hoaDon = hoaDonDao.themHoaDon(hoaDon);
-				if (hoaDon != null) {
-					createChiTietHoaDon(hoaDon);
-					JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
-							"Đã tạo hóa đơn!");
-				}
-				dispose();
+				thanhToan(false);
 			}
 		});
-		btnThanhToan.setBounds(0, y1 + 130, 380, 60);
+
+		JButton btnThanhToan = new JButton("THANH TOÁN");
+		btnThanhToan.setBounds(0, y1 + 170, 380, 50);
 		right.add(btnThanhToan);
 		btnThanhToan.setFont(font);
 		btnThanhToan.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btnThanhToan.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		btnThanhToan.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				thanhToan(true);
+			}
+		});
+		//Thanh toán bằng phím F4
+		// Tạo một Action và gán chức năng khi nhấn phím F4
+        Action action = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	thanhToan(true);
+            }
+        };
+        // Gắn hành động với phím tắt F4
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "performAction");
+        getRootPane().getActionMap().put("performAction", action);
+		
 
 		this.add(contentPane);
 	}
@@ -886,9 +963,19 @@ public class CreateBillFrm extends JFrame {
 	}
 
 	public void capNhatTienThuaTraKhach() {
-		if (txtKhachCanTra.getText().isEmpty())
+		if(txtKhachThanhToan.getText().isEmpty()){
+			txtTienThua.setText("0");
 			return;
-		if (txtKhachThanhToan.getText().isEmpty())
+		}
+		double khachCanTra = Double.parseDouble(txtKhachCanTra.getText());
+		double khachThanhToan = Double.parseDouble(txtKhachThanhToan.getText());
+		
+		if(khachThanhToan<khachCanTra) {
+			txtTienThua.setText("0");
+			return;
+		}
+			
+		if (txtKhachCanTra.getText().isEmpty())
 			return;
 		double tienThuaTraKhach = Double.parseDouble(txtKhachThanhToan.getText())
 				- Double.parseDouble(txtKhachCanTra.getText());
@@ -918,6 +1005,121 @@ public class CreateBillFrm extends JFrame {
 				e.printStackTrace();
 			}
 		}
+	}
+	public void capNhatSTT() {
+		for (int i = 0; i < orderTableModel.getRowCount(); i++) {
+			orderTableModel.setValueAt(i + 1, i, 0);
+		}
+	}
+	public boolean matchesTxt(String a, String b) {
+		for(int i = 0;i<b.length();i++) {
+			if(b.charAt(i)!=a.charAt(i))
+				return false;
+		}
+		return true;
+	}
+	public void thanhToan(boolean tt) {
+		if(orderTableModel.getRowCount()==0) {
+			JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+					"Chưa có sản phẩm!");
+			return;
+		}
+		
+		if(tt) {
+			if(txtKhachThanhToan.getText().isEmpty()) {
+				JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+						"Tiền thanh toán không hợp lệ!");
+				return;
+			}	
+			double khachCanTra = Double.parseDouble(txtKhachCanTra.getText());
+			double khachThanhToan = Double.parseDouble(txtKhachThanhToan.getText());
+			if(khachThanhToan<khachCanTra) {
+				JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+						"Tiền thanh toán không hợp lệ!");
+				return;
+			}
+		}
+		
+		LocalDate ngayLapHoaDon = LocalDate.now();
+		String trangThai;
+		if(tt) trangThai = "Đã TT";
+		else trangThai = "Chưa TT";
+		String phuongThucThanhToan = " ";
+		if(tt) {
+			if (tienMat.isSelected())
+				phuongThucThanhToan = "Tiền mặt";
+			else if (nganHang.isSelected())
+				phuongThucThanhToan = "Ngân hàng";
+			else if (viDienTu.isSelected())
+				phuongThucThanhToan = "Ví điện tử";
+		}
+		double tienNhan = 0;
+		double tienDu = 0;
+		if(tt) {
+			tienNhan = Double.parseDouble(txtKhachThanhToan.getText());
+			tienDu = Double.parseDouble(txtTienThua.getText());
+		}
+		
+		KhachHang khachHang = new KhachHang();
+		if(txtTenKH.getText().isEmpty()) {
+			khachHang = new KhachHang(1);
+		}else {
+			int maKhachHang = 0;
+			String sdtKH = txtSDT.getText().trim();
+			for (KhachHang kh : dsKhachHang) {
+				if (sdtKH.equals(kh.getSoDienThoai()))
+					maKhachHang = kh.getMaKhachHang();
+			}
+			khachHang = new KhachHang(maKhachHang);
+		}
+		int maNhanVien = 5;
+		int maQuay = 2;
+		double tongTienGiam = Double.parseDouble(txtTongGiamGia.getText());
+		double tongTien = Double.parseDouble(txtKhachCanTra.getText());
+
+		HoaDon hoaDon = new HoaDon(0, ngayLapHoaDon, trangThai, phuongThucThanhToan, tienNhan, tienDu,
+				khachHang, new NhanVien(maNhanVien), new Quay(maQuay), tongTienGiam, tongTien);
+
+		hoaDon = hoaDonDao.themHoaDon(hoaDon);
+		if (hoaDon != null) {
+			createChiTietHoaDon(hoaDon);
+			JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
+					"Đã tạo hóa đơn!");
+		}
+		dispose();
+	}
+	
+	
+	private static class NumberOnlyFilter extends DocumentFilter {
+        @Override
+        public void insertString(DocumentFilter.FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+            Document doc = fb.getDocument();
+            StringBuilder sb = new StringBuilder(doc.getText(0, doc.getLength()));
+            sb.insert(offset, string);
+
+            if (test(sb.toString())) {
+                super.insertString(fb, offset, string, attr);
+            }
+        }
+
+        @Override
+        public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+            Document doc = fb.getDocument();
+            StringBuilder sb = new StringBuilder(doc.getText(0, doc.getLength()));
+            sb.replace(offset, offset + length, text);
+
+            if (test(sb.toString())) {
+                super.replace(fb, offset, length, text, attrs);
+            }
+        }
+
+        private boolean test(String text) {
+            return text.isEmpty() || text.matches("\\d+");
+        }
+    }
+	private void setNVandQuay() {
+		lblQuay.setText(TaiKhoanDangNhap.getNV().getQuay().getTenQuay());
+		lblTK.setText(TaiKhoanDangNhap.getNV().getTenNhanVien());
 	}
 
 }
