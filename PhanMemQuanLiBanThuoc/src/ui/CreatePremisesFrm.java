@@ -175,13 +175,14 @@ public class CreatePremisesFrm extends JFrame implements ActionListener{
 		String tinh = txt_tinh.getText();
 		
 		Quay q = new Quay(tenQuay, diaChi, phuong, thanhPho, tinh);
-		try {
-			quay_dao.themQuay(q);
+		
+		if (quay_dao.themQuay(q)) {
 			ShowMesage("Thêm thành công");
-		} catch (Exception e) {
-			// TODO: handle exception
-			ShowMesage("Thêm không thành công");
+			
+			dispose();
+			return;
 		}
+		ShowMesage("Thêm không thành công");
 	}
 
 	private void ShowMesage(String string) {

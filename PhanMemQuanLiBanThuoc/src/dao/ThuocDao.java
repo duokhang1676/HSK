@@ -28,7 +28,7 @@ public class ThuocDao {
 		try {
 			String sql = "Select * from Thuoc";
 			Statement stmt = con.createStatement();
-			ResultSet rs = stmt.executeQuery(sql);	
+			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				int maThuoc = rs.getInt("MaThuoc");
 				String tenThuoc = rs.getString("TenThuoc");
@@ -107,7 +107,7 @@ public class ThuocDao {
 		try {
 			stmt = con.prepareStatement(sql);
 			stmt.setInt(1, ma);
-			return stmt.executeUpdate()>0;
+			return stmt.executeUpdate() > 0;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -262,7 +262,6 @@ public class ThuocDao {
 		return n > 0;
 	}
 
-	
 	public long getTongSoThuoc() {
 		return getAllData().size();
 	}

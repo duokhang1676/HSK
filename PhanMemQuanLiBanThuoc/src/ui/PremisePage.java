@@ -43,6 +43,7 @@ import components.ColorConsts;
 import components.Header;
 import components.TopSaleProductView;
 import dao.QuayDao;
+import entity.KhachHang;
 import entity.Quay;
 
 public class PremisePage extends BasePage implements MouseListener {
@@ -61,6 +62,7 @@ public class PremisePage extends BasePage implements MouseListener {
 	private JButton xoaBtn;
 	private JButton suaBtn;
 	private JButton lamMoiBtn;
+	private JButton hoanThanhBtn;
 
 	private DefaultTableModel quayModel;
 	private JTable quayTable;
@@ -84,6 +86,42 @@ public class PremisePage extends BasePage implements MouseListener {
 	public JPanel onCreateNestedContainerView() {
 		Font commonFont = new Font("Arials", Font.PLAIN, 14);
 		Font commonButtonFont = new Font("Arials", Font.BOLD, 16);
+
+		hoanThanhBtn = new JButton("Hoàn thành");
+		hoanThanhBtn.setPreferredSize(new Dimension(130, 40));
+		hoanThanhBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		hoanThanhBtn.setForeground(Color.decode(ColorConsts.BackgroundColor));
+		hoanThanhBtn.setVisible(false);
+		hoanThanhBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = quayTable.getSelectedRow();
+
+				int maQuay = Integer.parseInt(quayTable.getValueAt(row, 0).toString());
+				
+				String tenQuay = tenQuayTxt.getText().trim();
+				String diaChi = diaChiTxt.getText().trim();
+				String phuong = phuongTxt.getText().trim();
+				String thanhPho = thanhPhoTxt.getText().trim();
+				String tinh = tinhTxt.getText().trim();
+		
+				Quay quay = new Quay(maQuay, tenQuay, diaChi, phuong, thanhPho, tinh);
+				
+				if (quayDao.suaThongTinQuay(quay)) {
+					getAllQuay();
+					
+					maQuayTxt.setEditable(false);
+					tenQuayTxt.setEditable(false);
+					diaChiTxt.setEditable(false);
+					phuongTxt.setEditable(false);
+					thanhPhoTxt.setEditable(false);
+					tinhTxt.setEditable(false);
+					
+					hoanThanhBtn.setVisible(false);
+					
+					JOptionPane.showMessageDialog(null, "Cập nhập thông tin thành công");
+				}
+			}
+		});
 
 		JPanel left = new JPanel(new BorderLayout());
 		left.setBackground(Color.decode(ColorConsts.ForegroundColor));
@@ -127,7 +165,7 @@ public class PremisePage extends BasePage implements MouseListener {
 				int row = quayTable.getSelectedRow();
 				int maQuay = Integer.parseInt(quayModel.getValueAt(row, 0).toString());
 				String tenQuay = quayModel.getValueAt(row, 1).toString();
-				
+
 				if (JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa Quầy " + tenQuay, "Confirm",
 						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 
@@ -144,6 +182,22 @@ public class PremisePage extends BasePage implements MouseListener {
 		xoaTrangBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		xoaTrangBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				maQuayTxt.setEditable(false);
+				tenQuayTxt.setEditable(false);
+				diaChiTxt.setEditable(false);
+				phuongTxt.setEditable(false);
+				thanhPhoTxt.setEditable(false);
+				tinhTxt.setEditable(false);
+				
+				maQuayTxt.setText("");
+				tenQuayTxt.setText("");
+				diaChiTxt.setText("");
+				phuongTxt.setText("");
+				thanhPhoTxt.setText("");
+				tinhTxt.setText("");
+				
+				incomeIPeriodChartPanel.setVisible(false);
+				topSaleProductList.setVisible(false);
 			}
 		});
 
@@ -153,6 +207,22 @@ public class PremisePage extends BasePage implements MouseListener {
 		suaBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		suaBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int row = quayTable.getSelectedRow();
+
+				if (row < 0) {
+					JOptionPane.showMessageDialog(null, "Phải chọn dòng để sửa");
+					return;
+				}
+
+				maQuayTxt.setEditable(false);
+				
+				tenQuayTxt.setEditable(true);
+				diaChiTxt.setEditable(true);
+				phuongTxt.setEditable(true);
+				thanhPhoTxt.setEditable(true);
+				tinhTxt.setEditable(true);
+
+				hoanThanhBtn.setVisible(true);
 			}
 		});
 
@@ -190,39 +260,36 @@ public class PremisePage extends BasePage implements MouseListener {
 		tieuDeLabel.setBorder(new EmptyBorder(20, 0, 20, 0));
 
 		Box tpBox = Box.createHorizontalBox();
-		JLabel tbLb = new JLabel("Thành phố");
+		JLabel tpLb = new JLabel("Thành phố");
 
-		tbLb.setFont(commonFont);
+		tpLb.setFont(commonFont);
 		thanhPhoTxt = new JTextField("");
 		thanhPhoTxt.setEditable(false);
-		tpBox.add(tbLb);
+		tpBox.add(tpLb);
 		tpBox.add(thanhPhoTxt);
 
 		Box maQuayBox = Box.createHorizontalBox();
 		JLabel maQuayLb = new JLabel("Mã quầy");
-
 		maQuayLb.setFont(commonFont);
-		maQuayLb.setPreferredSize(tbLb.getPreferredSize());
+		maQuayLb.setPreferredSize(tpLb.getPreferredSize());
 		maQuayTxt = new JTextField("");
 		maQuayTxt.setEditable(false);
 		maQuayBox.add(maQuayLb);
 		maQuayBox.add(maQuayTxt);
 
 		Box tenQuayBox = Box.createHorizontalBox();
-		JLabel tenQuayLb = new JLabel("Mã quầy");
-
+		JLabel tenQuayLb = new JLabel("Tên quầy");
 		tenQuayLb.setFont(commonFont);
-		tenQuayLb.setPreferredSize(tbLb.getPreferredSize());
+		tenQuayLb.setPreferredSize(tpLb.getPreferredSize());
 		tenQuayTxt = new JTextField("");
 		tenQuayTxt.setEditable(false);
-		tenQuayBox.add(maQuayLb);
-		tenQuayBox.add(maQuayTxt);
+		tenQuayBox.add(tenQuayLb);
+		tenQuayBox.add(tenQuayTxt);
 
 		Box diaChiBox = Box.createHorizontalBox();
 		JLabel diaChiLb = new JLabel("Địa chỉ");
-
 		diaChiLb.setFont(commonFont);
-		diaChiLb.setPreferredSize(tbLb.getPreferredSize());
+		diaChiLb.setPreferredSize(tpLb.getPreferredSize());
 		diaChiTxt = new JTextField("");
 		diaChiTxt.setEditable(false);
 		diaChiBox.add(diaChiLb);
@@ -230,9 +297,8 @@ public class PremisePage extends BasePage implements MouseListener {
 
 		Box phuongBox = Box.createHorizontalBox();
 		JLabel phuongLb = new JLabel("Phường");
-
 		phuongLb.setFont(commonFont);
-		phuongLb.setPreferredSize(tbLb.getPreferredSize());
+		phuongLb.setPreferredSize(tpLb.getPreferredSize());
 		phuongTxt = new JTextField("");
 		phuongTxt.setEditable(false);
 		phuongBox.add(phuongLb);
@@ -240,9 +306,8 @@ public class PremisePage extends BasePage implements MouseListener {
 
 		Box tinhBox = Box.createHorizontalBox();
 		JLabel tinhLb = new JLabel("Tỉnh");
-
 		tinhLb.setFont(commonFont);
-		tinhLb.setPreferredSize(tbLb.getPreferredSize());
+		tinhLb.setPreferredSize(tpLb.getPreferredSize());
 		tinhTxt = new JTextField("");
 		tinhTxt.setEditable(false);
 		tinhBox.add(tinhLb);
@@ -292,6 +357,8 @@ public class PremisePage extends BasePage implements MouseListener {
 		right.add(tpBox);
 		right.add(Box.createVerticalStrut(20));
 		right.add(tinhBox);
+		right.add(Box.createVerticalStrut(20));
+		right.add(hoanThanhBtn);
 		right.add(doanhThuTheoThangLb);
 		right.add(incomeIPeriodChartPanel);
 		right.add(topSanPhamChayThangLb);
@@ -321,13 +388,19 @@ public class PremisePage extends BasePage implements MouseListener {
 	}
 
 	private void getAllQuay() {
-		while(quayModel.getRowCount() > 0) {
+		while (quayModel.getRowCount() > 0) {
 			quayModel.removeRow(0);
 		}
-		
+
 		for (Quay element : quayDao.getAllData()) {
-			quayModel.addRow(new String[] { String.valueOf(element.getMaQuay()), element.getTenQuay(),
-					element.getDiaChi(), element.getPhuong(), element.getThanhPho(), element.getTinh() });
+			quayModel.addRow(new String[] { 
+					String.valueOf(element.getMaQuay()), 
+					element.getTenQuay(),
+					element.getDiaChi(),
+					element.getPhuong(), 
+					element.getThanhPho(), 
+					element.getTinh() 
+					});
 		}
 	}
 
@@ -335,6 +408,13 @@ public class PremisePage extends BasePage implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		int row = quayTable.getSelectedRow();
 
+		maQuayTxt.setEditable(false);
+		tenQuayTxt.setEditable(false);
+		diaChiTxt.setEditable(false);
+		phuongTxt.setEditable(false);
+		thanhPhoTxt.setEditable(false);
+		tinhTxt.setEditable(false);
+		
 		maQuayTxt.setText(quayModel.getValueAt(row, 0).toString());
 		tenQuayTxt.setText(quayModel.getValueAt(row, 1).toString());
 		diaChiTxt.setText(quayModel.getValueAt(row, 2).toString());

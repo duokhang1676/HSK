@@ -53,6 +53,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 	private JButton btn_sua;
 	private JButton btn_luu;
 	private JButton btn_lamMoi;
+	private JButton hoanThanhBtn;
 
 	private DefaultTableModel cusModel;
 	private JTable cusTable;
@@ -70,7 +71,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 
 		khachHangDao = new KhachHangDao();
 
-		getAllNhanVien();
+		getAllCustomers();
 	}
 
 	@Override
@@ -78,6 +79,37 @@ public class CustomerPage extends BasePage implements MouseListener {
 		Font commonFont = new Font("Arials", Font.PLAIN, 14);
 		Font commonButtonFont = new Font("Arials", Font.BOLD, 16);
 
+		
+		hoanThanhBtn = new JButton("Hoàn thành");
+		hoanThanhBtn.setPreferredSize(new Dimension(130, 40));
+		hoanThanhBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
+		hoanThanhBtn.setForeground(Color.decode(ColorConsts.BackgroundColor));
+		hoanThanhBtn.setVisible(false);
+		hoanThanhBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = cusTable.getSelectedRow();
+				
+				int maKhachHang = Integer.parseInt(cusModel.getValueAt(row, 0).toString());
+				String soDienThoai = txtSdt.getText().trim();
+				String hoVaTen = txtHoTen.getText().trim();
+				
+				KhachHang khachHang = new KhachHang(maKhachHang, hoVaTen, soDienThoai);
+				
+				if (khachHangDao.suaThongTinKhachHang(khachHang)) {
+					getAllCustomers();
+					
+					txtMa.setEditable(false);
+					txtHoTen.setEditable(false);
+					txtSdt.setEditable(false);
+					ngayTaoSdt.setEditable(false);
+		
+					hoanThanhBtn.setVisible(false);
+					
+					JOptionPane.showMessageDialog(null, "Cập nhập thông tin thành công");
+				}
+			}
+		});
+		
 		JPanel left = new JPanel(new BorderLayout());
 		left.setBackground(Color.decode(ColorConsts.ForegroundColor));
 
@@ -140,6 +172,13 @@ public class CustomerPage extends BasePage implements MouseListener {
 				txtHoTen.setText("");
 				txtSdt.setText("");
 				ngayTaoSdt.setText("");
+				
+				hoanThanhBtn.setVisible(false);
+				
+				txtMa.setEditable(false);
+				txtHoTen.setEditable(false);
+				txtSdt.setEditable(false);
+				ngayTaoSdt.setEditable(false);
 			}
 		});
 		btn_sua = new JButton("Sửa");
@@ -148,6 +187,19 @@ public class CustomerPage extends BasePage implements MouseListener {
 		btn_sua.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btn_sua.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int row = cusTable.getSelectedRow();
+				
+				if (row < 0) {
+					JOptionPane.showMessageDialog(null, "Phải chọn dòng để sửa");
+					return;
+				}
+				
+				txtMa.setEditable(false);
+				txtHoTen.setEditable(true);
+				txtSdt.setEditable(true);
+				ngayTaoSdt.setEditable(false);
+	
+				hoanThanhBtn.setVisible(true);
 			}
 		});
 
@@ -157,7 +209,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 		btn_lamMoi.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btn_lamMoi.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				getAllNhanVien();
+				getAllCustomers();
 			}
 		});
 
@@ -231,7 +283,8 @@ public class CustomerPage extends BasePage implements MouseListener {
 		right.add(Box.createVerticalStrut(20));
 		right.add(ngayTaoBox);
 		right.add(Box.createVerticalStrut(20));
-
+		right.add(hoanThanhBtn);
+		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(left, BorderLayout.CENTER);
 		panel.add(new JScrollPane(right, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER),
@@ -247,6 +300,14 @@ public class CustomerPage extends BasePage implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		hoanThanhBtn.setVisible(false);
+		
+		txtMa.setEditable(false);
+		txtHoTen.setEditable(false);
+		txtSdt.setEditable(false);
+		ngayTaoSdt.setEditable(false);
+		
+		
 		int row = cusTable.getSelectedRow();
 		
 		txtMa.setText(cusModel.getValueAt(row, 0).toString());
@@ -279,7 +340,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 
 	}
 
-	private void getAllNhanVien() {
+	private void getAllCustomers() {
 		while (cusModel.getRowCount() > 0)
 			cusModel.removeRow(0);
 

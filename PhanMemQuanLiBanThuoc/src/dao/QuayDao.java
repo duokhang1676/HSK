@@ -12,6 +12,7 @@ import java.util.List;
 
 import db.ConnectDB;
 import entity.ChiTietHoaDon;
+import entity.KhachHang;
 import entity.MaGiamGia;
 import entity.NhomThuoc;
 import entity.Quay;
@@ -35,7 +36,7 @@ public class QuayDao {
 				String thanhPho = rs.getString("ThanhPho");
 				String tinh = rs.getString("Tinh");
 
-				Quay quay = new Quay(maQuay, tenQuay, phuong, diaChi, thanhPho, tinh);
+				Quay quay = new Quay(maQuay, tenQuay, diaChi, phuong, thanhPho, tinh);
 				dsQuay.add(quay);
 
 			}
@@ -65,36 +66,36 @@ public class QuayDao {
 	}
 
 	public List<TopSaleInPremises> getTopSaleInPremises(LocalDate from, LocalDate to) {
-		List topSales = new  ArrayList<TopSaleInPremises>();
+		List topSales = new ArrayList<TopSaleInPremises>();
 		try {
 			ConnectDB.getInstance();
 			Connection con = ConnectDB.getConnection();
 
 			PreparedStatement statement = con
 					.prepareStatement("SELECT TOP 5 Quay.MaQuay, TenQuay, SUM(TongTien) AS DoanhThu\r\n"
-							+ "  FROM HoaDon\r\n"
-							+ "  LEFT JOIN Quay ON Quay.MaQuay = HoaDon.MaQuay \r\n"
-							+ "  WHERE [NgayLapHoaDon] BETWEEN ? AND ? \r\n"	
-							+ "  GROUP BY Quay.MaQuay, TenQuay\r\n" + "  ORDER BY DoanhThu DESC");
-			
+							+ "  FROM HoaDon\r\n" + "  LEFT JOIN Quay ON Quay.MaQuay = HoaDon.MaQuay \r\n"
+							+ "  WHERE [NgayLapHoaDon] BETWEEN ? AND ? \r\n" + "  GROUP BY Quay.MaQuay, TenQuay\r\n"
+							+ "  ORDER BY DoanhThu DESC");
+
 			statement.setDate(1, Date.valueOf(from));
 			statement.setDate(2, Date.valueOf(to));
-			
+
 			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				int maQuay = rs.getInt("MaQuay");
 				String tenQuay = rs.getString("TenQuay");
 				double doanhThu = rs.getDouble("DoanhThu");
-				
+
 				topSales.add(new TopSaleInPremises(maQuay, tenQuay, doanhThu));
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return topSales;
 	}
+
 	public boolean themQuay(Quay q) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
@@ -119,5 +120,27 @@ public class QuayDao {
 			}
 		}
 		return n > 0;
+	}
+
+	public boolean suaThongTinQuay(Quay quay) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		try {
+			stmt = con.prepareStatement("UPDATE Quay "
+					+ "SET TenQuay = ?, DiaChi = ?, Phuong = ?, ThanhPho = ?, Tinh = ?" + " WHERE MaQuay = ?");
+
+			stmt.setString(1, quay.getTenQuay());
+			stmt.setString(2, quay.getDiaChi());
+			stmt.setString(3, quay.getPhuong());
+			stmt.setString(4, quay.getThanhPho());
+			stmt.setString(5, quay.getTinh());
+			stmt.setInt(6, quay.getMaQuay());
+
+			return stmt.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
