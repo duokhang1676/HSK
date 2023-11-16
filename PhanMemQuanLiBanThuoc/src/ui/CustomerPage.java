@@ -82,7 +82,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 		left.setBackground(Color.decode(ColorConsts.ForegroundColor));
 
 		cusModel = new DefaultTableModel(
-				new String[] { "Mã Khách Hàng", "Tên Khách Hàng", "Số Điện Thoại", "Quầy Mua" }, 0);
+				new String[] { "Mã Khách Hàng", "Tên Khách Hàng", "Số Điện Thoại", "Ngày tạo" }, 0);
 		cusTable = new JTable(cusModel);
 
 		JTableHeader headerTable = cusTable.getTableHeader();
