@@ -3,6 +3,7 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,6 +40,7 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 
 	private MaGiamGiaDao magiamgia_dao;
 
+
 	public CreateDiscountFrm() {
 		// TODO Auto-generated constructor stub
 		this.setTitle("Tạo mã giảm giá");
@@ -46,7 +49,9 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		magiamgia_dao = new MaGiamGiaDao();
-		
+		Font titleFont = new Font("Arial", Font.BOLD, 30);
+		JLabel title = new JLabel("Thêm mã giảm giá mới");
+		title.setFont(titleFont);
 		/**
 		 * Panel Information
 		 */
@@ -77,6 +82,7 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 		
 		txt_moTa = new JTextArea(3,2);
 		txt_moTa.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
 		
 		Box b, b1, b2, b3, b4, b5;
 		
@@ -168,10 +174,10 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 		LocalDate ngayKT = LocalDate.parse(txt_ngayKetThuc.getText());
 		double ptGiamGia = Double.parseDouble(txt_phanTramGiamGia.getText());
 		String moTa = txt_moTa.getText();
-		
-		MaGiamGia mgg = new MaGiamGia( ngayBD, ngayKT, ptGiamGia, moTa);
+
+//		MaGiamGia mgg = new MaGiamGia( ngayBD, ngayKT, ptGiamGia, moTa);
 		try {
-			magiamgia_dao.themMaGiamGia(mgg);
+//			magiamgia_dao.themMaGiamGia(mgg);
 			showMessage("Thêm thành công");
 		} catch (Exception e) {
 			// TODO: handle exception

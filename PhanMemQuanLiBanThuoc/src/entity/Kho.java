@@ -20,6 +20,12 @@ public class Kho {
 		this.soLuong = soLuong;
 		this.thuoc = thuoc;
 	}
+	
+	
+	public Kho(Thuoc thuoc) {
+		super();
+		this.thuoc = thuoc;
+	}
 
 	public int getSoLuong() {
 		return soLuong;

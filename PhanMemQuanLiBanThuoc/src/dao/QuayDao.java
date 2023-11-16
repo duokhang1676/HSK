@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import db.ConnectDB;
 import entity.ChiTietHoaDon;
+import entity.MaGiamGia;
 import entity.NhomThuoc;
 import entity.Quay;
 import entity.Thuoc;
@@ -92,5 +94,30 @@ public class QuayDao {
 		}
 		
 		return topSales;
+	}
+	public boolean themQuay(Quay q) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		int n = 0;
+		try {
+			stmt = con.prepareStatement("insert into" + " Quay values( ?, ?, ?, ?, ?)");
+			stmt.setString(1, q.getTenQuay());
+			stmt.setString(2, q.getDiaChi());
+			stmt.setString(3, q.getPhuong());
+			stmt.setString(4, q.getThanhPho());
+			stmt.setString(5, q.getTinh());
+			n = stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return n > 0;
 	}
 }

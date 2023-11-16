@@ -21,6 +21,15 @@ public class Quay {
 		this.tenQuay = tenQuay;
 	}
 	
+	public Quay(String tenQuay, String diaChi, String phuong, String thanhPho, String tinh) {
+		super();
+		this.tenQuay = tenQuay;
+		this.diaChi = diaChi;
+		this.phuong = phuong;
+		this.thanhPho = thanhPho;
+		this.tinh = tinh;
+	}
+
 	public int getMaQuay() {
 		return maQuay;
 	}

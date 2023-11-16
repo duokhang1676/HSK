@@ -34,12 +34,13 @@ public class MaGiamGia {
 		this.thuoc = thuoc;
 	}
 
-	public MaGiamGia(LocalDate ngayBatDau, LocalDate ngayKetThuc, double phanTramGiamGia, String moTa) {
+	public MaGiamGia(LocalDate ngayBatDau, LocalDate ngayKetThuc, double phanTramGiamGia, String moTa, Thuoc thuoc) {
 		super();
 		this.ngayBatDau = ngayBatDau;
 		this.ngayKetThuc = ngayKetThuc;
 		this.phanTramGiamGia = phanTramGiamGia;
 		this.moTa = moTa;
+		this.thuoc = thuoc;
 	}
 
 	public MaGiamGia(int maGiamGia, double phanTramGiamGia) {
