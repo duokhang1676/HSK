@@ -96,8 +96,8 @@ public class ChiTietHoaDonDao {
 		return n > 0;
 
 	}
-
-	private ArrayList<ChiTietHoaDon> getAllChiTietHoaDonByMaDonHang(int maDonHang) {
+	
+	public ArrayList<ChiTietHoaDon> getAllChiTietHoaDonByMaDonHang(int maDonHang) {
 		ArrayList<ChiTietHoaDon> dsCTHD = new ArrayList<ChiTietHoaDon>();
 		try {
 			db.ConnectDB.getInstance();
@@ -106,8 +106,8 @@ public class ChiTietHoaDonDao {
 
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setInt(1, maDonHang);
-
-			ResultSet rs = stmt.executeQuery(sql);
+			
+			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 				int ma = rs.getInt(0);
 				int soLuong = rs.getInt(1);
