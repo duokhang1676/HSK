@@ -440,7 +440,6 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		incomeInWeekChart = ChartFactory.createBarChart("Doanh Thu 7 Ngày Gần Nhất", "Ngày trong tuần", "Doanh thu",
 				getIncomeInWeekDateset(), PlotOrientation.VERTICAL, false, false, false);
 		((JFreeChart) incomeInWeekChart).setBorderVisible(false);
-		((JFreeChart) incomeInWeekChart).setPadding(new RectangleInsets(15, 15, 15, 15));
 		((JFreeChart) incomeInWeekChart).setBackgroundPaint(Color.white);
 
 		CategoryPlot cplot = (CategoryPlot) ((JFreeChart) incomeInWeekChart).getPlot();

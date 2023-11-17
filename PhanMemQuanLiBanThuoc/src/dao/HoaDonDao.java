@@ -14,6 +14,7 @@ import entity.HoaDon;
 import entity.KhachHang;
 import entity.NhanVien;
 import entity.Quay;
+import model.IncomeInPeriod;
 import model.PercentagePaymentMethod;
 
 public class HoaDonDao {
@@ -83,16 +84,21 @@ public class HoaDonDao {
 		return null;
 	}
 
-	public ArrayList<PercentagePaymentMethod> getPercentageOfMethodPayment() {
+	public ArrayList<PercentagePaymentMethod> getPercentageOfMethodPayment(LocalDate from, LocalDate to) {
 		ArrayList<PercentagePaymentMethod> dsPers = new ArrayList<PercentagePaymentMethod>();
 		try {
 			db.ConnectDB.getInstance();
 			Connection con = db.ConnectDB.getConnection();
 			String sql = "SELECT [PhuongThucThanhToan], COUNT([PhuongThucThanhToan]) AS SoLuongDonHang\r\n"
-					+ "FROM [dbo].[HoaDon]\r\n" + "GROUP BY [PhuongThucThanhToan]";
+					+ "FROM [dbo].[HoaDon] \r\n"
+					+ "WHERE NgayLapHoaDon BETWEEN ? AND ?\r\n"
+					+ "GROUP BY [PhuongThucThanhToan]";
 
-			Statement statement = con.createStatement();
-			ResultSet rs = statement.executeQuery(sql);
+			PreparedStatement statement = con.prepareStatement(sql);
+			statement.setDate(1, Date.valueOf(from));
+			statement.setDate(2, Date.valueOf(to));
+
+			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				String phuongThucThanhToan = rs.getString("PhuongThucThanhToan");
 				int soLuongDonHang = rs.getInt("SoLuongDonHang");
@@ -116,7 +122,7 @@ public class HoaDonDao {
 			statement.setDate(1, Date.valueOf(from));
 			statement.setDate(2, Date.valueOf(to));
 			
-			ResultSet rs = statement.executeQuery(sql);
+			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				return rs.getInt("TongSoHoaDon");
 			}
@@ -138,7 +144,7 @@ public class HoaDonDao {
 			statement.setDate(1, Date.valueOf(from));
 			statement.setDate(2, Date.valueOf(to));
 			
-			ResultSet rs = statement.executeQuery(sql);
+			ResultSet rs = statement.executeQuery();
 			while (rs.next()) {
 				return rs.getLong("TongDoanhThu");
 			}
@@ -147,4 +153,31 @@ public class HoaDonDao {
 		}
 		return 0;
 	} 
+	
+	public ArrayList<IncomeInPeriod> getDoanhThuTrongKhoang(LocalDate from, LocalDate to) {
+		ArrayList<IncomeInPeriod> incomes = new ArrayList<IncomeInPeriod>();
+		try {
+			db.ConnectDB.getInstance();
+			Connection con = db.ConnectDB.getConnection();
+			String sql = "SELECT NgayLapHoaDon, SUM(TongTien) AS TongDoanhThuTheoNgay\r\n"
+					+ "FROM HoaDon\r\n"
+					+ "WHERE NgayLapHoaDon BETWEEN ? AND ?\r\n"
+					+ "GROUP BY NgayLapHoaDon";
+
+			PreparedStatement statement = con.prepareStatement(sql);
+			statement.setDate(1, Date.valueOf(from));
+			statement.setDate(2, Date.valueOf(to));
+
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				LocalDate ngay = rs.getDate("NgayLapHoaDon").toLocalDate();
+				long income = rs.getLong("TongDoanhThuTheoNgay");
+
+				incomes.add(new IncomeInPeriod(String.valueOf(ngay.getDayOfMonth()), income));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return incomes;
+	}
 }
