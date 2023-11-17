@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
@@ -38,6 +39,7 @@ import components.ColorConsts;
 import components.Header;
 import components.OrderDetailView;
 import components.TopSaleProductView;
+import dao.ChiTietHoaDonDao;
 import dao.HoaDonDao;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
@@ -71,7 +73,6 @@ public class OrderPage extends BasePage implements MouseListener{
 	private JTextField txtTim;
 	private JTextField txtTongTienHang;
 	private JTextField txtTongGiamGia;
-	private JTextField txtKhachCanTra;
 	private JTextField txtKhachThanhToan;
 	private JTextField txtTienThua;
 	private JTextField txtDH;
@@ -99,6 +100,12 @@ public class OrderPage extends BasePage implements MouseListener{
 	private JButton btnLoc;
 	
 	private HoaDonDao hoaDonDao;
+	private ChiTietHoaDonDao chiTietHoaDonDao;
+	
+	private ArrayList<HoaDon> dsHoaDon;
+	private JLabel lblQuay;
+	private JLabel lblTK;
+	private JLabel lblNgayTaoDonHang;
 	
 	
 	public OrderPage() {
@@ -107,7 +114,8 @@ public class OrderPage extends BasePage implements MouseListener{
 
 	@Override
 	public JPanel onCreateNestedContainerView() {
-		
+		hoaDonDao = new HoaDonDao();
+		chiTietHoaDonDao = new ChiTietHoaDonDao();
 		Font commonFont = new Font("Arial", Font.PLAIN, 14);
 
 		JPanel contentPane = new JPanel(new BorderLayout());
@@ -145,8 +153,22 @@ public class OrderPage extends BasePage implements MouseListener{
 		
 		txtTim = new JTextField(18);
 		txtTim.setPreferredSize(new Dimension(0,25));
+		txtTim.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				txtTim.setText("");
+			}
+		});
+		
+		comboBox.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				txtTim.setText("");
+			}
+		});
 		
 		btnDTT = new JRadioButton("Đã thanh toán");
+		btnDTT.setSelected(true);
 		btnCTT = new JRadioButton("Chưa thanh toán");
 		btnDTT.setVisible(false);
 		btnCTT.setVisible(false);
@@ -161,11 +183,81 @@ public class OrderPage extends BasePage implements MouseListener{
 		btnLoc.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				layDonHangTheoNgay();
+				dropText();
+				DefaultTableModel model = (DefaultTableModel) orderTable.getModel();
+				model.setRowCount(0);
+				if(comboBox.getSelectedItem().toString().equals("Mã hóa đơn")) {
+					if(txtTim.getText().trim().isEmpty()) {
+						getDanhSachDonHang();
+						return;
+					}else {
+						for (HoaDon hoaDon : dsHoaDon) {
+							if(txtTim.getText().trim().equalsIgnoreCase(hoaDon.getMaHD()+""))
+								orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+									hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+						}
+					}
+				}else
+				if(comboBox.getSelectedItem().toString().equals("Quầy")) {
+					if(txtTim.getText().trim().isEmpty()) {
+						getDanhSachDonHang();
+						return;
+					}else {
+						for (HoaDon hoaDon : dsHoaDon) {
+							if(txtTim.getText().trim().equalsIgnoreCase(hoaDon.getQuay().getMaQuay()+"")
+									||txtTim.getText().trim().equalsIgnoreCase(hoaDon.getQuay().getTenQuay()+""))
+								orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+									hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+						}
+					}
+				}else
+				if(comboBox.getSelectedItem().toString().equals("Khách hàng")) {
+					if(txtTim.getText().trim().isEmpty()) {
+						getDanhSachDonHang();
+						return;
+					}else {
+						for (HoaDon hoaDon : dsHoaDon) {
+							if(txtTim.getText().trim().equalsIgnoreCase(hoaDon.getKhachHang().getMaKhachHang()+"")||
+									txtTim.getText().trim().equalsIgnoreCase(hoaDon.getKhachHang().getTenKhachHang()+"")||
+									txtTim.getText().trim().equalsIgnoreCase(hoaDon.getKhachHang().getSoDienThoai()+""))
+								orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+									hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+						}
+					}
+				}else {
+					if(btnDTT.isSelected()) {
+						for (HoaDon hoaDon : dsHoaDon) {
+							if((hoaDon.getTrangThai()+"").equalsIgnoreCase("Đã TT"))
+								orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+									hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+						}
+					}else {
+						for (HoaDon hoaDon : dsHoaDon) {
+							if((hoaDon.getTrangThai()+"").equalsIgnoreCase("Chưa TT"))
+								orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+									hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+						}
+					}
+				}
+			}
+
+			private void dropText() {
+				txtDH.setText("");
+				lblTK.setText("");
+				lblQuay.setText("");
+				lblNgayTaoDonHang.setText("");
+				txtTenKH.setText("");
+				txtSdtKhachHang.setText("");
+				DefaultTableModel model = (DefaultTableModel) chiTietHoaDonTable.getModel();
+				model.setRowCount(0);
+				txtTongTienHang.setText("");
+				txtTongGiamGia.setText("");
+				txtKhachThanhToan.setText("");
+				txtPttt.setText("");
+				ghiChuTextArea.setText("");
 			}
 		});
 		
-
 		Box leftHeaderBox = Box.createHorizontalBox();
 		leftHeaderBox.add(Box.createVerticalStrut(10));
 		leftHeaderBox.setForeground(Color.decode(ColorConsts.ForegroundColor));
@@ -186,7 +278,45 @@ public class OrderPage extends BasePage implements MouseListener{
 		TableColumnModel columnModel2 = orderTable.getColumnModel();
 		columnModel2.getColumn(0).setPreferredWidth(30);
 		columnModel2.getColumn(2).setPreferredWidth(160);
-		layAllDonHang();
+		getDanhSachDonHang();
+		orderTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int i = orderTable.getSelectedRow();
+				if(i==-1)
+					return;
+				for (HoaDon hoaDon : dsHoaDon) {
+					if((hoaDon.getMaHD()+"").equals(orderTable.getValueAt(i, 0).toString())) {
+						txtDH.setText(hoaDon.getMaHD()+"");
+						lblTK.setText(hoaDon.getNhanVien().getTenNhanVien()+"");
+						lblQuay.setText(hoaDon.getQuay().getTenQuay()+"");
+						lblNgayTaoDonHang.setText(hoaDon.getNgayLapHD()+"");
+						//txtTenKH.setText(hoaDon.getKhachHang().getTenKhachHang()+"");
+						txtSdtKhachHang.setText(hoaDon.getKhachHang().getSoDienThoai()+"");
+						
+//						ArrayList<ChiTietHoaDon> dsCTHD = chiTietHoaDonDao.getAllChiTietHoaDonByMaDonHang(hoaDon.getMaHD());
+//						int stt = 0;
+//						for (ChiTietHoaDon chiTietHoaDon : dsCTHD) {
+//							chiTietHoaDonModel.addRow(new Object[] {
+//									stt++,chiTietHoaDon.getSanPham().getTenThuoc(),
+//									chiTietHoaDon.getDonViTinh(), chiTietHoaDon.getSoLuong(),
+//									chiTietHoaDon.getDonGia(),chiTietHoaDon.getGiamGia(),
+//									chiTietHoaDon.getThanhTien()
+//							});
+//						}
+						double tongTien = hoaDon.getTongTien()-hoaDon.getTongTienGiam();
+						txtTongTienHang.setText(tongTien+"");
+						txtTongGiamGia.setText(hoaDon.getTongTienGiam()+"");
+						txtKhachThanhToan.setText(hoaDon.getTongTien()+"");
+						txtPttt.setText(hoaDon.getPhuongThucThanhToan()+"");
+						//ghiChuTextArea.setText(hoaDon.get)e
+						if(hoaDon.getTrangThai().equals("Chưa TT"))
+							btnXuatHoaDon.setText("Thanh toán");
+						else btnXuatHoaDon.setText("Xuất hóa đơn");
+					}
+				}
+			}
+		});
 		
 		
 		
@@ -231,32 +361,34 @@ public class OrderPage extends BasePage implements MouseListener{
 		lblDonHang.setPreferredSize(new Dimension(lblDonHang.getPreferredSize().width + 20, lblDonHang.getPreferredSize().height));
 		txtDH.setEditable(false);
 		
-		JLabel lblQuay = new JLabel("     Quầy số 1");
-		lblQuay.setFont(commonFont);
+		
 		Box donHangGroup = Box.createHorizontalBox();
-		donHangGroup.add(lblDonHang);
+		JLabel lblTTDH;
+		donHangGroup.add(lblTTDH = new JLabel("Đơn hàng"));
+		lblTTDH.setPreferredSize(new Dimension(160,20));
+		lblTTDH.setFont(new Font("Arial", Font.BOLD, 16));
 		donHangGroup.add(txtDH);
-		donHangGroup.add(lblQuay);
+	
 
 		/*
 		 * Don hang ngay gio
 		 */
-		JLabel lblTK = new JLabel("admin");
+		lblTK = new JLabel(".");
 		lblTK.setFont(commonFont);
 		
 		
-		JLabel lblNgayTaoDonHang = new JLabel("05/11/2023");
+		lblNgayTaoDonHang = new JLabel("");
 		lblNgayTaoDonHang.setFont(commonFont);
 		lblNgayTaoDonHang.setAlignmentX(CENTER_ALIGNMENT);
 		lblNgayTaoDonHang.setHorizontalAlignment(JLabel.CENTER);
 		
-		JLabel lblgioTaoDonHang = new JLabel("12:30");
-		lblgioTaoDonHang.setFont(commonFont);
+		lblQuay = new JLabel("");
+		lblQuay.setFont(commonFont);
 
 		JPanel ngayGioDonHangGroup = new JPanel(new BorderLayout());
 		ngayGioDonHangGroup.add(lblTK, BorderLayout.WEST);
 		ngayGioDonHangGroup.add(lblNgayTaoDonHang, BorderLayout.CENTER);
-		ngayGioDonHangGroup.add(lblgioTaoDonHang, BorderLayout.EAST);
+		ngayGioDonHangGroup.add(lblQuay, BorderLayout.EAST);
 
 		/**
 		 * Tim khach hang label title
@@ -299,7 +431,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		tenKHLb.setFont(commonFont);
 		tenKHLb.setPreferredSize(lblTienThua.getPreferredSize());
 		tenKHLb.setBorder(new EmptyBorder(0,0, 0, 10));
-		txtTenKhachHang = new JTextField("Nguyễn Quốc Huy");
+		txtTenKhachHang = new JTextField("");
 		txtTenKhachHang.setEditable(false);
 
 
@@ -315,7 +447,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		sdtKHLb.setFont(commonFont);
 		sdtKHLb.setBorder(new EmptyBorder(0,0, 0, 10));
 		sdtKHLb.setPreferredSize(lblTienThua.getPreferredSize());
-		txtSdtKhachHang = new JTextField("0868684969");
+		txtSdtKhachHang = new JTextField("");
 		txtSdtKhachHang.setEditable(false);
 
 
@@ -331,7 +463,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		JLabel lblTongTienHang = new JLabel("Tổng tiền hàng");
 		lblTongTienHang.setFont(commonFont);
 		lblTongTienHang.setPreferredSize(lblTienThua.getPreferredSize());
-		txtTongTienHang = new JTextField("1,000,000d");
+		txtTongTienHang = new JTextField("");
 		txtTongTienHang.setEditable(false);
 		tongTiengHangBox.add(lblTongTienHang);
 		tongTiengHangBox.add(txtTongTienHang);
@@ -344,7 +476,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		JLabel lblTongGiamGia = new JLabel("Tổng giảm giá");
 		lblTongGiamGia.setFont(commonFont);
 		lblTongGiamGia.setPreferredSize(lblTienThua.getPreferredSize());
-		txtTongGiamGia = new JTextField("1,000,000d");
+		txtTongGiamGia = new JTextField("");
 		txtTongGiamGia.setEditable(false);
 		tongGiamGiaBox.add(lblTongGiamGia);
 		tongGiamGiaBox.add(txtTongGiamGia);
@@ -352,26 +484,26 @@ public class OrderPage extends BasePage implements MouseListener{
 		/**
 		 * Tổng giảm box
 		 */
-		Box khachCanTraBox = Box.createHorizontalBox();
-		JLabel lblKhachCanTra = new JLabel("Thanh toán");
-		lblKhachCanTra.setFont(commonFont);
-		lblKhachCanTra.setPreferredSize(lblTienThua.getPreferredSize());
-		txtKhachCanTra = new JTextField("1,000,000d");
-		txtKhachCanTra.setEditable(false);
-		khachCanTraBox.add(lblKhachCanTra);
-		khachCanTraBox.add(txtKhachCanTra);
+		Box khachThanhToanBox = Box.createHorizontalBox();
+		JLabel lblKhachThanhToan = new JLabel("Thanh toán");
+		lblKhachThanhToan.setFont(commonFont);
+		lblKhachThanhToan.setPreferredSize(lblTienThua.getPreferredSize());
+		txtKhachThanhToan = new JTextField("");
+		txtKhachThanhToan.setEditable(false);
+		khachThanhToanBox.add(lblKhachThanhToan);
+		khachThanhToanBox.add(txtKhachThanhToan);
 		
 		/**
 		 * Khách thanh toán box
 		 */
-		Box khachThanhToanBox = Box.createHorizontalBox();
-		JLabel lblKhachThanhToan = new JLabel("Khách thanh toán");
-		lblKhachThanhToan.setFont(commonFont);
-		lblKhachThanhToan.setPreferredSize(lblTienThua.getPreferredSize());
-		txtKhachThanhToan = new JTextField("1,000,000d");
-		txtKhachThanhToan.setEditable(false);
-		khachThanhToanBox.add(lblKhachThanhToan);
-		khachThanhToanBox.add(txtKhachThanhToan);
+//		Box khachThanhToanBox = Box.createHorizontalBox();
+//		JLabel lblKhachThanhToan = new JLabel("Khách thanh toán");
+//		lblKhachThanhToan.setFont(commonFont);
+//		lblKhachThanhToan.setPreferredSize(lblTienThua.getPreferredSize());
+//		txtKhachThanhToan = new JTextField("abc");
+//		txtKhachThanhToan.setEditable(false);
+//		khachThanhToanBox.add(lblKhachThanhToan);
+//		khachThanhToanBox.add(txtKhachThanhToan);
 
 		
 		/**
@@ -383,7 +515,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		lblspace.setPreferredSize(new Dimension(270,0));
 		lblpttt.setFont(commonFont);
 		lblpttt.setPreferredSize(lblTienThua.getPreferredSize());
-		txtPttt = new JTextField("Tiền mặt");
+		txtPttt = new JTextField("");
 		txtPttt.setHorizontalAlignment(JTextField.CENTER);
 		txtPttt.setEditable(false);
 		ptttBox.add(lblpttt);
@@ -448,7 +580,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		right.add(Box.createVerticalStrut(10));
 		right.add(tongGiamGiaBox);
 		right.add(Box.createVerticalStrut(10));
-		right.add(khachCanTraBox);
+		right.add(khachThanhToanBox);
 		right.add(Box.createVerticalStrut(20));
 		right.add(ptttBox);
 		right.add(Box.createVerticalStrut(20));
@@ -459,15 +591,6 @@ public class OrderPage extends BasePage implements MouseListener{
 		
 		contentPane.add(left, BorderLayout.CENTER);
 		contentPane.add(right, BorderLayout.EAST);
-		
-		
-		chiTietHoaDonModel.addRow(new String[] {
-				"1",
-				"Ma Tuy Da",
-				"1",
-				"500000",
-				"500000"
-		});
 		
 		return contentPane;
 	}
@@ -506,24 +629,28 @@ public class OrderPage extends BasePage implements MouseListener{
 		
 	}
 	
-	public void layAllDonHang() {
-		hoaDonDao = new HoaDonDao();
-		ArrayList<HoaDon> dsHoaDon = hoaDonDao.getAllTBHoaDon();
-		if(dsHoaDon == null)return;
-		for (HoaDon hoaDon : dsHoaDon) {
-			
-			orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
-					hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
-		}
-	}
-	public void layDonHangTheoNgay() {
+	public void getDanhSachDonHang() {
 		DefaultTableModel model = (DefaultTableModel) orderTable.getModel();
-		model.setRowCount(0); 
-		LocalDate tuNgay = datePickerFrom.getDate();
-		LocalDate denNgay = datePickerTo.getDate();
-		hoaDonDao = new HoaDonDao();
-		ArrayList<HoaDon> dsHoaDon = hoaDonDao.getHoaDonTheoNgay(tuNgay, denNgay);
-		if(dsHoaDon == null)return;
+		model.setRowCount(0);
+		String dateFrom = datePickerFrom.getDateStringOrEmptyString();
+		String dateTo = datePickerTo.getDateStringOrEmptyString();
+		LocalDate tuNgay;
+		LocalDate denNgay;
+		if(dateFrom.isEmpty()&&dateTo.isEmpty()) {//lấy tất cả
+			dsHoaDon = hoaDonDao.getAllTBHoaDon();
+		}else if(dateFrom.isEmpty()&&!dateTo.isEmpty()) {//lấy đến ngày
+			denNgay = datePickerTo.getDate();
+			dsHoaDon = hoaDonDao.getHoaDonTheoNgayDen(denNgay);
+		}else if(!dateFrom.isEmpty()&&dateTo.isEmpty()) {//lấy từ ngày
+			tuNgay = datePickerFrom.getDate();
+			ArrayList<HoaDon> dsHoaDon = hoaDonDao.getHoaDonTheoNgayTu(tuNgay);
+		}else if(!dateFrom.isEmpty()&&!dateTo.isEmpty()) {
+			tuNgay = datePickerFrom.getDate();
+			denNgay = datePickerTo.getDate();
+			dsHoaDon = hoaDonDao.getHoaDonTheoNgay(tuNgay, denNgay);
+		}
+		if(dsHoaDon == null)
+			return;
 		for (HoaDon hoaDon : dsHoaDon) {
 			orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
 					hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});

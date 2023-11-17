@@ -103,6 +103,94 @@ public class HoaDonDao {
 		}
 		return dsHD;
 	}
+	
+	
+	public ArrayList<HoaDon> getHoaDonTheoNgayTu(LocalDate tuNgay) {
+		ArrayList<HoaDon> dsHD = new ArrayList<HoaDon>();
+		try {
+			db.ConnectDB.getInstance();
+			Connection con = db.ConnectDB.getConnection();
+			String sql = "SELECT HoaDon.MaHoaDon, HoaDon.NgayLapHoaDon, HoaDon.TrangThai, HoaDon.PhuongThucThanhToan,\r\n"
+					+ "       HoaDon.TienNhan, HoaDon.TienDu, HoaDon.TongTienGiam, HoaDon.TongTien,\r\n"
+					+ "       HoaDon.MaNhanVien, HoaDon.MaQuay, HoaDon.MaKhachHang,\r\n"
+					+ "       KhachHang.TenKhachHang, KhachHang.SoDienThoai AS SoDienThoaiKhachHang,\r\n"
+					+ "       NhanVien.TenNhanVien ,\r\n"
+					+ "       Quay.TenQuay\r\n"
+					+ "FROM HoaDon\r\n"
+					+ "LEFT JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang\r\n"
+					+ "LEFT JOIN NhanVien ON HoaDon.MaNhanVien = NhanVien.MaNhanVien\r\n"
+					+ "LEFT JOIN Quay ON HoaDon.MaQuay = Quay.MaQuay\r\n"
+					+ "WHERE HoaDon.NgayLapHoaDon >= ?";
+			PreparedStatement stmt = null;
+			stmt = con.prepareStatement(sql);
+			stmt.setDate(1, Date.valueOf(tuNgay));
+			
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				int ma = rs.getInt("MaHoaDon");
+				LocalDate ngayLapHD = rs.getDate("NgayLapHoaDon").toLocalDate();
+				String trangThai = rs.getString("TrangThai");
+				String phuongThucTT = rs.getString("PhuongThucThanhToan");
+				double tienNhan = rs.getDouble("TienNhan");
+				double tienDu = rs.getDouble("TienDu");
+				KhachHang kh = new KhachHang(rs.getInt("MaKhachHang"), rs.getString("TenKhachHang"), rs.getString("SoDienThoaiKhachHang"));
+				NhanVien nv = new NhanVien(rs.getInt("MaNhanVien"), rs.getString("TenNhanVien"), LocalDate.now(), "", "", new Quay(0), "");
+				Quay quay = new Quay(rs.getInt("MaQuay"), rs.getString("TenQuay"));
+				double tongTienGiam = rs.getDouble("TongTienGiam");
+				double tongTien = rs.getDouble("TongTien");
+				HoaDon hd = new HoaDon(ma, ngayLapHD, trangThai, phuongThucTT, tienNhan, tienDu, kh, nv, quay,
+						tongTienGiam, tongTien);
+				dsHD.add(hd);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dsHD;
+	}
+	
+	public ArrayList<HoaDon> getHoaDonTheoNgayDen(LocalDate denNgay) {
+		ArrayList<HoaDon> dsHD = new ArrayList<HoaDon>();
+		try {
+			db.ConnectDB.getInstance();
+			Connection con = db.ConnectDB.getConnection();
+			String sql = "SELECT HoaDon.MaHoaDon, HoaDon.NgayLapHoaDon, HoaDon.TrangThai, HoaDon.PhuongThucThanhToan,\r\n"
+					+ "       HoaDon.TienNhan, HoaDon.TienDu, HoaDon.TongTienGiam, HoaDon.TongTien,\r\n"
+					+ "       HoaDon.MaNhanVien, HoaDon.MaQuay, HoaDon.MaKhachHang,\r\n"
+					+ "       KhachHang.TenKhachHang, KhachHang.SoDienThoai AS SoDienThoaiKhachHang,\r\n"
+					+ "       NhanVien.TenNhanVien ,\r\n"
+					+ "       Quay.TenQuay\r\n"
+					+ "FROM HoaDon\r\n"
+					+ "LEFT JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang\r\n"
+					+ "LEFT JOIN NhanVien ON HoaDon.MaNhanVien = NhanVien.MaNhanVien\r\n"
+					+ "LEFT JOIN Quay ON HoaDon.MaQuay = Quay.MaQuay\r\n"
+					+ "WHERE  HoaDon.NgayLapHoaDon <= ?";
+			PreparedStatement stmt = null;
+			stmt = con.prepareStatement(sql);
+			stmt.setDate(1, Date.valueOf(denNgay));
+			
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				int ma = rs.getInt("MaHoaDon");
+				LocalDate ngayLapHD = rs.getDate("NgayLapHoaDon").toLocalDate();
+				String trangThai = rs.getString("TrangThai");
+				String phuongThucTT = rs.getString("PhuongThucThanhToan");
+				double tienNhan = rs.getDouble("TienNhan");
+				double tienDu = rs.getDouble("TienDu");
+				KhachHang kh = new KhachHang(rs.getInt("MaKhachHang"), rs.getString("TenKhachHang"), rs.getString("SoDienThoaiKhachHang"));
+				NhanVien nv = new NhanVien(rs.getInt("MaNhanVien"), rs.getString("TenNhanVien"), LocalDate.now(), "", "", new Quay(0), "");
+				Quay quay = new Quay(rs.getInt("MaQuay"), rs.getString("TenQuay"));
+				double tongTienGiam = rs.getDouble("TongTienGiam");
+				double tongTien = rs.getDouble("TongTien");
+				HoaDon hd = new HoaDon(ma, ngayLapHD, trangThai, phuongThucTT, tienNhan, tienDu, kh, nv, quay,
+						tongTienGiam, tongTien);
+				dsHD.add(hd);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return dsHD;
+	}
+	
 
 	public HoaDon themHoaDon(HoaDon hd) {
 		int affectedRows = 0;

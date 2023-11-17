@@ -24,6 +24,8 @@ import javax.swing.JButton;
 import org.jfree.ui.tabbedui.VerticalLayout;
 
 import components.ColorConsts;
+import components.TaiKhoanDangNhap;
+import entity.NhanVien;
 
 public class MyProfilePage extends BasePage {
 
@@ -37,11 +39,14 @@ public class MyProfilePage extends BasePage {
 	
 	@Override
 	protected JPanel onCreateNestedContainerView() {
+		
+		NhanVien nv = TaiKhoanDangNhap.getNV();
 
 		JLabel ngayVaoLamBoxLb = new JLabel("Ngày vào làm");
 		ngayVaoLamBoxLb.setFont(new Font("Arials", Font.PLAIN, 14));
 
-		ngayVaoLamTxt = new JTextField("9-11-2023");
+		ngayVaoLamTxt = new JTextField("");
+		ngayVaoLamTxt.setText(nv.getNgayVaoLam()+"");
 		ngayVaoLamTxt.setEditable(false);
 		Box ngayVaoLamBox = Box.createHorizontalBox();
 		ngayVaoLamBox.add(ngayVaoLamBoxLb);
@@ -50,7 +55,8 @@ public class MyProfilePage extends BasePage {
 		JLabel soDienThoaiLb = new JLabel("Số điện thoại");
 		soDienThoaiLb.setFont(new Font("Arials", Font.PLAIN, 14));
 		soDienThoaiLb.setPreferredSize(ngayVaoLamBoxLb.getPreferredSize());
-		sdtTxt = new JTextField("0868684969");
+		sdtTxt = new JTextField("");
+		sdtTxt.setText(nv.getSoDienThoai()+"");
 		sdtTxt.setEditable(false);
 		Box sdtBox = Box.createHorizontalBox();
 		sdtBox.add(soDienThoaiLb);
@@ -59,7 +65,8 @@ public class MyProfilePage extends BasePage {
 		JLabel hoTenLb = new JLabel("Họ tên");
 		hoTenLb.setFont(new Font("Arials", Font.PLAIN, 14));
 		hoTenLb.setPreferredSize(ngayVaoLamBoxLb.getPreferredSize());
-		hoTenTxt = new JTextField("Nguyễn Quốc Huy");
+		hoTenTxt = new JTextField("");
+		hoTenTxt.setText(nv.getTenNhanVien());
 		hoTenTxt.setEditable(false);
 		Box hoTenBox = Box.createHorizontalBox();
 		hoTenBox.add(hoTenLb);
@@ -68,7 +75,8 @@ public class MyProfilePage extends BasePage {
 		JLabel caLamViecLb = new JLabel("Ca làm việc");
 		caLamViecLb.setFont(new Font("Arials", Font.PLAIN, 14));
 		caLamViecLb.setPreferredSize(ngayVaoLamBoxLb.getPreferredSize());
-		caLamViecTxt = new JTextField("Ca sáng");
+		caLamViecTxt = new JTextField("");
+		caLamViecTxt.setText(nv.getCaLamViec());
 		caLamViecTxt.setEditable(false);
 		Box caLmViecBox = Box.createHorizontalBox();
 		caLmViecBox.add(caLamViecLb);
@@ -77,7 +85,8 @@ public class MyProfilePage extends BasePage {
 		JLabel chucVuLb = new JLabel("Chức vụ");
 		chucVuLb.setFont(new Font("Arials", Font.PLAIN, 14));
 		chucVuLb.setPreferredSize(ngayVaoLamBoxLb.getPreferredSize());
-		chucVuTxt = new JTextField("Quản lí");
+		chucVuTxt = new JTextField("");
+		chucVuTxt.setText(nv.getChucVu());
 		chucVuTxt.setEditable(false);
 		Box chucVuBox = Box.createHorizontalBox();
 		chucVuBox.add(chucVuLb);
@@ -99,6 +108,8 @@ public class MyProfilePage extends BasePage {
 		dangXuatBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		dangXuatBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				new RootFrame().setVisible(false);
+				new LoginPage().setVisible(true);
 			}
 		});
 		

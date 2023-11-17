@@ -15,6 +15,7 @@ public class HoaDon {
 	private Quay quay;
 	private double tongTienGiam;
 	private double tongTien;
+	//private String ghiChu;
 
 	public HoaDon() {
 	}
@@ -25,7 +26,7 @@ public class HoaDon {
 	}
 
 	public HoaDon(int maHD, LocalDate ngayLapHD, String trangThai, String phuongThucThanhToan, double tienNhan,
-			double tienDu, KhachHang khachHang, NhanVien nhanVien, Quay quay, double tongTienGiam, double tongTien) {
+			double tienDu, KhachHang khachHang, NhanVien nhanVien, Quay quay, double tongTienGiam, double tongTien/*, String ghiChu*/) {
 		super();
 		this.maHD = maHD;
 		this.ngayLapHD = ngayLapHD;
@@ -38,6 +39,7 @@ public class HoaDon {
 		this.quay = quay;
 		this.tongTienGiam = tongTienGiam;
 		this.tongTien = tongTien;
+		//this.ghiChu = ghiChu;
 	}
 
 	public int getMaHD() {
@@ -128,29 +130,13 @@ public class HoaDon {
 		this.tongTien = tongTien;
 	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(maHD);
-	}
+//	public String getGhiChu() {
+//		return ghiChu;
+//	}
+//
+//	public void setGhiChu(String ghiChu) {
+//		this.ghiChu = ghiChu;
+//	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		HoaDon other = (HoaDon) obj;
-		return maHD == other.maHD;
-	}
-
-	@Override
-	public String toString() {
-		return "HoaDon [maHD=" + maHD + ", ngayLapHD=" + ngayLapHD + ", trangThai=" + trangThai
-				+ ", phuongThucThanhToan=" + phuongThucThanhToan + ", tienNhan=" + tienNhan + ", tienDu=" + tienDu
-				+ ", khachHang=" + khachHang + ", nhanVien=" + nhanVien + ", quay=" + quay + ", tongTienGiam="
-				+ tongTienGiam + ", tongTien=" + tongTien + "]";
-	}
-
+	
 }

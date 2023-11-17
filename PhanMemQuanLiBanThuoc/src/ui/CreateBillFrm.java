@@ -1097,7 +1097,6 @@ public class CreateBillFrm extends JFrame {
 
 				// int maHoaDon = hoaDonDao.getMaHoaDonLast();
 
-				//int maGiamGia = 2;
 				ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(0, soLuong, donViTinh, donGia, sanPham, thue, thanhTien,
 						giamGia, hoaDon, 1);
 				chiTietHoaDonDao.themChiTietHoaDonKhongGG(chiTietHoaDon);
