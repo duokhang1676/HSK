@@ -410,6 +410,7 @@ public class CreateBillFrm extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				int i = tb.getSelectedRow();
+				if(txtSoLuong.getText().trim().equals(""))return;
 				int soLuong = Integer.parseInt(txtSoLuong.getText().trim());
 				if (i != -1) {
 				int sl = Integer.parseInt(orderTableModel.getValueAt(i, 3).toString());
@@ -516,7 +517,6 @@ public class CreateBillFrm extends JFrame {
 
 		int x2 = 820, x3 = 100, y1 = 10, y2 = 25, w2 = 500, h2 = 30;
 		JPanel right = new JPanel();
-		// right.setBackground(Color.decode(ColorConsts.BackgroundColor));
 		right.setBounds(x2, 0, 600, 700);
 		contentPane.add(right);
 		right.setLayout(null);
@@ -550,6 +550,8 @@ public class CreateBillFrm extends JFrame {
 
 		txtSDT = new JTextField("Nhập số điện thoại...");
 		txtSDT.setBounds(0, y1 += y2, 300, 20);
+		txtKhachThanhToan = new JTextField("");
+		 ((AbstractDocument) txtSDT.getDocument()).setDocumentFilter(new NumberOnlyFilter());
 		right.add(txtSDT);
 
 		// -----------------
@@ -558,12 +560,13 @@ public class CreateBillFrm extends JFrame {
 		right.add(txtSDTNhap);
 		txtSDTNhap.setColumns(10);
 		txtSDTNhap.setVisible(false);
+		txtKhachThanhToan = new JTextField("");
+		
+		 ((AbstractDocument) txtSDTNhap.getDocument()).setDocumentFilter(new NumberOnlyFilter());
 		// -------------
 
 		txtTenKH = new JTextField();
 		y1 += y2;
-		// txtTenKH.setBounds(0, y1+=y2, 300, 20);
-		// right.add(txtTenKH);
 		txtTenKH.setEditable(false);
 
 		temp = false;
@@ -671,7 +674,6 @@ public class CreateBillFrm extends JFrame {
 					txtTenKH.setText(listModelKH.getElementAt(i));// Để thằng này ở dưới thì bị lỗi ???
 					txtSDT.setText(dsKhachHangTemp.get(i).getSoDienThoai().toString());
 					khPane.setVisible(false);
-					// txtTenKH.setVisible(true);
 				}
 			}
 		});
@@ -1184,6 +1186,7 @@ public class CreateBillFrm extends JFrame {
 			createChiTietHoaDon(hoaDon);
 			JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
 					"Đã tạo hóa đơn!");
+			
 		}
 		dispose();
 	}

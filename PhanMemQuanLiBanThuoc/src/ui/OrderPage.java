@@ -14,6 +14,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.EventObject;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -36,6 +38,7 @@ import components.ColorConsts;
 import components.Header;
 import components.OrderDetailView;
 import components.TopSaleProductView;
+import dao.HoaDonDao;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.Thuoc;
@@ -44,6 +47,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -94,13 +98,11 @@ public class OrderPage extends BasePage implements MouseListener{
 	private JRadioButton btnCTT;
 	private JButton btnLoc;
 	
+	private HoaDonDao hoaDonDao;
+	
 	
 	public OrderPage() {
 		super();
-
-		orderTableModel.addRow(new String[] {
-			"1", "1", "1","1","1","1","1"
-		});
 	}
 
 	@Override
@@ -116,9 +118,10 @@ public class OrderPage extends BasePage implements MouseListener{
 		datePickerGroup.setBorder(new EmptyBorder(0, 5, 0, 0));
 
 		datePickerFrom = new DatePicker();
-		//datePickerFrom.setDate(LocalDate.now().minusDays(7));
+		datePickerFrom.setDate(LocalDate.now().minusDays(7));
 		datePickerTo = new DatePicker();
-		//datePickerTo.setDateToToday();
+		datePickerTo.setDateToToday();
+		
 
 		datePickerGroup.add(datePickerFrom);
 		datePickerGroup.add(datePickerTo);
@@ -155,6 +158,12 @@ public class OrderPage extends BasePage implements MouseListener{
 		btnLoc = new JButton("Lọc");
 		btnLoc.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btnLoc.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		btnLoc.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				layDonHangTheoNgay();
+			}
+		});
 		
 
 		Box leftHeaderBox = Box.createHorizontalBox();
@@ -168,18 +177,16 @@ public class OrderPage extends BasePage implements MouseListener{
 		leftHeaderRight.add(btnCTT);
 		leftHeaderRight.add(btnLoc);
 		leftHeaderBox.add(leftHeaderRight);
-//		leftHeaderBox.add(comboBox);
-//		leftHeaderBox.add(txtTim);
-//		leftHeaderBox.add(btnDTT);
-//		leftHeaderBox.add(btnCTT);
-//		leftHeaderBox.add(btnLoc);
 		leftHeaderBox.add(Box.createVerticalStrut(10));
-//		leftHeaderBox.setPreferredSize(new Dimension(200,25));
 
 		String[] headerCols = "Mã hóa đơn;Quầy;Khách hàng;Tổng thanh toán;Thời gian;Trạng thái".split(";");
 		orderTableModel = new DefaultTableModel(headerCols, 0);
 		orderTable = new JTable(orderTableModel);
-		orderTable.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		orderTable.setFont(new Font("Arial", Font.PLAIN, 14));
+		TableColumnModel columnModel2 = orderTable.getColumnModel();
+		columnModel2.getColumn(0).setPreferredWidth(30);
+		columnModel2.getColumn(2).setPreferredWidth(160);
+		layAllDonHang();
 		
 		
 		
@@ -268,6 +275,8 @@ public class OrderPage extends BasePage implements MouseListener{
 		columnModel.getColumn(2).setPreferredWidth(50);
 		columnModel.getColumn(3).setPreferredWidth(40);
 		columnModel.getColumn(5).setPreferredWidth(40);
+		
+		setCellEditable();
 		
 		chiTietHoaDonTable.addMouseListener(this);
 		/**
@@ -495,5 +504,49 @@ public class OrderPage extends BasePage implements MouseListener{
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void layAllDonHang() {
+		hoaDonDao = new HoaDonDao();
+		ArrayList<HoaDon> dsHoaDon = hoaDonDao.getAllTBHoaDon();
+		if(dsHoaDon == null)return;
+		for (HoaDon hoaDon : dsHoaDon) {
+			
+			orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+					hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+		}
+	}
+	public void layDonHangTheoNgay() {
+		DefaultTableModel model = (DefaultTableModel) orderTable.getModel();
+		model.setRowCount(0); 
+		LocalDate tuNgay = datePickerFrom.getDate();
+		LocalDate denNgay = datePickerTo.getDate();
+		hoaDonDao = new HoaDonDao();
+		ArrayList<HoaDon> dsHoaDon = hoaDonDao.getHoaDonTheoNgay(tuNgay, denNgay);
+		if(dsHoaDon == null)return;
+		for (HoaDon hoaDon : dsHoaDon) {
+			orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+					hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+		}
+	}
+	public void setCellEditable() {
+		for (int i = 0; i < orderTable.getColumnCount(); i++) {
+			orderTable.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(new JTextField()) {
+				@Override
+				public boolean isCellEditable(EventObject e) {
+					// Trả về false để ngăn chặn chỉnh sửa trực tiếp
+					return false;
+				}
+			});
+		}
+		for (int i = 0; i < chiTietHoaDonTable.getColumnCount(); i++) {
+			chiTietHoaDonTable.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(new JTextField()) {
+				@Override
+				public boolean isCellEditable(EventObject e) {
+					// Trả về false để ngăn chặn chỉnh sửa trực tiếp
+					return false;
+				}
+			});
+		}
 	}
 }
