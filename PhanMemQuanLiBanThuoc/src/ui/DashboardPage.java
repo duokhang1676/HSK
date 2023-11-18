@@ -15,8 +15,12 @@ import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.Currency;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -50,10 +54,12 @@ import components.TopSaleProductView;
 import dao.ChiTietHoaDonDao;
 import dao.HoaDonDao;
 import dao.QuayDao;
+import dao.ThuocDao;
 import model.IncomeInPeriod;
 import model.PercentagePaymentMethod;
 import model.TopSaleInCategory;
 import model.TopSaleInPremises;
+import model.TopThuocBanChay;
 
 public class DashboardPage extends BasePage implements DateChangeListener {
 
@@ -70,10 +76,11 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 	private JFreeChart paymentMethodChart;
 
 	private JList topSaleProductList;
-	private DefaultListModel<Object> topSaleProductModel;
+	private DefaultListModel<TopThuocBanChay> topSaleProductModel;
 
 	private QuayDao quayDao;
 	private HoaDonDao hoaDonDao;
+	private ThuocDao thuocDao;
 	private ChiTietHoaDonDao chiTietHoaDonDao;
 
 	private DefaultCategoryDataset topSaleInPremisDateset;
@@ -90,7 +97,8 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		quayDao = new QuayDao();
 		hoaDonDao = new HoaDonDao();
 		chiTietHoaDonDao = new ChiTietHoaDonDao();
-
+		thuocDao = new ThuocDao();
+		
 		fetchAllData();
 	}
 
@@ -180,18 +188,8 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		topSaleProductLabel.setBackground(Color.decode(ColorConsts.ForegroundColor));
 		topSaleProductLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
 
-		topSaleProductModel = new DefaultListModel<Object>();
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductList = new JList<Object>(topSaleProductModel);
+		topSaleProductModel = new DefaultListModel<TopThuocBanChay>();
+		topSaleProductList = new JList<TopThuocBanChay>(topSaleProductModel);
 		topSaleProductList.setCellRenderer(new TopSaleProductView());
 		topSaleProductPanel.add(topSaleProductLabel, BorderLayout.NORTH);
 		topSaleProductPanel.add(topSaleProductList, BorderLayout.CENTER);
@@ -316,6 +314,33 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		}
 	}
 	
+	private void getTop5ThuocBanChayNhat() {
+		LocalDate from = datePickerFrom.getDate();
+		LocalDate to = datePickerTo.getDate();
+		
+		topSaleProductModel.clear();
+		for (TopThuocBanChay item : thuocDao.getTop5ThuocBanChay(from, to)) {
+			topSaleProductModel.addElement(item);
+		}
+		
+	}
+	
+	private void getTongDoanhThu() {
+		LocalDate from = datePickerFrom.getDate();
+		LocalDate to = datePickerTo.getDate();
+		
+		long tongDoanhThu = hoaDonDao.getTongDoanhThu(from, to);
+		
+		Locale locale = new Locale("vi", "VN");
+        Currency currency = Currency.getInstance("VND");
+        DecimalFormatSymbols df = DecimalFormatSymbols.getInstance(locale);
+        df.setCurrency(currency);
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+        numberFormat.setCurrency(currency);
+        
+		incomeLabel.setText(numberFormat.format(tongDoanhThu));
+	}
+	
 	@Override
 	public void dateChanged(DateChangeEvent e) {
 		fetchAllData();
@@ -329,11 +354,12 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		getPaymentMethodPercentDataset();
 		getTopSaleInCategory();
 		getIncomeInPeriod();
+		getTop5ThuocBanChayNhat();
+		getTongDoanhThu();
 		
 		long tongSoDonHang = hoaDonDao.getTongSoDonHang(from, to);
 		orderCountLabel.setText(String.valueOf(tongSoDonHang));
 		
-		long tongDoanhThu = hoaDonDao.getTongDoanhThu(from, to);
-		incomeLabel.setText(String.valueOf(tongDoanhThu));
+		
 	}
 }
