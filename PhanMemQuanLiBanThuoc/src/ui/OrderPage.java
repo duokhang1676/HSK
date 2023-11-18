@@ -137,6 +137,7 @@ public class OrderPage extends BasePage implements MouseListener{
 
 		String listCombo[] = "Mã hóa đơn;Quầy;Khách hàng;Trạng thái".split(";");
 		JComboBox<String> comboBox= new JComboBox<String>(listCombo);
+		comboBox.setBackground(Color.decode(ColorConsts.ForegroundColor));
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(comboBox.getSelectedItem().toString().equals("Trạng thái")) {
@@ -246,9 +247,9 @@ public class OrderPage extends BasePage implements MouseListener{
 				lblTK.setText("");
 				lblQuay.setText("");
 				lblNgayTaoDonHang.setText("");
-				txtTenKH.setText("");
+				txtTenKhachHang.setText("");
 				txtSdtKhachHang.setText("");
-				DefaultTableModel model = (DefaultTableModel) chiTietHoaDonTable.getModel();
+				DefaultTableModel model  = (DefaultTableModel) chiTietHoaDonTable.getModel();
 				model.setRowCount(0);
 				txtTongTienHang.setText("");
 				txtTongGiamGia.setText("");
