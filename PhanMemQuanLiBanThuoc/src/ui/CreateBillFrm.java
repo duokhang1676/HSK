@@ -1171,8 +1171,8 @@ public class CreateBillFrm extends JFrame {
 			}
 			khachHang = new KhachHang(maKhachHang);
 		}
-		int maNhanVien = 5;
-		int maQuay = 2;
+		int maNhanVien = TaiKhoanDangNhap.getNV().getMaNhanVien();
+		int maQuay = TaiKhoanDangNhap.getNV().getQuay().getMaQuay();
 		double tongTienGiam = Double.parseDouble(txtTongGiamGia.getText());
 		double tongTien = Double.parseDouble(txtKhachCanTra.getText());
 

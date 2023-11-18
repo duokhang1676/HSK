@@ -72,6 +72,7 @@ public class ChangePasswordFrm extends JFrame{
 		Box matKhauMoiBox = Box.createHorizontalBox();
 		matKhauMoiBox.add(lblMatKhauMoi);
 		matKhauMoiBox.add(txtMatKhauMoi);
+		//Chuột phải để ẩn hiện mật khẩu
 		txtMatKhauMoi.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -93,6 +94,7 @@ public class ChangePasswordFrm extends JFrame{
 		Box matKhauMoiBox2 = Box.createHorizontalBox();
 		matKhauMoiBox2.add(lblMatKhauMoi2);
 		matKhauMoiBox2.add(txtMatKhauMoi2);
+		//Chuột phải để ẩn hiện mật khẩu
 		txtMatKhauMoi2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
