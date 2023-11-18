@@ -16,10 +16,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 
 import org.jfree.ui.tabbedui.VerticalLayout;
 
@@ -36,6 +38,7 @@ public class MyProfilePage extends BasePage {
 	private JTextField ngayVaoLamTxt;
 	
 	private JButton dangXuatBtn;
+	private JButton btnDoiMatKhau;
 	
 	@Override
 	protected JPanel onCreateNestedContainerView() {
@@ -101,6 +104,16 @@ public class MyProfilePage extends BasePage {
 		thongTinLb.setFont(new Font("Arials", Font.BOLD, 25));
 		thongTinLb.setBorder(new EmptyBorder(20, 0, 20, 0));
 		
+		btnDoiMatKhau = new JButton("Đổi mật khẩu");
+		btnDoiMatKhau.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		btnDoiMatKhau.setFont(new Font("Arials", Font.PLAIN, 16));
+		btnDoiMatKhau.setForeground(Color.decode(ColorConsts.PrimaryColor));
+		btnDoiMatKhau.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ChangePasswordFrm().setVisible(true);
+			}
+		});
+		
 		
 		dangXuatBtn = new JButton("Đăng xuất");
 		dangXuatBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
@@ -108,8 +121,12 @@ public class MyProfilePage extends BasePage {
 		dangXuatBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		dangXuatBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new RootFrame().setVisible(false);
-				new LoginPage().setVisible(true);
+				RootFrame rootFrame = (RootFrame) SwingUtilities.getWindowAncestor(MyProfilePage.this);
+				rootFrame.setVisible(false);
+				TaiKhoanDangNhap.setNV(null);
+				LoginPage login = new LoginPage();
+				login.setLocationRelativeTo(null);
+				login.setVisible(true);
 			}
 		});
 		
@@ -129,6 +146,8 @@ public class MyProfilePage extends BasePage {
 		pLeft.add(Box.createVerticalStrut(20));
 		pLeft.add(ngayVaoLamBox);
 		pLeft.add(Box.createVerticalStrut(40));
+		pLeft.add(btnDoiMatKhau);
+		pLeft.add(Box.createVerticalStrut(20));
 		pLeft.add(dangXuatBtn);
 
 		JPanel pRight = new JPanel(new VerticalLayout());

@@ -145,4 +145,23 @@ public class NhanVienDao {
 		}
 		return false;
 	}
+	
+	public boolean doiMatKhau(int maNhanVien, String password) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		try {
+			stmt = con.prepareStatement(
+					"UPDATE NhanVien " + "SET MatKhau = ?"
+							+ " WHERE MaNhanVien = ?");
+
+			stmt.setString(1, password);
+			stmt.setInt(2, maNhanVien);
+			
+			return stmt.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }
