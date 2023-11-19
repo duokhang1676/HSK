@@ -7,20 +7,26 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -28,6 +34,10 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
@@ -95,6 +105,11 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 	private JButton btn_hoanThanh;
 	private ArrayList<NhomThuoc> listNhomThuoc;
 	private ArrayList<NhaCungCap> listNhaCungCap;
+	private JList suggestionList;
+	private ArrayList<Thuoc> dsThuoc;
+	private DefaultListModel<String> suggestionListModel;
+	private ArrayList<Thuoc> dsThuocTemp = new ArrayList<Thuoc>();
+	private JScrollPane listTimKiem;
 
 	public ProductPage() {
 		super();
@@ -106,6 +121,8 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		thuoc_dao = new ThuocDao();
 		nhaCungCap_dao = new NhaCungCapDao();
 		maGiamGia_dao = new MaGiamGiaDao();
+		
+		dsThuoc = thuoc_dao.getAllData();
 		
 		JPanel jp_prodBody = new JPanel();
 		jp_prodBody.setLayout(new BorderLayout());
@@ -129,13 +146,17 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 
 		JLabel jl_maNCC = new JLabel("Mã nhà cung cấp: ");
 		txt_maNCC_timKiem = new JComboBox<String>();
-
+		
+		
+		suggestionListModel = new DefaultListModel<>();
+        suggestionList = new JList<>(suggestionListModel);
+        listTimKiem = new JScrollPane(suggestionList);
+        
 		timKiem_left.add(jl_timKiem);
 		timKiem_left.add(txt_timKiem);
 		timKiem_left.add(btn_timKiem);
 		timKiem_right.add(jl_maNhom);
 		timKiem_right.add(txt_maNhom_timKiem);
-		timKiem_right.add(Box.createHorizontalStrut(10));
 
 		jp_timKiem.add(timKiem_left);
 		jp_timKiem.add(Box.createHorizontalStrut(15));
@@ -168,6 +189,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		prod_table.setTableHeader(headerTable);
 		JScrollPane js_prodTable = new JScrollPane(prod_table);
 
+		setCellEditable();
 		docDuLieuVaoTable();
 
 		/**
@@ -222,11 +244,103 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 
 		jp_button.add(jp_btnRight);
 
+		
+
+		JLayeredPane jp_tableSearch = new JLayeredPane();
+	
+		
+		jp_tableSearch.add(js_prodTable, JLayeredPane.DEFAULT_LAYER);
+		js_prodTable.setBounds(0, 0, 800, 635);
+		jp_tableSearch.add(listTimKiem,JLayeredPane.PALETTE_LAYER);
+		listTimKiem.setBounds(72, 0, 345, 250);
+		listTimKiem.setVisible(false);
+		
+		txt_timKiem.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				listTimKiem.setVisible(true);
+				suggestionListModel.removeAllElements();
+				for (int i = 0; i < dsThuoc.size(); i++) {
+					if (dsThuoc.get(i).getTenThuoc().toLowerCase().contains(txt_timKiem.getText().trim().toLowerCase()))
+						suggestionListModel.addElement(dsThuoc.get(i).getTenThuoc());
+				}
+				if (txt_timKiem.getText().trim().equals("")) {
+					suggestionListModel.removeAllElements();
+					listTimKiem.setVisible(false);
+				}
+				if (txt_timKiem.getText().length() > 0 && suggestionListModel.getSize() == 0) {
+					suggestionListModel.addElement("Không tìm thấy sản phẩm :(");
+				}
+			}
+		});
+		txt_timKiem.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				listTimKiem.setVisible(true);
+				suggestionListModel.removeAllElements();
+				dsThuocTemp.clear();
+				for (int i = 0; i < dsThuoc.size(); i++) {
+					if (dsThuoc.get(i).getTenThuoc().toLowerCase().contains(txt_timKiem.getText().trim().toLowerCase())) {
+						suggestionListModel.addElement(dsThuoc.get(i).getTenThuoc());
+						dsThuocTemp.add(dsThuoc.get(i));
+					}
+
+				}
+				if (txt_timKiem.getText().trim().equals("")) {
+					suggestionListModel.removeAllElements();
+					listTimKiem.setVisible(false);
+				}
+				if (txt_timKiem.getText().length() > 0 && suggestionListModel.getSize() == 0) {
+					suggestionListModel.addElement("Không tìm thấy sản phẩm :(");
+				}
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				listTimKiem.setVisible(true);
+				suggestionListModel.removeAllElements();
+				dsThuocTemp.clear();
+				for (int i = 0; i < dsThuoc.size(); i++) {
+					if (dsThuoc.get(i).getTenThuoc().toLowerCase().contains(txt_timKiem.getText().trim().toLowerCase())) {
+						suggestionListModel.addElement(dsThuoc.get(i).getTenThuoc());
+						dsThuocTemp.add(dsThuoc.get(i));
+					}
+				}
+				if (txt_timKiem.getText().trim().equals("")) {
+					suggestionListModel.removeAllElements();
+					listTimKiem.setVisible(false);
+				}
+				if (txt_timKiem.getText().length() > 0 && suggestionListModel.getSize() == 0) {
+					suggestionListModel.addElement("Không tìm thấy sản phẩm :(");
+				}
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		suggestionList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount()==2) {
+					txt_timKiem.setText(suggestionList.getSelectedValue().toString());
+					listTimKiem.setVisible(false);
+				}
+			}
+		});
+		
 		JPanel jp_tableProd = new JPanel();
 		jp_tableProd.setBackground(Color.decode(ColorConsts.ForegroundColor));
 		jp_tableProd.setLayout(new BorderLayout());
 		jp_tableProd.add(jp_timKiem, BorderLayout.NORTH);
-		jp_tableProd.add(js_prodTable, BorderLayout.CENTER);
+		jp_tableProd.add(jp_tableSearch, BorderLayout.CENTER);
 		jp_tableProd.add(jp_button, BorderLayout.SOUTH);
 
 		/**
@@ -451,7 +565,6 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		incomeInWeekChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		incomeInWeekChartPanel.setPreferredSize(new Dimension(300, 300));
 
-//		jp_txtProd.add(jp_hinhAnh, BorderLayout.WEST);
 		jp_txtProd.add(b, BorderLayout.NORTH);
 		jp_txtProd.add(incomeInWeekChartPanel, BorderLayout.CENTER);
 		jp_txtProd.setBackground(Color.decode(ColorConsts.ForegroundColor));
@@ -592,6 +705,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 			searchData();
 		}else if (src.equals(btn_lamMoi)) {
 			docDuLieuVaoTable();
+			clearData();
 		}else if (src.equals(btn_sua)) {
 			setEditTextField();
 		}else if (src.equals(btn_hoanThanh)) {
@@ -616,7 +730,7 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		double giaNhapLe = Double.parseDouble(txt_giaNhapLe.getText());
 		double giaNhapChan = Double.parseDouble(txt_giaNhapChan.getText());
 		double giaBanLe = Double.parseDouble(txt_giaBanLe.getText());
-		double giaBanChan = Double.parseDouble(txt_giaNhapChan.getText());
+		double giaBanChan = Double.parseDouble(txt_giaBanChan.getText());
 		
 		NhomThuoc nhomThuoc = listNhomThuoc.get(txt_maNhom.getSelectedIndex());
 		NhaCungCap nhaCC = listNhaCungCap.get(txt_maNCC.getSelectedIndex());
@@ -693,11 +807,13 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 
 	private void searchData() {
 		// TODO Auto-generated method stub
+		listTimKiem.setVisible(false);
 		String ma = txt_timKiem.getText().trim();
 		if (ma.isEmpty()) {
 			showMessage("Nhập thông tin cần tìm!");
 		} else {
 			Thuoc t = thuoc_dao.timThuocTheoTen(ma);
+			if(t==null)return;
 			while (prod_table.getRowCount() > 0) {
 				prod_model.removeRow(0);
 			}
@@ -705,6 +821,8 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 					t.getDonViTinhLe(), t.getDonViTinhChan(), t.getGiaNhapLe(), t.getGiaNhapChan(), t.getGiaBanLe(),
 					t.getGiaBanChan() });
 		}
+		txt_timKiem.requestFocus();
+		txt_timKiem.selectAll();
 	}
 
 	private void clearData() {
@@ -746,6 +864,17 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 	private void showMessage(String string) {
 		// TODO Auto-generated method stub
 		JOptionPane.showMessageDialog(this, string);
+	}
+	public void setCellEditable() {
+		for (int i = 0; i < prod_table.getColumnCount(); i++) {
+				prod_table.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(new JTextField()) {
+					@Override
+					public boolean isCellEditable(EventObject e) {
+						// Trả về false để ngăn chặn chỉnh sửa trực tiếp
+						return false;
+					}
+				});
+			}
 	}
 
 }

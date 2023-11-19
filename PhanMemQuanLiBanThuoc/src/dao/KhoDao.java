@@ -28,7 +28,7 @@ public class KhoDao {
 
 				int maThuoc = rs.getInt("MaThuoc");
 				String tenThuoc = rs.getString("TenThuoc");
-				NhaCungCap nhaCC = new NhaCungCap(rs.getInt("MaNhaCungCap"));
+				
 				String donViTinh = rs.getString("DonViTinh");
 				String thanhPhanChinh = rs.getString("ThanhPhanChinh");
 				String donViTinhLe = rs.getString("DonViTinhLe");
@@ -43,7 +43,13 @@ public class KhoDao {
 
 				int soLuong = rs.getInt("SoLuong");
 
-				NhomThuoc nhomThuoc = new NhomThuoc(rs.getInt("MaNhomThuoc"));
+				int maNhomThuoc = rs.getInt("MaNhomThuoc");
+				String tenNhomThuoc = rs.getString("TenNhomThuoc");
+				NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc, tenNhomThuoc);
+
+				int maNhaCungCap = rs.getInt("MaNhaCungCap");
+				NhaCungCap nhaCC = new NhaCungCap(maNhaCungCap);
+				
 				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
 						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
 				Kho kho = new Kho(soLuong, thuoc);
@@ -136,5 +142,115 @@ public class KhoDao {
 			}
 		}
 		return n > 0;
+	}
+	public ArrayList<Kho> locThuocTheoTenNhom(int ma) {
+		ArrayList<Kho> dsKho = new ArrayList<Kho>();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		try {
+			String sql = "SELECT * FROM Kho RIGHT JOIN Thuoc ON Kho.MaThuoc = Thuoc.MaThuoc LEFT JOIN NhomThuoc ON Thuoc.MaNhomThuoc = NhomThuoc.MaNhomThuoc WHERE NhomThuoc.MaNhomThuoc = ?";
+			stmt = con.prepareStatement(sql);
+			stmt.setInt(1, ma);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				int maThuoc = rs.getInt("MaThuoc");
+				String tenThuoc = rs.getString("TenThuoc");
+				
+				String donViTinh = rs.getString("DonViTinh");
+				String thanhPhanChinh = rs.getString("ThanhPhanChinh");
+				String donViTinhLe = rs.getString("DonViTinhLe");
+				LocalDate hanSuDung = LocalDate.parse(rs.getString("HanSuDung"));
+				String dkBaoQuan = rs.getString("DieuKienBaoQuan");
+				String donViTinhChan = rs.getString("DonViTinhChan");
+				String ghiChu = rs.getString("GhiChu");
+				double giaNhapLe = rs.getDouble("GiaNhapLe");
+				double giaNhapChan = rs.getDouble("GiaNhapChan");
+				double giaBanLe = rs.getDouble("GiaBanLe");
+				double giaBanChan = rs.getDouble("GiaBanChan");
+
+				int soLuong = rs.getInt("SoLuong");
+
+				int maNhomThuoc = rs.getInt("MaNhomThuoc");
+				String tenNhomThuoc = rs.getString("TenNhomThuoc");
+				NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc, tenNhomThuoc);
+
+				int maNhaCungCap = rs.getInt("MaNhaCungCap");
+				NhaCungCap nhaCC = new NhaCungCap(maNhaCungCap);
+				
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
+						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				Kho kho = new Kho(soLuong, thuoc);
+
+				dsKho.add(kho);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+
+		return dsKho;
+	}
+	public Kho timThuocTheoTenThuoc(String ten) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		try {
+			String sql = "SELECT * FROM Kho RIGHT JOIN Thuoc ON Kho.MaThuoc = Thuoc.MaThuoc LEFT JOIN NhomThuoc ON Thuoc.MaNhomThuoc = NhomThuoc.MaNhomThuoc WHERE Thuoc.TenThuoc = ?";
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1, ten);
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				int maThuoc = rs.getInt("MaThuoc");
+				String tenThuoc = rs.getString("TenThuoc");
+				
+				String donViTinh = rs.getString("DonViTinh");
+				String thanhPhanChinh = rs.getString("ThanhPhanChinh");
+				String donViTinhLe = rs.getString("DonViTinhLe");
+				LocalDate hanSuDung = LocalDate.parse(rs.getString("HanSuDung"));
+				String dkBaoQuan = rs.getString("DieuKienBaoQuan");
+				String donViTinhChan = rs.getString("DonViTinhChan");
+				String ghiChu = rs.getString("GhiChu");
+				double giaNhapLe = rs.getDouble("GiaNhapLe");
+				double giaNhapChan = rs.getDouble("GiaNhapChan");
+				double giaBanLe = rs.getDouble("GiaBanLe");
+				double giaBanChan = rs.getDouble("GiaBanChan");
+
+				int soLuong = rs.getInt("SoLuong");
+
+				int maNhomThuoc = rs.getInt("MaNhomThuoc");
+				String tenNhomThuoc = rs.getString("TenNhomThuoc");
+				NhomThuoc nhomThuoc = new NhomThuoc(maNhomThuoc, tenNhomThuoc);
+
+				int maNhaCungCap = rs.getInt("MaNhaCungCap");
+				NhaCungCap nhaCC = new NhaCungCap(maNhaCungCap);
+				
+				Thuoc thuoc = new Thuoc(maThuoc, tenThuoc, nhaCC, donViTinh, thanhPhanChinh, donViTinhLe, hanSuDung,
+						dkBaoQuan, donViTinhChan, ghiChu, giaNhapLe, giaNhapChan, giaBanLe, giaBanChan, nhomThuoc);
+				Kho kho = new Kho(soLuong, thuoc);
+				
+				return kho;
+
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+				e2.printStackTrace();
+			}
+		}
+
+		return null;
 	}
 }

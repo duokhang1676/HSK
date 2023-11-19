@@ -4,19 +4,29 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.EventObject;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,6 +34,8 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.jfree.chart.ChartFactory;
@@ -77,20 +89,32 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 
 	private KhoDao khoDao;
 	private NhomThuocDao nhomThuocDao;
+	private JLabel jl_thongBao;
+	private DefaultListModel suggestionListModel;
+	
+	private JScrollPane listTimKiem;
+	private ThuocDao thuoc_dao;
+	private ArrayList<Kho> dsThuoc;
+	private ArrayList<Kho> dsThuocTemp = new ArrayList<Kho>();
+	private JList<String> suggestionList;
 
 	public WarehousePage() {
 		super();
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected JPanel onCreateNestedContainerView() {
 		khoDao = new KhoDao();
 		nhomThuocDao = new NhomThuocDao();
+		thuoc_dao = new ThuocDao();
+		dsThuoc = khoDao.getAllTonKhoTheoThuoc();
 
 		JPanel jp_prodBody = new JPanel();
 		jp_prodBody.setLayout(new BorderLayout());
 		Font commonFont = new Font("Arial", Font.PLAIN, 14);
+		Font bigFont = new Font("Arial", Font.BOLD, 20);
 
 		Box jp_timKiem, timKiem_left, timKiem_right;
 		jp_timKiem = Box.createHorizontalBox();
@@ -125,6 +149,8 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		prod_model = new DefaultTableModel(cols_name, 0);
 		prod_table = new JTable(prod_model);
 		JScrollPane js_prodTable = new JScrollPane(prod_table);
+		
+		setCellEditable();
 
 		getAllNhomThuoc();
 		docDuLieuVaoTable();
@@ -161,7 +187,6 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		btn_lamMoi.setPreferredSize(new Dimension(width, height));
 		btn_lamMoi.setBackground(Color.decode(ColorConsts.BackgroundColor));
 
-		jp_btnRight.add(btn_them);
 		jp_btnRight.add(btn_suaSoLuong);
 		jp_btnRight.add(btn_xoaTrang);
 		jp_btnRight.add(btn_luu);
@@ -169,12 +194,105 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		jp_btnRight.setBackground(Color.decode(ColorConsts.PrimaryColor));
 
 		jp_button.add(jp_btnRight);
+		
+		suggestionListModel = new DefaultListModel<>();
+        suggestionList = new JList<String>(suggestionListModel);
+        listTimKiem = new JScrollPane(suggestionList);
+		JLayeredPane jp_tableSearch = new JLayeredPane();
+	
+		
+		jp_tableSearch.add(js_prodTable, JLayeredPane.DEFAULT_LAYER);
+		js_prodTable.setBounds(0, 0, 800, 635);
+		jp_tableSearch.add(listTimKiem,JLayeredPane.PALETTE_LAYER);
+		listTimKiem.setBounds(72, 0, 345, 250);
+		listTimKiem.setVisible(false);
+		
+		txt_timKiem.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				listTimKiem.setVisible(true);
+				suggestionListModel.removeAllElements();
+				for (int i = 0; i < dsThuoc.size(); i++) {
+					if (dsThuoc.get(i).getThuoc().getTenThuoc().toLowerCase().contains(txt_timKiem.getText().trim().toLowerCase()))
+						suggestionListModel.addElement(dsThuoc.get(i).getThuoc().getTenThuoc());
+				}
+				if (txt_timKiem.getText().trim().equals("")) {
+					suggestionListModel.removeAllElements();
+					listTimKiem.setVisible(false);
+				}
+				if (txt_timKiem.getText().length() > 0 && suggestionListModel.getSize() == 0) {
+					suggestionListModel.addElement("Không tìm thấy sản phẩm :(");
+				}
+			}
+		});
+		txt_timKiem.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				listTimKiem.setVisible(true);
+				suggestionListModel.removeAllElements();
+				dsThuocTemp.clear();
+				for (int i = 0; i < dsThuoc.size(); i++) {
+					if (dsThuoc.get(i).getThuoc().getTenThuoc().toLowerCase().contains(txt_timKiem.getText().trim().toLowerCase())) {
+						suggestionListModel.addElement(dsThuoc.get(i).getThuoc().getTenThuoc());
+						dsThuocTemp.add(dsThuoc.get(i));
+					}
+
+				}
+				if (txt_timKiem.getText().trim().equals("")) {
+					suggestionListModel.removeAllElements();
+					listTimKiem.setVisible(false);
+				}
+				if (txt_timKiem.getText().length() > 0 && suggestionListModel.getSize() == 0) {
+					suggestionListModel.addElement("Không tìm thấy sản phẩm :(");
+				}
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				listTimKiem.setVisible(true);
+				suggestionListModel.removeAllElements();
+				dsThuocTemp.clear();
+				for (int i = 0; i < dsThuoc.size(); i++) {
+					if (dsThuoc.get(i).getThuoc().getTenThuoc().toLowerCase().contains(txt_timKiem.getText().trim().toLowerCase())) {
+						suggestionListModel.addElement(dsThuoc.get(i).getThuoc().getTenThuoc());
+						dsThuocTemp.add(dsThuoc.get(i));
+					}
+				}
+				if (txt_timKiem.getText().trim().equals("")) {
+					suggestionListModel.removeAllElements();
+					listTimKiem.setVisible(false);
+				}
+				if (txt_timKiem.getText().length() > 0 && suggestionListModel.getSize() == 0) {
+					suggestionListModel.addElement("Không tìm thấy sản phẩm :(");
+				}
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		suggestionList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount()==2) {
+					txt_timKiem.setText(suggestionList.getSelectedValue().toString());
+					listTimKiem.setVisible(false);
+				}
+			}
+		});
 
 		JPanel jp_tableProd = new JPanel();
 		jp_tableProd.setBackground(Color.decode(ColorConsts.ForegroundColor));
 		jp_tableProd.setLayout(new BorderLayout());
 		jp_tableProd.add(jp_timKiem, BorderLayout.NORTH);
-		jp_tableProd.add(js_prodTable, BorderLayout.CENTER);
+		jp_tableProd.add(jp_tableSearch, BorderLayout.CENTER);
 		jp_tableProd.add(jp_button, BorderLayout.SOUTH);
 
 		JPanel jp_txtProd = new JPanel();
@@ -189,6 +307,19 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		JLabel jl_giaNhapChan = new JLabel("Giá nhập chẵn: ");
 		JLabel jl_ngayHetHan = new JLabel("Ngày hết hạn: ");
 		JLabel jl_soLuongTrongKho = new JLabel("Số lượng trong kho: ");
+		JLabel jl_tinhTrangThuoc = new JLabel("Tình trạng thuốc: ");
+		jl_tinhTrangThuoc.setFont(bigFont);
+		
+		jl_maThuoc.setPreferredSize(jl_soLuongTrongKho.getPreferredSize());
+		jl_tenThuoc.setPreferredSize(jl_soLuongTrongKho.getPreferredSize());
+		jl_donViTinh.setPreferredSize(jl_soLuongTrongKho.getPreferredSize());
+		jl_donViTinhLe.setPreferredSize(jl_soLuongTrongKho.getPreferredSize());
+		jl_donViTinhChan.setPreferredSize(jl_soLuongTrongKho.getPreferredSize());
+		jl_giaNhapLe.setPreferredSize(jl_soLuongTrongKho.getPreferredSize());
+		jl_giaNhapChan.setPreferredSize(jl_soLuongTrongKho.getPreferredSize());
+		jl_ngayHetHan.setPreferredSize(jl_soLuongTrongKho.getPreferredSize());
+		
+		
 
 		txt_maThuoc = new JTextField();
 		txt_maThuoc.setEditable(false);
@@ -219,6 +350,16 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 
 		txt_soLuongTrongKho = new JTextField();
 		txt_soLuongTrongKho.setEditable(false);
+		
+		JPanel jp_tinhTrangThuoc = new JPanel(new GridLayout(2, 1));
+		jp_tinhTrangThuoc.setPreferredSize(new Dimension(250, 100));
+		jl_thongBao = new JLabel("Thuốc sắp hết hạn!!!");
+		jl_thongBao.setFont(bigFont);
+		jl_thongBao.setForeground(Color.RED);
+		jl_thongBao.setVisible(false);
+		jp_tinhTrangThuoc.add(jl_tinhTrangThuoc);
+		jp_tinhTrangThuoc.add(jl_thongBao);
+		jp_tinhTrangThuoc.setBackground(Color.decode(ColorConsts.ForegroundColor));
 
 		Box b1, b2, b4, b8, b9, b10, b11, b12, b3, b112;
 		int heightStrut = 10, widthStrut = 10;
@@ -282,6 +423,9 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		right.add(b3);
 		right.add(Box.createVerticalStrut(heightStrut));
 		right.add(b112);
+		right.add(Box.createVerticalStrut(30));
+		right.add(jp_tinhTrangThuoc);
+		
 
 		prod_table.addMouseListener(this);
 		btn_them.addActionListener(this);
@@ -337,9 +481,20 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 			txt_giaNhapLe.setText(String.valueOf(kho.getThuoc().getGiaNhapLe()));
 			txt_giaNhapChan.setText(String.valueOf(kho.getThuoc().getGiaNhapChan()));
 
+			
 			txt_ngayHetHan.setText(kho.getThuoc().getHanSuDung().toString());
 
 			txt_soLuongTrongKho.setText(String.valueOf(kho.getSoLuong()));
+			
+			LocalDate hanSuDung = kho.getThuoc().getHanSuDung();
+			LocalDate ngayHienTai = LocalDate.now();
+			
+			Long ngayConLai = ChronoUnit.DAYS.between(hanSuDung, ngayHienTai);
+			if (Math.abs(ngayConLai) <= 30) {
+				jl_thongBao.setVisible(true);
+			}else {
+				jl_thongBao.setVisible(false);
+			}
 		}
 	}
 
@@ -383,6 +538,9 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		if (src.equals(btn_lamMoi)) {
 			docDuLieuVaoTable();
 		}
+		if (src.equals(btn_luu)) {
+			groupByName();
+		}
 
 		if (src.equals(btn_suaSoLuong)) {
 			int row = prod_table.getSelectedRow();
@@ -416,32 +574,37 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 	}
 
 	private void groupByName() {
-//		int index_item = txt_maNhom_timKiem.getSelectedIndex() + 1;
-//		List<Thuoc> dsThuoc = thuoc_dao.locThuocTheoTenNhom(index_item);
-//		while (prod_table.getRowCount() > 0) {
-//			prod_model.removeRow(0);
-//		}
-//		for (Thuoc t : dsThuoc) {
-//			prod_model.addRow(new Object[] { t.getMaThuoc(), t.getTenThuoc(), t.getHanSuDung(), t.getDonViTinh(),
-//					t.getDonViTinhLe(), t.getDonViTinhChan(), t.getGiaNhapLe(), t.getGiaNhapChan(), t.getGiaBanLe(),
-//					t.getGiaBanChan() });
-//		}
+		int index_item = txt_maNhom_timKiem.getSelectedIndex() + 1;
+		List<Kho> dsThuoc = khoDao.locThuocTheoTenNhom(index_item);
+		while (prod_table.getRowCount() > 0) {
+			prod_model.removeRow(0);
+		}
+		for (Kho kho : dsThuoc) {
+			prod_model.addRow(new String[] { String.valueOf(kho.getThuoc().getMaThuoc()), kho.getThuoc().getTenThuoc(),
+					kho.getThuoc().getNhomThuoc().getTenNhomThuoc(), kho.getThuoc().getHanSuDung().toString(),
+					kho.getThuoc().getDonViTinh(), String.valueOf(kho.getSoLuong()) });
+		}
 	}
 
 	private void searchData() {
-//		// TODO Auto-generated method stub
-//		String ma = txt_timKiem.getText().trim();
-//		if (ma.isEmpty()) {
-//			showMessage("Nhập thông tin cần tìm!");
-//		} else {
-//			Thuoc t = thuoc_dao.timThuocTheoTen(ma);
-//			while (prod_table.getRowCount() > 0) {
-//				prod_model.removeRow(0);
-//			}
-//			prod_model.addRow(new Object[] { t.getMaThuoc(), t.getTenThuoc(), t.getHanSuDung(), t.getDonViTinh(),
-//					t.getDonViTinhLe(), t.getDonViTinhChan(), t.getGiaNhapLe(), t.getGiaNhapChan(), t.getGiaBanLe(),
-//					t.getGiaBanChan() });
-//		}
+		// TODO Auto-generated method stub
+		listTimKiem.setVisible(false);
+		String ma = txt_timKiem.getText().trim();
+		if (ma.isEmpty()) {
+			showMessage("Nhập thông tin cần tìm!");
+		} else {
+			Kho kho = khoDao.timThuocTheoTenThuoc(ma);
+			System.out.println("Press");
+			if(kho==null)return;
+			while (prod_table.getRowCount() > 0) {
+				prod_model.removeRow(0);
+			}
+			prod_model.addRow(new String[] { String.valueOf(kho.getThuoc().getMaThuoc()), kho.getThuoc().getTenThuoc(),
+					kho.getThuoc().getNhomThuoc().getTenNhomThuoc(), kho.getThuoc().getHanSuDung().toString(),
+					kho.getThuoc().getDonViTinh(), String.valueOf(kho.getSoLuong()) });
+		}
+		txt_timKiem.requestFocus();
+		txt_timKiem.selectAll();
 	}
 
 	private void clearData() {
@@ -458,5 +621,17 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 
 	private void showMessage(String string) {
 		JOptionPane.showMessageDialog(this, string);
+	}
+	public void setCellEditable() {
+		for (int i = 0; i < prod_table.getColumnCount(); i++) {
+				prod_table.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(new JTextField()) {
+					@Override
+					public boolean isCellEditable(EventObject e) {
+						// Trả về false để ngăn chặn chỉnh sửa trực tiếp
+						return false;
+					}
+				});
+			
+		}
 	}
 }

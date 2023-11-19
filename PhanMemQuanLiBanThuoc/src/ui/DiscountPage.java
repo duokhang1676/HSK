@@ -45,6 +45,7 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 	private JTextField txt_phanTramGiamGia;
 	private JTextArea txt_moTa;
 	private MaGiamGiaDao maGiamGia_dao;
+	private JTextField txt_maThuoc;
 
 	@Override
 	protected JPanel onCreateNestedContainerView() {
@@ -57,7 +58,7 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		 */
 		JPanel jp_table = new JPanel();
 		jp_table.setLayout(new BorderLayout());
-		String[] cols_name = {"Mã giảm giá", "Ngày bắt đầu", "Ngày kết thúc", "Phần trăm giảm giá", "Mô tả"};
+		String[] cols_name = {"Mã giảm giá", "Ngày bắt đầu", "Ngày kết thúc", "Phần trăm giảm giá","Thuốc", "Mô tả"};
 		model_discount = new DefaultTableModel(cols_name, 0);
 		table_discount = new JTable(model_discount);
 		JScrollPane js_table = new JScrollPane(table_discount);
@@ -114,11 +115,13 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		JLabel jl_ngayKetThuc = new JLabel("Ngày kết thúc: ");
 		JLabel jl_moTa = new JLabel("Mô tả: ");
 		JLabel jl_phanTramGiamGia = new JLabel("Phần trăm giảm giá: ");
+		JLabel jl_maThuoc = new JLabel("Thuốc: ");
 		
 		jl_maGiamGia.setPreferredSize(jl_phanTramGiamGia.getPreferredSize());
 		jl_ngayBatDau.setPreferredSize(jl_phanTramGiamGia.getPreferredSize());
 		jl_ngayKetThuc.setPreferredSize(jl_phanTramGiamGia.getPreferredSize());
 		jl_moTa.setPreferredSize(jl_phanTramGiamGia.getPreferredSize());
+		jl_maThuoc.setPreferredSize(jl_phanTramGiamGia.getPreferredSize());
 		
 		txt_maGiamGia = new JTextField();
 		txt_maGiamGia.setEditable(false);
@@ -128,12 +131,14 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		txt_ngayKetThuc.setEnabled(false);
 		txt_phanTramGiamGia = new JTextField();
 		txt_phanTramGiamGia.setEditable(false);
+		txt_maThuoc = new JTextField();
+		txt_maThuoc.setEditable(false);
 		
 		txt_moTa = new JTextArea(3,2);
 		txt_moTa.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		txt_moTa.setEditable(false);
 		
-		Box b, b1, b2, b3, b4, b5;
+		Box b, b1, b2, b3, b4, b5, b6;
 		
 		b = Box.createVerticalBox();
 		b1 = Box.createHorizontalBox();
@@ -141,6 +146,7 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		b3 = Box.createHorizontalBox();
 		b4 = Box.createHorizontalBox();
 		b5 = Box.createHorizontalBox();
+		b6 = Box.createHorizontalBox();
 		
 		b1.add(jl_maGiamGia);
 		b1.add(Box.createHorizontalStrut(10));
@@ -162,6 +168,10 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		b5.add(Box.createHorizontalStrut(10));
 		b5.add(txt_moTa);
 		
+		b6.add(jl_maThuoc);
+		b6.add(Box.createHorizontalStrut(10));
+		b6.add(txt_maThuoc);
+		
 		b.add(b1);
 		b.add(Box.createVerticalStrut(15));
 		b.add(b2);
@@ -169,6 +179,8 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		b.add(b3);
 		b.add(Box.createVerticalStrut(15));
 		b.add(b4);
+		b.add(Box.createVerticalStrut(15));
+		b.add(b6);
 		b.add(Box.createVerticalStrut(15));
 		b.add(b5);
 		b.add(Box.createVerticalStrut(15));
@@ -203,7 +215,7 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		for (MaGiamGia maGiamGia : listMaGiamGias) {
 			
 			model_discount.addRow(new Object[] {maGiamGia.getMaGiamGia(), maGiamGia.getNgayBatDau(), maGiamGia.getNgayKetThuc(),
-					maGiamGia.getPhanTramGiamGia(), maGiamGia.getMoTa()});
+					maGiamGia.getPhanTramGiamGia(),maGiamGia.getThuoc().getTenThuoc(), maGiamGia.getMoTa()});
 		}
 	}
 
@@ -234,6 +246,7 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		txt_ngayBatDau.setText("");
 		txt_ngayKetThuc.setText("");
 		txt_phanTramGiamGia.setText("");
+		txt_maThuoc.setText("");
 		txt_moTa.setText("");
 	}
 
@@ -267,7 +280,8 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		txt_ngayBatDau.setDate(LocalDate.parse(model_discount.getValueAt(row, 1).toString()));
 		txt_ngayKetThuc.setDate(LocalDate.parse(model_discount.getValueAt(row, 2).toString()));
 		txt_phanTramGiamGia.setText(model_discount.getValueAt(row, 3).toString());
-		txt_moTa.setText(model_discount.getValueAt(row, 4).toString());
+		txt_maThuoc.setText(model_discount.getValueAt(row, 4).toString());
+		txt_moTa.setText(model_discount.getValueAt(row, 5).toString());
 	}
 
 	@Override
