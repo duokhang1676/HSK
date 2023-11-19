@@ -536,6 +536,7 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 			searchData();
 		}
 		if (src.equals(btn_lamMoi)) {
+			clearData();
 			docDuLieuVaoTable();
 		}
 		if (src.equals(btn_luu)) {

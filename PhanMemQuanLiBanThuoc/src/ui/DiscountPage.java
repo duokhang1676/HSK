@@ -281,6 +281,7 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		txt_ngayKetThuc.setDate(LocalDate.parse(model_discount.getValueAt(row, 2).toString()));
 		txt_phanTramGiamGia.setText(model_discount.getValueAt(row, 3).toString());
 		txt_maThuoc.setText(model_discount.getValueAt(row, 4).toString());
+		if(model_discount.getValueAt(row, 5)!=null)
 		txt_moTa.setText(model_discount.getValueAt(row, 5).toString());
 	}
 

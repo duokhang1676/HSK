@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -15,7 +16,7 @@ import javax.swing.JPanel;
 
 public class NavigationBar implements IComponent {
 	
-	private final int MAX_ROW_COUNT = 25;
+	private final int MAX_ROW_COUNT = 13;
 	private final int COLUMN_COUNT = 1;
 	
 	private JPanel navigationBarPanel;
@@ -28,13 +29,14 @@ public class NavigationBar implements IComponent {
 		
 		navigationBarPanel = new JPanel();
 		navigationBarPanel.setLayout(new GridLayout(MAX_ROW_COUNT, COLUMN_COUNT));
-		navigationBarPanel.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		navigationBarPanel.setBackground(Color.decode(ColorConsts.ForegroundColor));
 	}
 	
 	public NavigationBar addNaviButton(String text, String urlImg) {
 		JButton naviButton = new JButton(text);
 		naviButton.setBackground(Color.decode(ColorConsts.ForegroundColor));
-		naviButton.setPreferredSize(new Dimension(250, 120));
+		naviButton.setPreferredSize(new Dimension(200, 120));
+		naviButton.setBorder(BorderFactory.createEmptyBorder());
 		
 		if (!urlImg.isEmpty()) {
 			naviButton.setIcon(new ImageIcon(urlImg));
