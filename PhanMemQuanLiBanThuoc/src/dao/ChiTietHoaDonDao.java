@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import db.ConnectDB;
@@ -106,7 +107,10 @@ public boolean themChiTietHoaDon(ChiTietHoaDon ctHD){
 		try {
 			db.ConnectDB.getInstance();
 			Connection con = db.ConnectDB.getConnection();
-			String sql = "SELECT * FROM ChiTietHoaDon WHERE [MaHoaDon] = ?";
+			String sql = "SELECT * \r\n"
+					+ "FROM ChiTietHoaDon\r\n"
+					+ "LEFT JOIN Thuoc ON ChiTietHoaDon.MaSanPham = Thuoc.MaThuoc\r\n"
+					+ "WHERE ChiTietHoaDon.[MaHoaDon] = ?";
 			
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setInt(1, maDonHang);
@@ -117,7 +121,7 @@ public boolean themChiTietHoaDon(ChiTietHoaDon ctHD){
 				int soLuong = rs.getInt("SoLuong");
 				String donViTinh = rs.getString("DonViTinh");
 				double donGia = rs.getDouble("DonGia");
-				Thuoc sp = new Thuoc(rs.getInt("MaSanPham"));
+				Thuoc sp = new Thuoc(rs.getInt("MaThuoc"), rs.getString("TenThuoc"), null, "", "", "", LocalDate.now(), "", "", "", 0, 0, 0, 0, null);
 				double thue = rs.getDouble("Thue");
 				double thanhTien = rs.getDouble("ThanhTien");
 				double giamGia = rs.getDouble("GiamGia");

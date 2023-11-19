@@ -1183,6 +1183,42 @@ public class CreateBillFrm extends JFrame {
 		if (hoaDon != null) {
 			capNhatKho();
 			createChiTietHoaDon(hoaDon);
+			if(tt){
+				//---------------------------- Tạo hóa đơn
+				String cthd = "";
+				for(int i = 0;i<tb.getRowCount();i++) {
+					cthd+= ("\t"+(i+1)+". "+tb.getValueAt(i, 1)+"("
+							+tb.getValueAt(i, 2)+")\n"
+							+"\t\t"+tb.getValueAt(i, 3)
+							+"\t\t"+tb.getValueAt(i, 4)
+							+"\t\t"+tb.getValueAt(i, 6)+"\n");
+				}
+				String content = 
+						"\t\t\t NHÀ THUỐC HKTD\n"
+						+ "\t\t  www.nhathuochktd.com\n"
+						+ "\t\t\tQuầy: "+lblQuay.getText()+"\n"
+						+ "\t-------------------------------\n"
+						+ "\tPHIẾU THANH TOÁN (Bao gồm VAT)\n"
+						+ "\tSố HD: ?"+""+"/ Ngày: "+ngayLapHD.getText()+"\n"
+						+ "\tNhân viên: "+lblTK.getText()+"\n"
+						+ "\t\tSL\t\tGiá bán\t\tTTiền\n"
+						+ cthd
+						+ "\t--------------------------------\n"
+						+ "\tPhải thanh toán:\t\t"+txtTongTienHang.getText()+"\n"
+						+ "\t--------------------------------\n"
+						+ "\tNhà thuốc chỉ xuất hóa đơn và đổi\n"
+						+ "\ttrả trong ngày vui lòng liên hệ\n"
+						+ "\tnhân viên để được phụ vụ,\n"
+						+ "\tXin cảm ơn Quý Khách!";
+				
+				try {
+				OrderPage.saveFile(content, "data/bill"+"_new"+".txt");
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				//----------------------------
+			}
 			JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateBillFrm.this),
 					"Đã tạo hóa đơn!");
 			

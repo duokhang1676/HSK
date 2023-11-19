@@ -13,11 +13,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.EventObject;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -505,7 +509,40 @@ public class OrderPage extends BasePage implements MouseListener{
 							JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(OrderPage.this),
 								"Đã thanh toán!");
 				}else {
+					String cthd = "";
+					for(int i = 0;i<chiTietHoaDonModel.getRowCount();i++) {
+						cthd+= ("\t"+(i+1)+". "+chiTietHoaDonModel.getValueAt(i, 1)+"("
+								+chiTietHoaDonModel.getValueAt(i, 2)+")\n"
+								+"\t\t"+chiTietHoaDonModel.getValueAt(i, 3)
+								+"\t\t"+chiTietHoaDonModel.getValueAt(i, 4)
+								+"\t\t"+chiTietHoaDonModel.getValueAt(i, 6)+"\n");
+					}
+					String content = 
+							"\t\t\t NHÀ THUỐC HKTD\n"
+							+ "\t\t  www.nhathuochktd.com\n"
+							+ "\t\t\tQuầy: "+lblQuay.getText()+"\n"
+							+ "\t-------------------------------\n"
+							+ "\tPHIẾU THANH TOÁN (Bao gồm VAT)\n"
+							+ "\tSố HD: "+txtDH.getText()+"/ Ngày: "+lblNgayTaoDonHang.getText()+"\n"
+							+ "\tNhân viên: "+lblTK.getText()+"\n"
+							+ "\t\tSL\t\tGiá bán\t\tTTiền\n"
+							+ cthd
+							+ "\t--------------------------------\n"
+							+ "\tPhải thanh toán:\t\t"+txtTongTienHang.getText()+"\n"
+							+ "\t--------------------------------\n"
+							+ "\tNhà thuốc chỉ xuất hóa đơn và đổi\n"
+							+ "\ttrả trong ngày vui lòng liên hệ\n"
+							+ "\tnhân viên để được phụ vụ,\n"
+							+ "\tXin cảm ơn Quý Khách!";
 					
+					try {
+						if(saveFile(content, "data/bill"+txtDH.getText()+".txt"))
+							JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(OrderPage.this),
+									"Đã xuất hóa đơn!");
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		});
@@ -704,5 +741,19 @@ public class OrderPage extends BasePage implements MouseListener{
 				}
 			});
 		}
+	}
+	public static boolean saveFile(String content,String filePath) throws Exception{
+		PrintWriter out = null;
+		try {
+			out = new PrintWriter(new BufferedOutputStream(
+					new FileOutputStream(filePath)),true);
+			out.println(content);
+		} catch(Exception e) {
+			return false;
+		}
+		finally {
+			if(out!=null)out.close();
+		}
+		return true;
 	}
 }
