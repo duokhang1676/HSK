@@ -240,6 +240,7 @@ public class OrderPage extends BasePage implements MouseListener{
 						lblNgayTaoDonHang.setText(dtf.format(hoaDon.getNgayLapHD()));
 						txtTenKhachHang.setText(hoaDon.getKhachHang().getTenKhachHang()+"");
 						txtSdtKhachHang.setText(hoaDon.getKhachHang().getSoDienThoai()+"");
+						ghiChuTextArea.setText(hoaDon.getGhiChu());
 						
 						ArrayList<ChiTietHoaDon> dsCTHD = chiTietHoaDonDao.getAllChiTietHoaDonByMaDonHang(hoaDon.getMaHD());
 						int stt = 1;
@@ -258,7 +259,7 @@ public class OrderPage extends BasePage implements MouseListener{
 						txtTongGiamGia.setText(hoaDon.getTongTienGiam()+"");
 						txtKhachThanhToan.setText(hoaDon.getTongTien()+"");
 						txtPttt.setText(hoaDon.getPhuongThucThanhToan()+"");
-						//ghiChuTextArea.setText(hoaDon.get)e
+						ghiChuTextArea.setText(hoaDon.getGhiChu());
 						if(hoaDon.getTrangThai().equals("Chưa TT"))
 							btnXuatHoaDon.setText("Thanh toán");
 						else btnXuatHoaDon.setText("Xuất hóa đơn");

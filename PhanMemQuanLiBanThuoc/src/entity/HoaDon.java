@@ -15,7 +15,7 @@ public class HoaDon {
 	private Quay quay;
 	private double tongTienGiam;
 	private double tongTien;
-	//private String ghiChu;
+	private String ghiChu;
 
 	public HoaDon() {
 	}
@@ -24,9 +24,9 @@ public class HoaDon {
 		super();
 		this.maHD = maHD;
 	}
-
+	
 	public HoaDon(int maHD, LocalDate ngayLapHD, String trangThai, String phuongThucThanhToan, double tienNhan,
-			double tienDu, KhachHang khachHang, NhanVien nhanVien, Quay quay, double tongTienGiam, double tongTien/*, String ghiChu*/) {
+			double tienDu, KhachHang khachHang, NhanVien nhanVien, Quay quay, double tongTienGiam, double tongTien, String ghiChu) {
 		super();
 		this.maHD = maHD;
 		this.ngayLapHD = ngayLapHD;
@@ -39,7 +39,23 @@ public class HoaDon {
 		this.quay = quay;
 		this.tongTienGiam = tongTienGiam;
 		this.tongTien = tongTien;
-		//this.ghiChu = ghiChu;
+		this.ghiChu = ghiChu;
+	}
+
+	public HoaDon(int maHD, LocalDate ngayLapHD, String trangThai, String phuongThucThanhToan, double tienNhan,
+			double tienDu, KhachHang khachHang, NhanVien nhanVien, Quay quay, double tongTienGiam, double tongTien) {
+		super();
+		this.maHD = maHD;
+		this.ngayLapHD = ngayLapHD;
+		this.trangThai = trangThai;
+		this.phuongThucThanhToan = phuongThucThanhToan;
+		this.tienNhan = tienNhan;
+		this.tienDu = tienDu;
+		this.khachHang = khachHang;
+		this.nhanVien = nhanVien;
+		this.quay = quay;
+		this.tongTienGiam = tongTienGiam;
+		this.tongTien = tongTien;
 	}
 
 	public int getMaHD() {
@@ -130,13 +146,13 @@ public class HoaDon {
 		this.tongTien = tongTien;
 	}
 
-//	public String getGhiChu() {
-//		return ghiChu;
-//	}
-//
-//	public void setGhiChu(String ghiChu) {
-//		this.ghiChu = ghiChu;
-//	}
+	public String getGhiChu() {
+		return ghiChu;
+	}
+
+	public void setGhiChu(String ghiChu) {
+		this.ghiChu = ghiChu;
+	}
 
 	
 }

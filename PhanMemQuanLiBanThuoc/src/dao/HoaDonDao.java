@@ -31,7 +31,8 @@ public class HoaDonDao {
 					+ "       HoaDon.MaNhanVien, HoaDon.MaQuay, HoaDon.MaKhachHang,\r\n"
 					+ "       KhachHang.TenKhachHang, KhachHang.SoDienThoai AS SoDienThoaiKhachHang,\r\n"
 					+ "       NhanVien.TenNhanVien ,\r\n"
-					+ "       Quay.TenQuay\r\n"
+					+ "       Quay.TenQuay,\r\n"
+					+ "		  HoaDon.GhiChu\r\n"
 					+ "FROM HoaDon\r\n"
 					+ "LEFT JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang\r\n"
 					+ "LEFT JOIN NhanVien ON HoaDon.MaNhanVien = NhanVien.MaNhanVien\r\n"
@@ -51,8 +52,9 @@ public class HoaDonDao {
 				Quay quay = new Quay(rs.getInt("MaQuay"), rs.getString("TenQuay"));
 				double tongTienGiam = rs.getDouble("TongTienGiam");
 				double tongTien = rs.getDouble("TongTien");
+				String ghiChu = rs.getString("GhiChu");
 				HoaDon hd = new HoaDon(ma, ngayLapHD, trangThai, phuongThucTT, tienNhan, tienDu, kh, nv, quay,
-						tongTienGiam, tongTien);
+						tongTienGiam, tongTien, ghiChu);
 				dsHD.add(hd);
 			}
 		} catch (Exception e) {
@@ -71,7 +73,8 @@ public class HoaDonDao {
 					+ "       HoaDon.MaNhanVien, HoaDon.MaQuay, HoaDon.MaKhachHang,\r\n"
 					+ "       KhachHang.TenKhachHang, KhachHang.SoDienThoai AS SoDienThoaiKhachHang,\r\n"
 					+ "       NhanVien.TenNhanVien ,\r\n"
-					+ "       Quay.TenQuay\r\n"
+					+ "       Quay.TenQuay,\r\n"
+					+ "		  HoaDon.GhiChu\r\n"
 					+ "FROM HoaDon\r\n"
 					+ "LEFT JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang\r\n"
 					+ "LEFT JOIN NhanVien ON HoaDon.MaNhanVien = NhanVien.MaNhanVien\r\n"
@@ -95,8 +98,9 @@ public class HoaDonDao {
 				Quay quay = new Quay(rs.getInt("MaQuay"), rs.getString("TenQuay"));
 				double tongTienGiam = rs.getDouble("TongTienGiam");
 				double tongTien = rs.getDouble("TongTien");
+				String ghiChu = rs.getString("GhiChu");
 				HoaDon hd = new HoaDon(ma, ngayLapHD, trangThai, phuongThucTT, tienNhan, tienDu, kh, nv, quay,
-						tongTienGiam, tongTien);
+						tongTienGiam, tongTien, ghiChu);
 				dsHD.add(hd);
 			}
 		} catch (Exception e) {
@@ -116,7 +120,8 @@ public class HoaDonDao {
 					+ "       HoaDon.MaNhanVien, HoaDon.MaQuay, HoaDon.MaKhachHang,\r\n"
 					+ "       KhachHang.TenKhachHang, KhachHang.SoDienThoai AS SoDienThoaiKhachHang,\r\n"
 					+ "       NhanVien.TenNhanVien ,\r\n"
-					+ "       Quay.TenQuay\r\n"
+					+ "       Quay.TenQuay,\r\n"
+					+ "		  HoaDon.GhiChu\r\n"
 					+ "FROM HoaDon\r\n"
 					+ "LEFT JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang\r\n"
 					+ "LEFT JOIN NhanVien ON HoaDon.MaNhanVien = NhanVien.MaNhanVien\r\n"
@@ -139,8 +144,9 @@ public class HoaDonDao {
 				Quay quay = new Quay(rs.getInt("MaQuay"), rs.getString("TenQuay"));
 				double tongTienGiam = rs.getDouble("TongTienGiam");
 				double tongTien = rs.getDouble("TongTien");
+				String ghiChu = rs.getString("GhiChu");
 				HoaDon hd = new HoaDon(ma, ngayLapHD, trangThai, phuongThucTT, tienNhan, tienDu, kh, nv, quay,
-						tongTienGiam, tongTien);
+						tongTienGiam, tongTien, ghiChu);
 				dsHD.add(hd);
 			}
 		} catch (Exception e) {
@@ -159,7 +165,8 @@ public class HoaDonDao {
 					+ "       HoaDon.MaNhanVien, HoaDon.MaQuay, HoaDon.MaKhachHang,\r\n"
 					+ "       KhachHang.TenKhachHang, KhachHang.SoDienThoai AS SoDienThoaiKhachHang,\r\n"
 					+ "       NhanVien.TenNhanVien ,\r\n"
-					+ "       Quay.TenQuay\r\n"
+					+ "       Quay.TenQuay,\r\n"
+					+ "		  HoaDon.GhiChu\r\n"
 					+ "FROM HoaDon\r\n"
 					+ "LEFT JOIN KhachHang ON HoaDon.MaKhachHang = KhachHang.MaKhachHang\r\n"
 					+ "LEFT JOIN NhanVien ON HoaDon.MaNhanVien = NhanVien.MaNhanVien\r\n"
@@ -182,8 +189,9 @@ public class HoaDonDao {
 				Quay quay = new Quay(rs.getInt("MaQuay"), rs.getString("TenQuay"));
 				double tongTienGiam = rs.getDouble("TongTienGiam");
 				double tongTien = rs.getDouble("TongTien");
+				String ghiChu = rs.getString("GhiChu");
 				HoaDon hd = new HoaDon(ma, ngayLapHD, trangThai, phuongThucTT, tienNhan, tienDu, kh, nv, quay,
-						tongTienGiam, tongTien);
+						tongTienGiam, tongTien, ghiChu);
 				dsHD.add(hd);
 			}
 		} catch (Exception e) {
@@ -200,7 +208,7 @@ public class HoaDonDao {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		try {
-			String sql = "Insert into HoaDon values(?,?,?,?,?,?,?,?,?,?)";
+			String sql = "Insert into HoaDon values(?,?,?,?,?,?,?,?,?,?,?)";
 			statement = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			statement.setDate(1, Date.valueOf(hd.getNgayLapHD()));
 			statement.setString(2, hd.getTrangThai());
@@ -212,6 +220,7 @@ public class HoaDonDao {
 			statement.setInt(8, hd.getQuay().getMaQuay());
 			statement.setDouble(9, hd.getTongTienGiam());
 			statement.setDouble(10, hd.getTongTien());
+			statement.setString(11, hd.getGhiChu());
 			affectedRows = statement.executeUpdate();
 
 			if (affectedRows > 0) {
@@ -314,32 +323,32 @@ public class HoaDonDao {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	public ArrayList<IncomeInPeriod> getDoanhThuTrongKhoang(LocalDate from, LocalDate to) {
+		ArrayList<IncomeInPeriod> incomes = new ArrayList<IncomeInPeriod>();
+		try {
+			db.ConnectDB.getInstance();
+			Connection con = db.ConnectDB.getConnection();
+			String sql = "SELECT NgayLapHoaDon, SUM(TongTien) AS TongDoanhThuTheoNgay\r\n"
+					+ "FROM HoaDon\r\n"
+					+ "WHERE NgayLapHoaDon BETWEEN ? AND ?\r\n"
+					+ "GROUP BY NgayLapHoaDon";
 
-//	public ArrayList<IncomeInPeriod> getDoanhThuTrongKhoang(LocalDate from, LocalDate to) {
-//		ArrayList<IncomeInPeriod> incomes = new ArrayList<IncomeInPeriod>();
-//		try {
-//			db.ConnectDB.getInstance();
-//			Connection con = db.ConnectDB.getConnection();
-//			String sql = "SELECT NgayLapHoaDon, SUM(TongTien) AS TongDoanhThuTheoNgay\r\n"
-//					+ "FROM HoaDon\r\n"
-//					+ "WHERE NgayLapHoaDon BETWEEN ? AND ?\r\n"
-//					+ "GROUP BY NgayLapHoaDon";
-//
-//			PreparedStatement statement = con.prepareStatement(sql);
-//			statement.setDate(1, Date.valueOf(from));
-//			statement.setDate(2, Date.valueOf(to));
-//
-//			ResultSet rs = statement.executeQuery();
-//			while (rs.next()) {
-//				LocalDate ngay = rs.getDate("NgayLapHoaDon").toLocalDate();
-//				long income = rs.getLong("TongDoanhThuTheoNgay");
-//
-//				incomes.add(new IncomeInPeriod(String.valueOf(ngay.getDayOfMonth()), income));
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return incomes;
+			PreparedStatement statement = con.prepareStatement(sql);
+			statement.setDate(1, Date.valueOf(from));
+			statement.setDate(2, Date.valueOf(to));
+
+			ResultSet rs = statement.executeQuery();
+			while (rs.next()) {
+				LocalDate ngay = rs.getDate("NgayLapHoaDon").toLocalDate();
+				long income = rs.getLong("TongDoanhThuTheoNgay");
+
+				incomes.add(new IncomeInPeriod(String.valueOf(ngay.getDayOfMonth()), income));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return incomes;
 
 	}
 }

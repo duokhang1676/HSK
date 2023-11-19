@@ -13,5 +13,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/jcalendar-1.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/sqljdbc42.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.5.4.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/fontbox-3.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-3.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-io-3.0.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

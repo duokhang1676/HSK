@@ -304,15 +304,15 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		}
 	}
 
-//	private void getIncomeInPeriod() {
-//		LocalDate from = datePickerFrom.getDate();
-//		LocalDate to = datePickerTo.getDate();
-//		
-//		incomeDataSet.clear();
-//		for (IncomeInPeriod item : hoaDonDao.getDoanhThuTrongKhoang(from, to)) {
-//			incomeDataSet.addValue(item.getValue(), "Doanh thu", item.getyLabel());
-//		}
-//	}
+	private void getIncomeInPeriod() {
+		LocalDate from = datePickerFrom.getDate();
+		LocalDate to = datePickerTo.getDate();
+		
+		incomeDataSet.clear();
+		for (IncomeInPeriod item : hoaDonDao.getDoanhThuTrongKhoang(from, to)) {
+			incomeDataSet.addValue(item.getValue(), "Doanh thu", item.getyLabel());
+		}
+	}
 	
 	private void getTop5ThuocBanChayNhat() {
 		LocalDate from = datePickerFrom.getDate();
@@ -353,7 +353,7 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		getTopSaleInPremisDateset();
 		getPaymentMethodPercentDataset();
 		getTopSaleInCategory();
-		//getIncomeInPeriod();
+		getIncomeInPeriod();
 		getTop5ThuocBanChayNhat();
 		getTongDoanhThu();
 		

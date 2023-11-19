@@ -3,7 +3,7 @@
 			Quầy: Tân Bình
 	-------------------------------
 	PHIẾU THANH TOÁN (Bao gồm VAT)
-	Số HD: ?/ Ngày: 19/11/2023
+	Số HD: 57/ Ngày: 19/11/2023
 	Nhân viên: Khang
 		SL		Giá bán		TTiền
 	1. Amoxcillin(Vỉ)
@@ -27,7 +27,7 @@
 	10. Erythromycin(Túyp)
 		1		7000.0		7000.0
 	--------------------------------
-	Phải thanh toán:		157500.0
+	Phải thanh toán:		154000.0
 	--------------------------------
 	Nhà thuốc chỉ xuất hóa đơn và đổi
 	trả trong ngày vui lòng liên hệ

@@ -143,6 +143,7 @@ public class CreateBillFrm extends JFrame {
 	
 	private boolean isUserInteraction = true;
 	private JTextField txtSoLuong;
+	private JTextArea textArea;
 	
 	public CreateBillFrm() {
 		super();
@@ -938,7 +939,7 @@ public class CreateBillFrm extends JFrame {
 			}
 		});
 
-		JTextArea textArea = new JTextArea();
+		textArea = new JTextArea();
 		textArea.setBounds(10, 322, 283, 69);
 
 		JLabel lblGhiChu = new JLabel("Ghi chú");
@@ -1175,9 +1176,10 @@ public class CreateBillFrm extends JFrame {
 		int maQuay = TaiKhoanDangNhap.getNV().getQuay().getMaQuay();
 		double tongTienGiam = Double.parseDouble(txtTongGiamGia.getText());
 		double tongTien = Double.parseDouble(txtKhachCanTra.getText());
+		String ghiChu = textArea.getText();
 
 		HoaDon hoaDon = new HoaDon(0, ngayLapHoaDon, trangThai, phuongThucThanhToan, tienNhan, tienDu,
-				khachHang, new NhanVien(maNhanVien), new Quay(maQuay), tongTienGiam, tongTien);
+				khachHang, new NhanVien(maNhanVien), new Quay(maQuay), tongTienGiam, tongTien, ghiChu);
 
 		hoaDon = hoaDonDao.themHoaDon(hoaDon);
 		if (hoaDon != null) {
