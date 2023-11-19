@@ -1,4 +1,4 @@
-package ui;
+	package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -292,19 +292,21 @@ public class OrderPage extends BasePage implements MouseListener{
 						lblTK.setText(hoaDon.getNhanVien().getTenNhanVien()+"");
 						lblQuay.setText(hoaDon.getQuay().getTenQuay()+"");
 						lblNgayTaoDonHang.setText(hoaDon.getNgayLapHD()+"");
-						//txtTenKH.setText(hoaDon.getKhachHang().getTenKhachHang()+"");
+						txtTenKhachHang.setText(hoaDon.getKhachHang().getTenKhachHang()+"");
 						txtSdtKhachHang.setText(hoaDon.getKhachHang().getSoDienThoai()+"");
 						
-//						ArrayList<ChiTietHoaDon> dsCTHD = chiTietHoaDonDao.getAllChiTietHoaDonByMaDonHang(hoaDon.getMaHD());
-//						int stt = 0;
-//						for (ChiTietHoaDon chiTietHoaDon : dsCTHD) {
-//							chiTietHoaDonModel.addRow(new Object[] {
-//									stt++,chiTietHoaDon.getSanPham().getTenThuoc(),
-//									chiTietHoaDon.getDonViTinh(), chiTietHoaDon.getSoLuong(),
-//									chiTietHoaDon.getDonGia(),chiTietHoaDon.getGiamGia(),
-//									chiTietHoaDon.getThanhTien()
-//							});
-//						}
+						ArrayList<ChiTietHoaDon> dsCTHD = chiTietHoaDonDao.getAllChiTietHoaDonByMaDonHang(hoaDon.getMaHD());
+						int stt = 1;
+						chiTietHoaDonModel.setNumRows(0);
+						for (ChiTietHoaDon chiTietHoaDon : dsCTHD) {
+							chiTietHoaDonModel.addRow(new Object[] {
+									stt++,chiTietHoaDon.getSanPham().getTenThuoc(),
+									chiTietHoaDon.getDonViTinh(), chiTietHoaDon.getSoLuong(),
+									chiTietHoaDon.getDonGia(),chiTietHoaDon.getGiamGia(),
+									chiTietHoaDon.getThanhTien()
+							});
+						}
+						
 						double tongTien = hoaDon.getTongTien()-hoaDon.getTongTienGiam();
 						txtTongTienHang.setText(tongTien+"");
 						txtTongGiamGia.setText(hoaDon.getTongTienGiam()+"");
