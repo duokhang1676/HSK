@@ -15,6 +15,7 @@ import entity.NhaCungCap;
 import entity.NhanVien;
 import entity.NhomThuoc;
 import entity.Thuoc;
+import model.TopThuocBanChay;
 
 public class ThuocDao {
 	public ThuocDao() {
@@ -264,5 +265,37 @@ public class ThuocDao {
 
 	public long getTongSoThuoc() {
 		return getAllData().size();
+	}
+	
+	public ArrayList<TopThuocBanChay> getTop5ThuocBanChay(LocalDate from, LocalDate to) {
+		ArrayList<TopThuocBanChay> dsTop10 = new ArrayList<TopThuocBanChay>();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement stmt = null;
+		try {
+			String sql = "  SELECT TOP 5 MaThuoc, TenThuoc, COUNT(*) AS SoLuongBanRa FROM Thuoc\r\n"
+					+ "  LEFT JOIN ChiTietHoaDon ON MaSanPham = MaThuoc\r\n"
+					+ "  LEFT JOIN HoaDon ON ChiTietHoaDon.MaHoaDon = HoaDon.MaHoaDon\r\n"
+					+ "  WHERE NgayLapHoaDon BETWEEN ? AND ?\r\n"
+					+ "  GROUP BY MaThuoc, TenThuoc\r\n"
+					+ "  ORDER BY SoLuongBanRa DESC";
+			
+			stmt = con.prepareStatement(sql);
+			stmt.setDate(1, Date.valueOf(from));
+			stmt.setDate(2, Date.valueOf(to));
+			
+			ResultSet rs = stmt.executeQuery();
+			while (rs.next()) {
+				int maThuoc = rs.getInt("MaThuoc");
+				String tenThuoc = rs.getString("TenThuoc");
+				int soLuongBanRa = rs.getInt("SoLuongBanRa");
+				
+				dsTop10.add(new TopThuocBanChay(maThuoc, tenThuoc, soLuongBanRa));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return dsTop10;
 	}
 }

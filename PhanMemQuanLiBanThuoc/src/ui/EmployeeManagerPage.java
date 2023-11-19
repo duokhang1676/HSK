@@ -358,7 +358,6 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 				"Doanh thu", getIncomeInPeriodDateset(), PlotOrientation.VERTICAL, false, false, false);
 
 		incomeIPeriodChart.setBorderVisible(false);
-		incomeIPeriodChart.setPadding(new RectangleInsets(15, 15, 15, 15));
 		incomeIPeriodChart.setBackgroundPaint(Color.white);
 
 		incomeIPeriodChartPanel = new ChartPanel(incomeIPeriodChart);

@@ -6,12 +6,12 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/LGoodDatePicker-11.2.1.jar"/>
-	<classpathentry kind="lib" path="lib/junit-3.8.jar"/>
-	<classpathentry kind="lib" path="lib/jfreechart-1.0.0.jar"/>
-	<classpathentry kind="lib" path="lib/jcommon-1.0.0.jar"/>
-	<classpathentry kind="lib" path="lib/pdfbox-app-3.0.0.jar"/>
-	<classpathentry kind="lib" path="lib/jcalendar-1.4.jar"/>
-	<classpathentry kind="lib" path="lib/sqljdbc42.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/LGoodDatePicker-11.2.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/junit-3.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcommon-1.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/pdfbox-app-3.0.0.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jcalendar-1.4.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/sqljdbc42.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/jfreechart-1.5.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

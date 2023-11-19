@@ -10,16 +10,23 @@ import java.awt.Paint;
 import java.awt.PaintContext;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.ColorModel;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.Currency;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -32,11 +39,9 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.data.DefaultKeyedValues;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
-import org.jfree.data.general.PieDataset;
 import org.jfree.ui.RectangleInsets;
 
 import com.github.lgooddatepicker.components.DatePicker;
@@ -46,10 +51,15 @@ import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
 import components.ColorConsts;
 import components.Header;
 import components.TopSaleProductView;
+import dao.ChiTietHoaDonDao;
 import dao.HoaDonDao;
 import dao.QuayDao;
+import dao.ThuocDao;
+import model.IncomeInPeriod;
 import model.PercentagePaymentMethod;
+import model.TopSaleInCategory;
 import model.TopSaleInPremises;
+import model.TopThuocBanChay;
 
 public class DashboardPage extends BasePage implements DateChangeListener {
 
@@ -59,30 +69,37 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 	private JLabel incomeLabel;
 	private JLabel orderCountLabel;
 	private JLabel productCountLabel;
-	
+
 	private JFreeChart incomeInWeekChart;
 	private JFreeChart categoryTopSaleChart;
 	private JFreeChart premisSaleChart;
 	private JFreeChart paymentMethodChart;
-	
+
 	private JList topSaleProductList;
-	private DefaultListModel<Object> topSaleProductModel;
-	
+	private DefaultListModel<TopThuocBanChay> topSaleProductModel;
+
 	private QuayDao quayDao;
 	private HoaDonDao hoaDonDao;
-	
-	
+	private ThuocDao thuocDao;
+	private ChiTietHoaDonDao chiTietHoaDonDao;
+
 	private DefaultCategoryDataset topSaleInPremisDateset;
 	private DefaultPieDataset paymentMethodDataset;
+	private DefaultPieDataset topSaleInCategoryDataset;
+	private DefaultCategoryDataset incomeDataSet;
 	
+	private JButton refreshButton;
+	private JButton filterByDayButton;
+
 	public DashboardPage() {
 		super();
-		
+
 		quayDao = new QuayDao();
 		hoaDonDao = new HoaDonDao();
+		chiTietHoaDonDao = new ChiTietHoaDonDao();
+		thuocDao = new ThuocDao();
 		
-		getTopSaleInPremisDateset();
-		getPaymentMethodPercentDataset();
+		fetchAllData();
 	}
 
 	@Override
@@ -132,108 +149,85 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		boxGroup.add(box1);
 		boxGroup.add(box3);
 
-		
 		JPanel chartGridGroup = new JPanel(new GridLayout(0, 3, 10, 10));
 		chartGridGroup.setBorder(new EmptyBorder(15, 0, 15, 0));
-		
-		
-		incomeInWeekChart = ChartFactory.createBarChart(
-				"Doanh Thu 7 Ngày Gần Nhất", 
-				"Ngày trong tuần",
-				"Doanh thu", 
-				getIncomeInWeekDateset(), 
-				PlotOrientation.VERTICAL,
-				false, 
-				false,
-				false);
-		
+
+		incomeDataSet = new DefaultCategoryDataset();
+		incomeInWeekChart = ChartFactory.createBarChart("Doanh Thu 7 Ngày Gần Nhất", "Ngày trong tuần", "Doanh thu",
+				incomeDataSet, PlotOrientation.VERTICAL, false, false, false);
+
 		incomeInWeekChart.setBorderVisible(false);
-		incomeInWeekChart.setPadding(new RectangleInsets(15, 15, 15, 15));
 		incomeInWeekChart.setBackgroundPaint(Color.white);
 
-		CategoryPlot cplot = (CategoryPlot)incomeInWeekChart.getPlot();
-	    BarRenderer r = (BarRenderer)incomeInWeekChart.getCategoryPlot().getRenderer();
-	    r.setSeriesPaint(0, new Color(22, 120, 254));
-		
-		ChartPanel incomeInWeekChartPanel =new ChartPanel(incomeInWeekChart);
+		CategoryPlot cplot = (CategoryPlot) incomeInWeekChart.getPlot();
+		BarRenderer r = (BarRenderer) incomeInWeekChart.getCategoryPlot().getRenderer();
+		r.setSeriesPaint(0, new Color(22, 120, 254));
+
+		ChartPanel incomeInWeekChartPanel = new ChartPanel(incomeInWeekChart);
 		incomeInWeekChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		
+		incomeInWeekChartPanel.setBackground(Color.decode(ColorConsts.ForegroundColor));
 		//
-		
-		categoryTopSaleChart = ChartFactory.createPieChart("Top 5 danh mục thuốc bán chạy nhất", getTopSaleInCategory(), true, true, true);
-		categoryTopSaleChart.setPadding(new RectangleInsets(15, 15, 15, 15));
+
+		topSaleInCategoryDataset = new DefaultPieDataset();
+
+		categoryTopSaleChart = ChartFactory.createPieChart("Top 5 danh mục thuốc bán chạy nhất",
+				topSaleInCategoryDataset, true, true, true);
+		// categoryTopSaleChart.setPadding(new RectangleInsets(15, 15, 15, 15));
 		categoryTopSaleChart.setBackgroundPaint(Color.white);
-		
+
 		ChartPanel categoryChartPanel = new ChartPanel(categoryTopSaleChart);
 		categoryChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		
-		// 
-		
+		categoryChartPanel.setBackground(Color.decode(ColorConsts.ForegroundColor));
+
 		JPanel topSaleProductPanel = new JPanel(new BorderLayout());
 		topSaleProductPanel.setBackground(Color.decode(ColorConsts.ForegroundColor));
-		
+
 		JLabel topSaleProductLabel = new JLabel("Top 10 sản phẩm bán chạy nhất");
 		topSaleProductLabel.setFont(new Font("Arials", Font.BOLD, 23));
 		topSaleProductLabel.setAlignmentX(CENTER_ALIGNMENT);
 		topSaleProductLabel.setBackground(Color.decode(ColorConsts.ForegroundColor));
 		topSaleProductLabel.setBorder(new EmptyBorder(15, 15, 15, 15));
-		
-		topSaleProductModel = new DefaultListModel<Object>();
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductModel.addElement("Viên uống hỗ trợ giấc ngủ Blackmores Tranquil Night");
-		topSaleProductList = new JList<Object>(topSaleProductModel);
+
+		topSaleProductModel = new DefaultListModel<TopThuocBanChay>();
+		topSaleProductList = new JList<TopThuocBanChay>(topSaleProductModel);
 		topSaleProductList.setCellRenderer(new TopSaleProductView());
 		topSaleProductPanel.add(topSaleProductLabel, BorderLayout.NORTH);
 		topSaleProductPanel.add(topSaleProductList, BorderLayout.CENTER);
-		
+
 		//
-		
+
 		topSaleInPremisDateset = new DefaultCategoryDataset();
-		premisSaleChart = ChartFactory.createBarChart(
-				"Top quầy thuốc bán chạy nhất", 
-				"Quầy thuốc",
-				"Doanh thu", 
-				topSaleInPremisDateset, 
-				PlotOrientation.HORIZONTAL,
-				false, 
-				false,
-				false);
-		
+		premisSaleChart = ChartFactory.createBarChart("Top quầy thuốc bán chạy nhất", "Quầy thuốc", "Doanh thu",
+				topSaleInPremisDateset, PlotOrientation.HORIZONTAL, false, false, false);
+
 		premisSaleChart.setBorderVisible(false);
-		premisSaleChart.setPadding(new RectangleInsets(15, 15, 15, 15));
 		premisSaleChart.setBackgroundPaint(Color.white);
 
-		CategoryPlot cplotPremis = (CategoryPlot)premisSaleChart.getPlot();
-	    BarRenderer rPremis = (BarRenderer)premisSaleChart.getCategoryPlot().getRenderer();
-	    rPremis.setSeriesPaint(0, new Color(22, 120, 254));
-		
-		ChartPanel premisSaleChartPanel =new ChartPanel(premisSaleChart);
+		CategoryPlot cplotPremis = (CategoryPlot) premisSaleChart.getPlot();
+		BarRenderer rPremis = (BarRenderer) premisSaleChart.getCategoryPlot().getRenderer();
+		rPremis.setSeriesPaint(0, new Color(22, 120, 254));
+
+		ChartPanel premisSaleChartPanel = new ChartPanel(premisSaleChart);
 		premisSaleChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
+		premisSaleChartPanel.setBackground(Color.decode(ColorConsts.ForegroundColor));
 
 		paymentMethodDataset = new DefaultPieDataset();
-		paymentMethodChart = ChartFactory.createPieChart("Phương thức thanh toán", paymentMethodDataset, true, true, true);
-		paymentMethodChart.setPadding(new RectangleInsets(15, 15, 15, 15));
+		paymentMethodChart = ChartFactory.createPieChart("Phương thức thanh toán", paymentMethodDataset, true, true,
+				true);
+
 		paymentMethodChart.setBackgroundPaint(Color.white);
-		
+
 		ChartPanel paymentMethodChartPanel = new ChartPanel(paymentMethodChart);
 		paymentMethodChartPanel.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		
-		
+		paymentMethodChartPanel.setBackground(Color.decode(ColorConsts.ForegroundColor));
+
 		chartGridGroup.setBackground(Color.decode(ColorConsts.BackgroundColor));
 		chartGridGroup.add(incomeInWeekChartPanel);
 		chartGridGroup.add(categoryChartPanel);
 		chartGridGroup.add(topSaleProductPanel);
 		chartGridGroup.add(premisSaleChartPanel);
 		chartGridGroup.add(paymentMethodChartPanel);
-		
+
 		panel.add(boxGroup, BorderLayout.NORTH);
 		panel.add(chartGridGroup, BorderLayout.CENTER);
 		return panel;
@@ -256,74 +250,116 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 
 		datePickerTo.addDateChangeListener(this);
 		datePickerFrom.addDateChangeListener(this);
-		
+
+		refreshButton = new JButton("Làm mới");
+		refreshButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				datePickerFrom.setDate(LocalDate.now().minusDays(7));
+				datePickerTo.setDateToToday();
+
+				fetchAllData();
+			}
+		});
+
 		datePickerGroup.add(datePickerFrom);
 		datePickerGroup.add(datePickerTo);
+		datePickerGroup.add(refreshButton);
 		datePickerGroup.setBackground(Color.decode(ColorConsts.ForegroundColor));
 
 		insidePane.add(datePickerGroup);
 
-		return new Header()
-				.addTitle("Trang chủ")
-				.addInsidePanel(insidePane)
-				.createView();
+		return new Header().addTitle("Trang chủ").addInsidePanel(insidePane).createView();
 	}
-	
-	
-	private CategoryDataset getIncomeInWeekDateset() {
-		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		
-		dataset.addValue(1000000, "Doanh thu", "T2");
-		dataset.addValue(500000, "Doanh thu", "T3");
-		dataset.addValue(200000, "Doanh thu", "T4");
-		
-		dataset.addValue(2000000, "Doanh thu", "T5");
-		dataset.addValue(300000, "Doanh thu", "T6");
-		dataset.addValue(500000, "Doanh thu", "T7");
-		dataset.addValue(2000000, "Doanh thu", "CN");
-		
-		return dataset;
-	}
-	
-	private PieDataset getTopSaleInCategory() {
-		DefaultPieDataset dataset = new DefaultPieDataset();
-		dataset.setValue("Thuốc kháng sinh", 60.0);
-		dataset.setValue("Thuốc giảm đau, hạ sốt", 20.0);
-		dataset.setValue("Thuốc kháng viêm", 10.0);
-		dataset.setValue("Thuốc ho và long đờm", 5.0);
-		dataset.setValue("Thuốc trị tiêu chảy", 5.0);
-		
-		return dataset;
+
+	private void getTopSaleInCategory() {
+		LocalDate from = datePickerFrom.getDate();
+		LocalDate to = datePickerTo.getDate();
+
+		topSaleInCategoryDataset.clear();
+		for (TopSaleInCategory item : chiTietHoaDonDao.getTop5DanhMucThuocBanChay(from, to)) {
+			topSaleInCategoryDataset.setValue(item.getCategoryName(), item.getSoLuongBanRa());
+		}
 	}
 
 	private void getTopSaleInPremisDateset() {
 		LocalDate from = datePickerFrom.getDate();
 		LocalDate to = datePickerTo.getDate();
-		
+
+		topSaleInPremisDateset.clear();
 		for (TopSaleInPremises item : quayDao.getTopSaleInPremises(from, to)) {
 			topSaleInPremisDateset.addValue(item.getDoanhThu(), "Doanh thu", item.getTenQuay());
 		}
-	} 
-	
+	}
+
 	private void getPaymentMethodPercentDataset() {
 		LocalDate from = datePickerFrom.getDate();
 		LocalDate to = datePickerTo.getDate();
-		
-		while (!paymentMethodDataset.getKeys().isEmpty()) {
-			paymentMethodDataset.remove((Comparable) paymentMethodDataset.getKeys().get(0));
-		}
-		
-		paymentMethodDataset.remove("Tiền mặt");
-		paymentMethodDataset.remove("Ngân hàng");
-		paymentMethodDataset.remove("Ví điện tử");
-		for (PercentagePaymentMethod item : hoaDonDao.getPercentageOfMethodPayment()) {
+
+		paymentMethodDataset.clear();
+		for (PercentagePaymentMethod item : hoaDonDao.getPercentageOfMethodPayment(from, to)) {
 			paymentMethodDataset.setValue(item.getPhuongThucThanhToan(), item.getSoLuongDonHang());
 		}
 	}
 
+//	private void getIncomeInPeriod() {
+//		LocalDate from = datePickerFrom.getDate();
+//		LocalDate to = datePickerTo.getDate();
+//		
+//		incomeDataSet.clear();
+//		for (IncomeInPeriod item : hoaDonDao.getDoanhThuTrongKhoang(from, to)) {
+//			incomeDataSet.addValue(item.getValue(), "Doanh thu", item.getyLabel());
+//		}
+//	}
+	
+	private void getTop5ThuocBanChayNhat() {
+		LocalDate from = datePickerFrom.getDate();
+		LocalDate to = datePickerTo.getDate();
+		
+		topSaleProductModel.clear();
+		for (TopThuocBanChay item : thuocDao.getTop5ThuocBanChay(from, to)) {
+			topSaleProductModel.addElement(item);
+		}
+		
+	}
+	
+	private void getTongDoanhThu() {
+		LocalDate from = datePickerFrom.getDate();
+		LocalDate to = datePickerTo.getDate();
+		
+		long tongDoanhThu = hoaDonDao.getTongDoanhThu(from, to);
+		
+		Locale locale = new Locale("vi", "VN");
+        Currency currency = Currency.getInstance("VND");
+        DecimalFormatSymbols df = DecimalFormatSymbols.getInstance(locale);
+        df.setCurrency(currency);
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(locale);
+        numberFormat.setCurrency(currency);
+        
+		incomeLabel.setText(numberFormat.format(tongDoanhThu));
+	}
+	
 	@Override
 	public void dateChanged(DateChangeEvent e) {
+		fetchAllData();
+	}
+
+	private void fetchAllData() {
+		LocalDate from = datePickerFrom.getDate();
+		LocalDate to = datePickerTo.getDate();
+		
 		getTopSaleInPremisDateset();
 		getPaymentMethodPercentDataset();
-	} 
+		getTopSaleInCategory();
+		//getIncomeInPeriod();
+		getTop5ThuocBanChayNhat();
+		getTongDoanhThu();
+		
+		long tongSoDonHang = hoaDonDao.getTongSoDonHang(from, to);
+		orderCountLabel.setText(String.valueOf(tongSoDonHang));
+		
+		
+	}
 }

@@ -2,7 +2,7 @@ package model;
 
 public class TopSaleInCategory {
 	private String categoryName;
-	private double doanhThu;
+	private long soLuongBanRa;
 
 	public String getCategoryName() {
 		return categoryName;
@@ -12,18 +12,18 @@ public class TopSaleInCategory {
 		this.categoryName = categoryName;
 	}
 
-	public double getDoanhThu() {
-		return doanhThu;
+	public long getSoLuongBanRa() {
+		return soLuongBanRa;
 	}
 
-	public void setDoanhThu(double doanhThu) {
-		this.doanhThu = doanhThu;
+	public void setSoLuongBanRa(long soLuongBanRa) {
+		this.soLuongBanRa = soLuongBanRa;
 	}
 
-	public TopSaleInCategory(String categoryName, double doanhThu) {
+	public TopSaleInCategory(String categoryName, long soLuongBanRa) {
 		super();
 		this.categoryName = categoryName;
-		this.doanhThu = doanhThu;
+		this.soLuongBanRa = soLuongBanRa;
 	}
 
 }
