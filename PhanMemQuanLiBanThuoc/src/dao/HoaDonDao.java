@@ -292,4 +292,20 @@ public class HoaDonDao {
 		}
 		return 0;
 	} 
+	
+	public boolean setTrangThai(int maHoaDon) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement statement = null;
+		try {
+			statement = con.prepareStatement("update HoaDon\r\n"
+					+ "set TrangThai = 'Đã TT'\r\n"
+					+ "where MaHoaDon = ?");
+			statement.setInt(1, maHoaDon);
+			return statement.executeUpdate()>0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
 }

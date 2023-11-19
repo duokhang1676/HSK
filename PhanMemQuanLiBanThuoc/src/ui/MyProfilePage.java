@@ -45,7 +45,7 @@ public class MyProfilePage extends BasePage {
 		
 		NhanVien nv = TaiKhoanDangNhap.getNV();
 
-		JLabel ngayVaoLamBoxLb = new JLabel("Ngày vào làm");
+		JLabel ngayVaoLamBoxLb = new JLabel("Ngày vào làm   ");
 		ngayVaoLamBoxLb.setFont(new Font("Arials", Font.PLAIN, 14));
 
 		ngayVaoLamTxt = new JTextField("");

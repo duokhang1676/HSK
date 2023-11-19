@@ -15,6 +15,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.EventObject;
 
@@ -22,6 +23,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -106,6 +108,7 @@ public class OrderPage extends BasePage implements MouseListener{
 	private JLabel lblQuay;
 	private JLabel lblTK;
 	private JLabel lblNgayTaoDonHang;
+	private JComboBox<String> comboBox;
 	
 	
 	public OrderPage() {
@@ -136,7 +139,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		//datePickerGroup.setBackground(Color.decode(ColorConsts.ForegroundColor));
 
 		String listCombo[] = "Mã hóa đơn;Quầy;Khách hàng;Trạng thái".split(";");
-		JComboBox<String> comboBox= new JComboBox<String>(listCombo);
+		comboBox= new JComboBox<String>(listCombo);
 		comboBox.setBackground(Color.decode(ColorConsts.ForegroundColor));
 		comboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -160,6 +163,12 @@ public class OrderPage extends BasePage implements MouseListener{
 				txtTim.setText("");
 			}
 		});
+		txtTim.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				loc();
+			}
+		});
 		
 		comboBox.addActionListener(new ActionListener() {	
 			@Override
@@ -170,7 +179,9 @@ public class OrderPage extends BasePage implements MouseListener{
 		
 		btnDTT = new JRadioButton("Đã thanh toán");
 		btnDTT.setSelected(true);
+		btnDTT.setFont(new Font("Arial",Font.BOLD,10));
 		btnCTT = new JRadioButton("Chưa thanh toán");
+		btnCTT.setFont(new Font("Arial",Font.BOLD,10));
 		btnDTT.setVisible(false);
 		btnCTT.setVisible(false);
 		
@@ -184,79 +195,9 @@ public class OrderPage extends BasePage implements MouseListener{
 		btnLoc.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dropText();
-				DefaultTableModel model = (DefaultTableModel) orderTable.getModel();
-				model.setRowCount(0);
-				if(comboBox.getSelectedItem().toString().equals("Mã hóa đơn")) {
-					if(txtTim.getText().trim().isEmpty()) {
-						getDanhSachDonHang();
-						return;
-					}else {
-						for (HoaDon hoaDon : dsHoaDon) {
-							if(txtTim.getText().trim().equalsIgnoreCase(hoaDon.getMaHD()+""))
-								orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
-									hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
-						}
-					}
-				}else
-				if(comboBox.getSelectedItem().toString().equals("Quầy")) {
-					if(txtTim.getText().trim().isEmpty()) {
-						getDanhSachDonHang();
-						return;
-					}else {
-						for (HoaDon hoaDon : dsHoaDon) {
-							if(txtTim.getText().trim().equalsIgnoreCase(hoaDon.getQuay().getMaQuay()+"")
-									||txtTim.getText().trim().equalsIgnoreCase(hoaDon.getQuay().getTenQuay()+""))
-								orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
-									hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
-						}
-					}
-				}else
-				if(comboBox.getSelectedItem().toString().equals("Khách hàng")) {
-					if(txtTim.getText().trim().isEmpty()) {
-						getDanhSachDonHang();
-						return;
-					}else {
-						for (HoaDon hoaDon : dsHoaDon) {
-							if(txtTim.getText().trim().equalsIgnoreCase(hoaDon.getKhachHang().getMaKhachHang()+"")||
-									txtTim.getText().trim().equalsIgnoreCase(hoaDon.getKhachHang().getTenKhachHang()+"")||
-									txtTim.getText().trim().equalsIgnoreCase(hoaDon.getKhachHang().getSoDienThoai()+""))
-								orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
-									hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
-						}
-					}
-				}else {
-					if(btnDTT.isSelected()) {
-						for (HoaDon hoaDon : dsHoaDon) {
-							if((hoaDon.getTrangThai()+"").equalsIgnoreCase("Đã TT"))
-								orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
-									hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
-						}
-					}else {
-						for (HoaDon hoaDon : dsHoaDon) {
-							if((hoaDon.getTrangThai()+"").equalsIgnoreCase("Chưa TT"))
-								orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
-									hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
-						}
-					}
-				}
+				loc();
 			}
 
-			private void dropText() {
-				txtDH.setText("");
-				lblTK.setText("");
-				lblQuay.setText("");
-				lblNgayTaoDonHang.setText("");
-				txtTenKhachHang.setText("");
-				txtSdtKhachHang.setText("");
-				DefaultTableModel model  = (DefaultTableModel) chiTietHoaDonTable.getModel();
-				model.setRowCount(0);
-				txtTongTienHang.setText("");
-				txtTongGiamGia.setText("");
-				txtKhachThanhToan.setText("");
-				txtPttt.setText("");
-				ghiChuTextArea.setText("");
-			}
 		});
 		
 		Box leftHeaderBox = Box.createHorizontalBox();
@@ -291,7 +232,8 @@ public class OrderPage extends BasePage implements MouseListener{
 						txtDH.setText(hoaDon.getMaHD()+"");
 						lblTK.setText(hoaDon.getNhanVien().getTenNhanVien()+"");
 						lblQuay.setText(hoaDon.getQuay().getTenQuay()+"");
-						lblNgayTaoDonHang.setText(hoaDon.getNgayLapHD()+"");
+						DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+						lblNgayTaoDonHang.setText(dtf.format(hoaDon.getNgayLapHD()));
 						txtTenKhachHang.setText(hoaDon.getKhachHang().getTenKhachHang()+"");
 						txtSdtKhachHang.setText(hoaDon.getKhachHang().getSoDienThoai()+"");
 						
@@ -555,6 +497,16 @@ public class OrderPage extends BasePage implements MouseListener{
 		btnXuatHoaDon.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btnXuatHoaDon.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(txtDH.getText().isEmpty())return;
+				if(txtPttt.getText().trim().isEmpty()) {
+					if(JOptionPane.showConfirmDialog((RootFrame) SwingUtilities.getWindowAncestor(OrderPage.this),"Số tiền khách hàng cần thanh toán là "+ txtTongTienHang.getText()+"VND","Thanh toán",
+							JOptionPane.YES_NO_OPTION)==JOptionPane.YES_OPTION)
+						if(hoaDonDao.setTrangThai(Integer.parseInt(txtDH.getText().trim())))
+							JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(OrderPage.this),
+								"Đã thanh toán!");
+				}else {
+					
+				}
 			}
 		});
 		
@@ -631,6 +583,79 @@ public class OrderPage extends BasePage implements MouseListener{
 		// TODO Auto-generated method stub
 		
 	}
+	private void dropText() {
+		txtDH.setText("");
+		lblTK.setText("");
+		lblQuay.setText("");
+		lblNgayTaoDonHang.setText("");
+		txtTenKhachHang.setText("");
+		txtSdtKhachHang.setText("");
+		DefaultTableModel model  = (DefaultTableModel) chiTietHoaDonTable.getModel();
+		model.setRowCount(0);
+		txtTongTienHang.setText("");
+		txtTongGiamGia.setText("");
+		txtKhachThanhToan.setText("");
+		txtPttt.setText("");
+		ghiChuTextArea.setText("");
+	}
+	public void loc() {
+		dropText();
+		DefaultTableModel model = (DefaultTableModel) orderTable.getModel();
+		model.setRowCount(0);
+		if(comboBox.getSelectedItem().toString().equals("Mã hóa đơn")) {
+			if(txtTim.getText().trim().isEmpty()) {
+				getDanhSachDonHang();
+				return;
+			}else {
+				for (HoaDon hoaDon : dsHoaDon) {
+					if(txtTim.getText().trim().equalsIgnoreCase(hoaDon.getMaHD()+""))
+						orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+							hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+				}
+			}
+		}else
+		if(comboBox.getSelectedItem().toString().equals("Quầy")) {
+			if(txtTim.getText().trim().isEmpty()) {
+				getDanhSachDonHang();
+				return;
+			}else {
+				for (HoaDon hoaDon : dsHoaDon) {
+					if(txtTim.getText().trim().equalsIgnoreCase(hoaDon.getQuay().getMaQuay()+"")
+							||txtTim.getText().trim().equalsIgnoreCase(hoaDon.getQuay().getTenQuay()+""))
+						orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+							hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+				}
+			}
+		}else
+		if(comboBox.getSelectedItem().toString().equals("Khách hàng")) {
+			if(txtTim.getText().trim().isEmpty()) {
+				getDanhSachDonHang();
+				return;
+			}else {
+				for (HoaDon hoaDon : dsHoaDon) {
+					if(txtTim.getText().trim().equalsIgnoreCase(hoaDon.getKhachHang().getMaKhachHang()+"")||
+							txtTim.getText().trim().equalsIgnoreCase(hoaDon.getKhachHang().getTenKhachHang()+"")||
+							txtTim.getText().trim().equalsIgnoreCase(hoaDon.getKhachHang().getSoDienThoai()+""))
+						orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+							hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+				}
+			}
+		}else {
+			if(btnDTT.isSelected()) {
+				for (HoaDon hoaDon : dsHoaDon) {
+					if((hoaDon.getTrangThai()+"").equalsIgnoreCase("Đã TT"))
+						orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+							hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+				}
+			}else {
+				for (HoaDon hoaDon : dsHoaDon) {
+					if((hoaDon.getTrangThai()+"").equalsIgnoreCase("Chưa TT"))
+						orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
+							hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+				}
+			}
+		}
+	}
 	
 	public void getDanhSachDonHang() {
 		DefaultTableModel model = (DefaultTableModel) orderTable.getModel();
@@ -654,9 +679,10 @@ public class OrderPage extends BasePage implements MouseListener{
 		}
 		if(dsHoaDon == null)
 			return;
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 		for (HoaDon hoaDon : dsHoaDon) {
 			orderTableModel.addRow(new Object[] {hoaDon.getMaHD(), hoaDon.getQuay().getTenQuay(), hoaDon.getKhachHang().getTenKhachHang(), hoaDon.getTongTien(),
-					hoaDon.getNgayLapHD(), hoaDon.getTrangThai()});
+					dtf.format(hoaDon.getNgayLapHD()), hoaDon.getTrangThai()});
 		}
 	}
 	public void setCellEditable() {
