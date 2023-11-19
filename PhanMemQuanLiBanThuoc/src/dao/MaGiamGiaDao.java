@@ -22,7 +22,7 @@ public class MaGiamGiaDao {
 		try {
 			db.ConnectDB.getInstance();
 			Connection con = db.ConnectDB.getConnection();
-			String sql = "Select * from MaGiamGia";
+			String sql = "Select * from MaGiamGia join Thuoc on MaGiamGia.MaThuoc = Thuoc.MaThuoc";
 			Statement statement = con.createStatement();
 			ResultSet rs = statement.executeQuery(sql);
 			while (rs.next()) {
@@ -32,7 +32,7 @@ public class MaGiamGiaDao {
 				double ptGiamGia = rs.getDouble("PhanTramGiamGia");
 				String mota = rs.getString("MoTa");
 				
-				Thuoc thuoc = new Thuoc(rs.getInt("MaThuoc"));
+				Thuoc thuoc = new Thuoc(rs.getInt("MaThuoc"), rs.getString("TenThuoc"), null, null, null, null, null, null, null, null, 0, 0, 0 , 0, null);
 				
 				MaGiamGia giamgia = new MaGiamGia(ma ,  ngayBD , ngayKT , ptGiamGia , mota, thuoc);
 				dsGG.add(giamgia);

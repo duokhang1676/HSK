@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -21,6 +22,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.github.lgooddatepicker.components.DatePicker;
+import com.toedter.calendar.JDateChooser;
 
 import components.ColorConsts;
 import dao.KhoDao;
@@ -42,7 +46,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 	private JTextField txt_thanhPhan;
 	private JTextField txt_donViTinhLe;
 	private JTextField txt_donViTinhChan;
-	private JTextField txt_hanSuDung;
+	private DatePicker txt_hanSuDung;
 	private JTextField txt_dieuKienBQ;
 	private JTextArea txt_ghiChu;
 	private JTextField txt_giaNhapLe;
@@ -127,14 +131,14 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 //		txt_maNCC = new JTextField();
 
 		txt_maNCC = new JComboBox<String>();
-		txt_maNCC.setEditable(true);
+		txt_maNCC.setEditable(false);
 
 		txt_donViTinh = new JTextField();
 		txt_thanhPhan = new JTextField();
 		txt_donViTinhLe = new JTextField();
 		txt_donViTinhChan = new JTextField();
-		txt_hanSuDung = new JTextField();
-//		txt_hanSuDung = new JDateChooser();
+//		txt_hanSuDung = new JTextField();
+		txt_hanSuDung = new DatePicker();
 		txt_dieuKienBQ = new JTextField();
 		txt_ghiChu = new JTextArea(3, 2);
 		txt_giaNhapLe = new JTextField();
@@ -144,9 +148,11 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 
 //		txt_maNhom = new JTextField();
 		txt_maNhom = new JComboBox<String>();
-		txt_maNhom.setEditable(true);
+		txt_maNhom.setEditable(false);
 
 		txt_ghiChu.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		txt_hanSuDung.setPreferredSize(txt_tenThuoc.getPreferredSize());
 		
 		
 
@@ -294,13 +300,189 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		// TODO Auto-generated method stub
 		Object src = e.getSource();
 		if (src.equals(btn_them)) {
-			addRow();
-			dispose();
+			if (validData()) {
+				addRow();
+				dispose();
+			}
 		} 
 		
 		if (src.equals(btn_xoaTrang)) {
 			clearData();
 		}
+	}
+
+	private boolean validData() {
+		// TODO Auto-generated method stub
+		String tenThuoc = txt_tenThuoc.getText().trim();
+		String thanhPhanChinh = txt_thanhPhan.getText().trim();
+		String donViTinh = txt_donViTinh.getText().trim();
+		String donViTinhLe = txt_donViTinhLe.getText().trim();
+		String donViTinhChan = txt_donViTinhChan.getText().trim();
+		String dieuKienBQ = txt_dieuKienBQ.getText().trim();
+		String giaNhapLe = txt_giaNhapLe.getText();
+		String giaNhapChan = txt_giaNhapChan.getText();
+		String giaBanLe = txt_giaBanLe.getText();
+		String giaBanChan = txt_giaBanChan.getText();
+		
+//		Pattern p = Pattern.compile("[a-zA-Z0-9. ]+", Pattern.UNICODE_CHARACTER_CLASS);
+		
+		//check ten thuoc
+		if (tenThuoc.length() <= 0) {
+//			if (!(tenThuoc.matches("[a-zA-Z0-9. ]+"))) {
+//				showMessage("Tên thuốc không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
+//				txt_tenThuoc.requestFocus();
+//				txt_tenThuoc.selectAll();
+//				return false;
+//			}
+			showMessage("Tên thuốc không được để trống!!!");
+			return false;
+		}
+		//check thanh phan chinh
+		if (thanhPhanChinh.length() > 0) {
+			if (!(thanhPhanChinh.matches("[a-zA-Z0-9. ]+"))) {
+				showMessage("Thành phần chính không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
+				txt_thanhPhan.requestFocus();
+				txt_thanhPhan.selectAll();
+				return false;
+			}
+		}else {
+			showMessage("Thành phần chính không được để trống!!!");
+			return false;
+		}
+		// check dk bao quan
+		if (dieuKienBQ.length() > 0) {
+			if (!(dieuKienBQ.matches("[a-zA-Z0-9. ]+"))) {
+				showMessage("Điều kiện bảo quản không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
+				txt_dieuKienBQ.requestFocus();
+				txt_dieuKienBQ.selectAll();
+				return false;
+			}
+		} else {
+			showMessage("Điều kiện bảo quản không được để trống!!!");
+			return false;
+		}
+		//check don vi tinh
+		if (donViTinh.length() > 0) {
+			if (!(donViTinh.matches("[a-zA-Z0-9. ]+"))) {
+				showMessage("Đơn vị tính không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
+				txt_donViTinh.requestFocus();
+				txt_donViTinh.selectAll();
+				return false;
+			}
+		}else {
+			showMessage("Đơn vị tính không được để trống!!!");
+			return false;
+		}
+		//check don vi tinh le
+		if (donViTinhLe.length() > 0) {
+			if (!(donViTinhLe.matches("[a-zA-Z0-9. ]+"))) {
+				showMessage("Đơn vị tính lẻ không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
+				txt_donViTinhLe.requestFocus();
+				txt_donViTinhLe.selectAll();
+				return false;
+			}
+		}else {
+			showMessage("Đơn vị tính lẻ không được để trống!!!");
+			return false;
+		}
+		//check don vi tinh chan
+		if (donViTinhChan.length() > 0) {
+			if (!(donViTinhChan.matches("[a-zA-Z0-9. ]+"))) {
+				showMessage("Đơn vị tính chẵn không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
+				txt_donViTinhChan.requestFocus();
+				txt_donViTinhChan.selectAll();
+				return false;
+			}
+		}else {
+			showMessage("Đơn vị tính chẵn không được để trống!!!");
+			return false;
+		}
+		//check gia nhap le
+		if (giaNhapLe.length() > 0) {
+			try {
+				double nhapLe = Double.parseDouble(giaNhapLe);
+				if (!(nhapLe > 0)) {
+					showMessage("Giá nhập lẻ phải lớn hơn 0!!!");
+					txt_giaNhapLe.requestFocus();
+					txt_giaNhapLe.selectAll();
+					return false;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				showMessage("Giá nhập lẻ phải nhập số!!!");
+				txt_giaNhapLe.requestFocus();
+				txt_giaNhapLe.selectAll();
+				return false;
+			}
+		}else {
+			showMessage("Giá nhập lẻ không được để trống!!!");
+			return false;
+		}
+		// check gia nhap le
+		if (giaNhapChan.length() > 0) {
+			try {
+				double nhapChan = Double.parseDouble(giaNhapChan);
+				if (!(nhapChan > 0)) {
+					showMessage("Giá nhập chẵn phải lớn hơn 0!!!");
+					txt_giaNhapChan.requestFocus();
+					txt_giaNhapChan.selectAll();
+					return false;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				showMessage("Giá nhập chẵn phải nhập số!!!");
+				txt_giaNhapChan.requestFocus();
+				txt_giaNhapChan.selectAll();
+				return false;
+			}
+		} else {
+			showMessage("Giá nhập chẵn không được để trống!!!");
+			return false;
+		}
+		//gia ban le
+		if (giaBanLe.length() > 0) {
+			try {
+				double banLe = Double.parseDouble(giaBanLe);
+				if (!(banLe > 0)) {
+					showMessage("Giá bán lẻ phải lớn hơn 0!!!");
+					txt_giaBanLe.requestFocus();
+					txt_giaBanLe.selectAll();
+					return false;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				showMessage("Giá bán lẻ phải nhập số!!!");
+				txt_giaBanLe.requestFocus();
+				txt_giaBanLe.selectAll();
+				return false;
+			}
+		} else {
+			showMessage("Giá bán lẻ không được để trống!!!");
+			return false;
+		}
+		//gia ban chan
+		if (giaBanChan.length() > 0) {
+			try {
+				double banChan = Double.parseDouble(giaBanChan);
+				if (!(banChan > 0)) {
+					showMessage("Giá bán chẵn phải lớn hơn 0!!!");
+					txt_giaBanChan.requestFocus();
+					txt_giaBanChan.selectAll();
+					return false;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				showMessage("Giá bán chẵn phải nhập số!!!");
+				txt_giaBanChan.requestFocus();
+				txt_giaBanChan.selectAll();
+				return false;
+			}
+		} else {
+			showMessage("Giá bán chẵn không được để trống!!!");
+			return false;
+		}
+		
+		return true;
 	}
 
 	private void clearData() {
@@ -325,7 +507,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		String donViTinh = txt_donViTinh.getText();
 		String thanhPhanChinh = txt_thanhPhan.getText();
 		String donViTinhLe = txt_donViTinhLe.getText();
-		LocalDate hanSuDung = LocalDate.parse(txt_hanSuDung.getText());
+		LocalDate hanSuDung = txt_hanSuDung.getDate();
 		String dkBaoQuan = txt_dieuKienBQ.getText();
 		String donViTinhChan = txt_donViTinhChan.getText();
 		String ghiChu = txt_ghiChu.getText();

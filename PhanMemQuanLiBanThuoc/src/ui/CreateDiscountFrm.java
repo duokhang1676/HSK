@@ -6,41 +6,66 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import com.github.lgooddatepicker.components.DatePicker;
 
 import components.ColorConsts;
 import dao.MaGiamGiaDao;
+import dao.ThuocDao;
 import entity.MaGiamGia;
+import entity.Thuoc;
 
 public class CreateDiscountFrm extends JFrame implements ActionListener{
 	private JTextField txt_maGiamGia;
 	
-	private JTextField txt_ngayKetThuc;
+	private DatePicker txt_ngayKetThuc;
 	private JTextField txt_phanTramGiamGia;
 	private JTextArea txt_moTa;
 	private JButton btn_them;
 	private JButton btn_xoaTrang;
 
-	private JTextField txt_ngayBatDau;
+	private DatePicker txt_ngayBatDau;
 
 	private MaGiamGiaDao magiamgia_dao;
 
+	private DefaultListModel suggestionListModel;
 
+	private JList suggestionList;
+
+	private JScrollPane listTimKiem;
+
+	private JTextField txt_maThuoc;
+
+	private ThuocDao thuoc_dao;
+
+	private ArrayList<Thuoc> dsThuoc;
+	private ArrayList<Thuoc> dsThuocTemp = new ArrayList<Thuoc>();
+
+
+	@SuppressWarnings("unchecked")
 	public CreateDiscountFrm() {
 		// TODO Auto-generated constructor stub
 		this.setTitle("Tạo mã giảm giá");
@@ -48,7 +73,9 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
+		thuoc_dao = new ThuocDao();
 		magiamgia_dao = new MaGiamGiaDao();
+		dsThuoc = thuoc_dao.getAllData();
 		Font titleFont = new Font("Arial", Font.BOLD, 30);
 		JLabel title = new JLabel("Thêm mã giảm giá mới");
 		title.setFont(titleFont);
@@ -63,25 +90,118 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 		JLabel jl_ngayKetThuc = new JLabel("Ngày kết thúc: ");
 		JLabel jl_moTa = new JLabel("Mô tả: ");
 		JLabel jl_phanTramGiamGia = new JLabel("Phần trăm giảm giá: ");
+		JLabel jl_maThuoc = new JLabel("Tên thuốc: ");
 		
 		jl_maGiamGia.setPreferredSize(jl_phanTramGiamGia.getPreferredSize());
 		jl_ngayBatDau.setPreferredSize(jl_phanTramGiamGia.getPreferredSize());
 		jl_ngayKetThuc.setPreferredSize(jl_phanTramGiamGia.getPreferredSize());
 		jl_moTa.setPreferredSize(jl_phanTramGiamGia.getPreferredSize());
+		jl_maThuoc.setPreferredSize(jl_phanTramGiamGia.getPreferredSize());
 		
 		txt_maGiamGia = new JTextField();
 		txt_maGiamGia.setEditable(false);
 		
-//		txt_ngayBatDau = new DatePicker();
-		txt_ngayBatDau = new JTextField();
+		txt_maThuoc = new JTextField();
 		
-//		txt_ngayKetThuc = new DatePicker();
-		txt_ngayKetThuc = new JTextField();
+		txt_ngayBatDau = new DatePicker();
+//		txt_ngayBatDau = new JTextField();
+		
+		txt_ngayKetThuc = new DatePicker();
+//		txt_ngayKetThuc = new JTextField();
 		
 		txt_phanTramGiamGia = new JTextField();
 		
 		txt_moTa = new JTextArea(3,2);
 		txt_moTa.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		
+		
+		suggestionListModel = new DefaultListModel<>();
+        suggestionList = new JList<>(suggestionListModel);
+        listTimKiem = new JScrollPane(suggestionList);
+		
+		listTimKiem.setVisible(false);
+		
+		txt_maThuoc.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				listTimKiem.setVisible(true);
+				suggestionListModel.removeAllElements();
+				for (int i = 0; i < dsThuoc.size(); i++) {
+					if (dsThuoc.get(i).getTenThuoc().toLowerCase().contains(txt_maThuoc.getText().trim().toLowerCase()))
+						suggestionListModel.addElement(dsThuoc.get(i).getTenThuoc());
+				}
+				if (txt_maThuoc.getText().trim().equals("")) {
+					suggestionListModel.removeAllElements();
+					listTimKiem.setVisible(false);
+				}
+				if (txt_maThuoc.getText().length() > 0 && suggestionListModel.getSize() == 0) {
+					suggestionListModel.addElement("Không tìm thấy sản phẩm :(");
+				}
+			}
+		});
+		txt_maThuoc.getDocument().addDocumentListener(new DocumentListener() {
+			
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				listTimKiem.setVisible(true);
+				suggestionListModel.removeAllElements();
+				dsThuocTemp.clear();
+				for (int i = 0; i < dsThuoc.size(); i++) {
+					if (dsThuoc.get(i).getTenThuoc().toLowerCase().contains(txt_maThuoc.getText().trim().toLowerCase())) {
+						suggestionListModel.addElement(dsThuoc.get(i).getTenThuoc());
+						dsThuocTemp.add(dsThuoc.get(i));
+					}
+
+				}
+				if (txt_maThuoc.getText().trim().equals("")) {
+					suggestionListModel.removeAllElements();
+					listTimKiem.setVisible(false);
+				}
+				if (txt_maThuoc.getText().length() > 0 && suggestionListModel.getSize() == 0) {
+					suggestionListModel.addElement("Không tìm thấy sản phẩm :(");
+				}
+			}
+			
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				listTimKiem.setVisible(true);
+				suggestionListModel.removeAllElements();
+				dsThuocTemp.clear();
+				for (int i = 0; i < dsThuoc.size(); i++) {
+					if (dsThuoc.get(i).getTenThuoc().toLowerCase().contains(txt_maThuoc.getText().trim().toLowerCase())) {
+						suggestionListModel.addElement(dsThuoc.get(i).getTenThuoc());
+						dsThuocTemp.add(dsThuoc.get(i));
+					}
+				}
+				if (txt_maThuoc.getText().trim().equals("")) {
+					suggestionListModel.removeAllElements();
+					listTimKiem.setVisible(false);
+				}
+				if (txt_maThuoc.getText().length() > 0 && suggestionListModel.getSize() == 0) {
+					suggestionListModel.addElement("Không tìm thấy sản phẩm :(");
+				}
+			}
+			
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		suggestionList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(e.getClickCount()==2) {
+					txt_maThuoc.setText(suggestionList.getSelectedValue().toString());
+					listTimKiem.setVisible(false);
+				}
+			}
+		});
+		
 		
 		
 		Box b, b1, b2, b3, b4, b5;
@@ -93,9 +213,9 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 		b4 = Box.createHorizontalBox();
 		b5 = Box.createHorizontalBox();
 		
-		b1.add(jl_maGiamGia);
+		b1.add(jl_maThuoc);
 		b1.add(Box.createHorizontalStrut(10));
-		b1.add(txt_maGiamGia);
+		b1.add(txt_maThuoc);
 		
 		b2.add(jl_ngayBatDau);
 		b2.add(Box.createHorizontalStrut(10));
@@ -124,7 +244,15 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 		b.add(b5);
 		b.add(Box.createVerticalStrut(15));
 		
-		jp_info.add(b, BorderLayout.CENTER);
+		JLayeredPane jp_infor = new JLayeredPane();
+	
+		
+		jp_infor.add(b, JLayeredPane.DEFAULT_LAYER);
+		b.setBounds(0, 0, 550, 250);
+		jp_infor.add(listTimKiem,JLayeredPane.PALETTE_LAYER);
+		listTimKiem.setBounds(125, 30, 425, 100);
+		
+//		jp_info.add(b, BorderLayout.CENTER);
 		
 		int width = 130, height = 40;
 		JPanel jp_button = new JPanel();
@@ -151,7 +279,7 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 		btn_xoaTrang.addActionListener(this);
 		
 		this.setLayout(new BorderLayout());
-		this.add(jp_info, BorderLayout.CENTER);
+		this.add(jp_infor, BorderLayout.CENTER);
 		this.add(jp_button, BorderLayout.SOUTH);
 		this.setVisible(true);
 	}
@@ -161,23 +289,61 @@ public class CreateDiscountFrm extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		Object src = e.getSource();
 		if (src.equals(btn_them)) {
-			addRow();
-			dispose();
+			if (validData()) {
+				addRow();
+				dispose();
+			}
 		}else if (src.equals(btn_xoaTrang)) {
 			clearData();
 		}
 	}
 
+	private boolean validData() {
+		// TODO Auto-generated method stub
+		String ptGiamGia = txt_phanTramGiamGia.getText();
+		String thuoc = txt_maThuoc.getText();
+		// check thuoc
+		if (thuoc.length() <= 0) {
+			showMessage("Tên thuốc không được để trống!!!");
+			return false;
+		}
+		// check phan tram giam gia
+		if (ptGiamGia.length() > 0) {
+			try {
+				double ptgg = Double.parseDouble(ptGiamGia);
+				if (!(ptgg > 0)) {
+					showMessage("Phần trăm giảm giá phải lớn hơn 0!!!");
+					txt_phanTramGiamGia.requestFocus();
+					txt_phanTramGiamGia.selectAll();
+					return false;
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				showMessage("Phần trăm giảm giá phải nhập số!!!");
+				txt_phanTramGiamGia.requestFocus();
+				txt_phanTramGiamGia.selectAll();
+				return false;
+			}
+		} else {
+			showMessage("Phần trăm giảm giá không được để trống!!!");
+			return false;
+		}
+		
+		return true;
+	}
+
 	private void addRow() {
 		// TODO Auto-generated method stub
-		LocalDate ngayBD = LocalDate.parse(txt_ngayBatDau.getText());
-		LocalDate ngayKT = LocalDate.parse(txt_ngayKetThuc.getText());
+		LocalDate ngayBD = txt_ngayBatDau.getDate();
+		LocalDate ngayKT = txt_ngayKetThuc.getDate();
 		double ptGiamGia = Double.parseDouble(txt_phanTramGiamGia.getText());
+		
+		Thuoc thuoc = thuoc_dao.timThuocTheoTen(txt_maThuoc.getText().toString());
 		String moTa = txt_moTa.getText();
 
-//		MaGiamGia mgg = new MaGiamGia( ngayBD, ngayKT, ptGiamGia, moTa);
+		MaGiamGia mgg = new MaGiamGia( ngayBD, ngayKT, ptGiamGia, moTa, thuoc);
 		try {
-//			magiamgia_dao.themMaGiamGia(mgg);
+			magiamgia_dao.themMaGiamGia(mgg);
 			showMessage("Thêm thành công");
 		} catch (Exception e) {
 			// TODO: handle exception
