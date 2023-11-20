@@ -85,7 +85,7 @@ public class LoginPage extends JFrame implements ActionListener {
 		
 		JLabel lblNewLabel = new JLabel("Welcome!");
 		lblNewLabel.setForeground(new Color(22, 65, 135));
-		lblNewLabel.setFont(new Font("Letterpress Clean Script", Font.BOLD, 40));
+		lblNewLabel.setFont(new Font("Letterpress Script", Font.BOLD, 40));
 		lblNewLabel.setBounds(262, 200, 151, 72);
 		jp_login.add(lblNewLabel);
 		
