@@ -9,9 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.EventObject;
 
 import javax.print.event.PrintJobListener;
 import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -121,6 +123,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 		headerTable.setBackground(Color.decode(ColorConsts.BackgroundColor));
 		headerTable.setFont(new Font("Arial", Font.BOLD, 14));
 		headerTable.setPreferredSize(new Dimension(headerTable.getPreferredSize().width, 40));
+		setCellEditable();
 
 		cusTable.setRowHeight(40);
 		cusTable.setShowVerticalLines(false);
@@ -353,5 +356,16 @@ public class CustomerPage extends BasePage implements MouseListener {
 			cusModel.addRow(new String[] { String.valueOf(khachHang.getMaKhachHang()), khachHang.getTenKhachHang(),
 					khachHang.getSoDienThoai(), khachHang.getNgayTao().toString() });
 		}
+	}
+	public void setCellEditable() {
+		for (int i = 0; i < cusTable.getColumnCount(); i++) {
+				cusTable.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(new JTextField()) {
+					@Override
+					public boolean isCellEditable(EventObject e) {
+						// Trả về false để ngăn chặn chỉnh sửa trực tiếp
+						return false;
+					}
+				});
+			}
 	}
 }

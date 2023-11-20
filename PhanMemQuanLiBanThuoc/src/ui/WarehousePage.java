@@ -37,6 +37,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -148,6 +149,16 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		String[] cols_name = { "Mã thuốc", "Tên thuốc", "Nhóm thuốc", "Ngày hết hạn", "Đơn vị tính", "Số lượng" };
 		prod_model = new DefaultTableModel(cols_name, 0);
 		prod_table = new JTable(prod_model);
+		
+		JTableHeader headerTable =  prod_table.getTableHeader();
+		headerTable.setPreferredSize(new Dimension(headerTable.getPreferredSize().width, 40));
+
+		prod_table.setShowVerticalLines(false);
+		prod_table.setRowHeight(40);
+		prod_table.setFont(new Font("Arial", Font.PLAIN, 14));
+		prod_table.setIntercellSpacing(new Dimension(0, 0));
+		prod_table.setGridColor(Color.decode("#696969"));
+		prod_table.setTableHeader(headerTable);
 		JScrollPane js_prodTable = new JScrollPane(prod_table);
 		
 		setCellEditable();

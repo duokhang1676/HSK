@@ -10,9 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.EventObject;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -135,6 +137,8 @@ public class PremisePage extends BasePage implements MouseListener {
 		headerTable.setBackground(Color.decode(ColorConsts.BackgroundColor));
 		headerTable.setFont(new Font("Arial", Font.BOLD, 14));
 		headerTable.setPreferredSize(new Dimension(headerTable.getPreferredSize().width, 40));
+		
+		setCellEditable();
 
 		quayTable.setRowHeight(40);
 
@@ -463,5 +467,16 @@ public class PremisePage extends BasePage implements MouseListener {
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 
+	}
+	public void setCellEditable() {
+		for (int i = 0; i < quayTable.getColumnCount(); i++) {
+				quayTable.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(new JTextField()) {
+					@Override
+					public boolean isCellEditable(EventObject e) {
+						// Trả về false để ngăn chặn chỉnh sửa trực tiếp
+						return false;
+					}
+				});
+			}
 	}
 }
