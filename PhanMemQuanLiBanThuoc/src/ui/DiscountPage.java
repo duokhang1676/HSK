@@ -3,15 +3,18 @@ package ui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.EventObject;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -22,6 +25,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 
 import com.github.lgooddatepicker.components.DatePicker;
 
@@ -61,7 +65,19 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		String[] cols_name = {"Mã giảm giá", "Ngày bắt đầu", "Ngày kết thúc", "Phần trăm giảm giá","Thuốc", "Mô tả"};
 		model_discount = new DefaultTableModel(cols_name, 0);
 		table_discount = new JTable(model_discount);
+		
+		JTableHeader headerTable =  table_discount.getTableHeader();
+		headerTable.setPreferredSize(new Dimension(headerTable.getPreferredSize().width, 40));
+
+		table_discount.setShowVerticalLines(false);
+		table_discount.setRowHeight(40);
+		table_discount.setFont(new Font("Arial", Font.PLAIN, 14));
+		table_discount.setIntercellSpacing(new Dimension(0, 0));
+		table_discount.setGridColor(Color.decode("#696969"));
+		table_discount.setTableHeader(headerTable);
 		JScrollPane js_table = new JScrollPane(table_discount);
+		
+		setCellEditable();
 		
 		/**
 		 * doc du lieu vao bang
@@ -231,6 +247,7 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		// TODO Auto-generated method stub
 		Object src = e.getSource();
 		if (src.equals(btn_lamMoi)) {
+			clearData();
 			docDuLieuVaoTable();
 		}else if (src.equals(btn_them)) {
 			new CreateDiscountFrm();
@@ -308,6 +325,17 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+	public void setCellEditable() {
+		for (int i = 0; i < table_discount.getColumnCount(); i++) {
+				table_discount.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(new JTextField()) {
+					@Override
+					public boolean isCellEditable(EventObject e) {
+						// Trả về false để ngăn chặn chỉnh sửa trực tiếp
+						return false;
+					}
+				});
+			}
 	}
 
 }
