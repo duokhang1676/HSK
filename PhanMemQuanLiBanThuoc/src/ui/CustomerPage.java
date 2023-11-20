@@ -37,6 +37,7 @@ import org.jfree.ui.tabbedui.VerticalLayout;
 
 import components.ColorConsts;
 import components.Header;
+import components.TaiKhoanDangNhap;
 import components.TopSaleProductView;
 import dao.KhachHangDao;
 import dao.QuayDao;
@@ -145,6 +146,8 @@ public class CustomerPage extends BasePage implements MouseListener {
 			}
 		});
 		btn_xoa = new JButton("Xóa");
+		if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý"))
+			btn_xoa.setVisible(false);
 		btn_xoa.setIcon(new ImageIcon("icon\\ic_clearLight.png"));
 		btn_xoa.setPreferredSize(new Dimension(0, 50));
 		btn_xoa.setBackground(Color.decode(ColorConsts.PrimaryColor));

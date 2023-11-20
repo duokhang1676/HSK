@@ -67,6 +67,8 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		table_discount = new JTable(model_discount);
 		
 		JTableHeader headerTable =  table_discount.getTableHeader();
+		headerTable.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		headerTable.setFont(new Font("Arial", Font.BOLD, 12));
 		headerTable.setPreferredSize(new Dimension(headerTable.getPreferredSize().width, 40));
 
 		table_discount.setShowVerticalLines(false);

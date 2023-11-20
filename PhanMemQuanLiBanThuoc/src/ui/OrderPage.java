@@ -35,6 +35,7 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
 import org.jfree.ui.tabbedui.VerticalLayout;
@@ -223,9 +224,23 @@ public class OrderPage extends BasePage implements MouseListener{
 		orderTable = new JTable(orderTableModel);
 		orderTable.setFont(new Font("Arial", Font.PLAIN, 14));
 		TableColumnModel columnModel2 = orderTable.getColumnModel();
-		columnModel2.getColumn(0).setPreferredWidth(30);
+		columnModel2.getColumn(0).setPreferredWidth(38);
 		columnModel2.getColumn(2).setPreferredWidth(160);
 		getDanhSachDonHang();
+		
+		JTableHeader headerTable = orderTable.getTableHeader();
+		headerTable.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		headerTable.setFont(new Font("Arial", Font.BOLD, 12));
+		headerTable.setPreferredSize(new Dimension(headerTable.getPreferredSize().width, 40));
+		
+		orderTable.setRowHeight(40);
+		orderTable.setShowVerticalLines(false);
+		orderTable.setFont(new Font("Arial", Font.PLAIN, 14));
+		orderTable.setRowHeight(40);
+		orderTable.setIntercellSpacing(new Dimension(0, 0));
+		orderTable.setGridColor(Color.decode("#696969"));
+		orderTable.setTableHeader(headerTable);
+		
 		orderTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

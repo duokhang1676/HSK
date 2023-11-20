@@ -150,9 +150,11 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		prod_model = new DefaultTableModel(cols_name, 0);
 		prod_table = new JTable(prod_model);
 		
-		JTableHeader headerTable =  prod_table.getTableHeader();
+		JTableHeader headerTable = prod_table.getTableHeader();
+		headerTable.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		headerTable.setFont(new Font("Arial", Font.BOLD, 12));
 		headerTable.setPreferredSize(new Dimension(headerTable.getPreferredSize().width, 40));
-
+		
 		prod_table.setShowVerticalLines(false);
 		prod_table.setRowHeight(40);
 		prod_table.setFont(new Font("Arial", Font.PLAIN, 14));

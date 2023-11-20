@@ -44,6 +44,7 @@ import org.jfree.ui.tabbedui.VerticalLayout;
 
 import components.ColorConsts;
 import components.Header;
+import components.TaiKhoanDangNhap;
 import components.TopSaleProductView;
 import dao.QuayDao;
 import entity.KhachHang;
@@ -151,6 +152,8 @@ public class PremisePage extends BasePage implements MouseListener {
 		quayTable.addMouseListener(this);
 
 		themBtn = new JButton("Thêm");
+		if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý"))
+			themBtn.setVisible(false);
 		themBtn.setIcon(new ImageIcon("icon\\ic_addLight.png"));
 		themBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		themBtn.setFont(commonButtonFont);
@@ -162,6 +165,8 @@ public class PremisePage extends BasePage implements MouseListener {
 		});
 
 		xoaBtn = new JButton("Xóa");
+		if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý"))
+			xoaBtn.setVisible(false);
 		xoaBtn.setIcon(new ImageIcon("icon\\ic_clearLight.png"));
 		xoaBtn.setPreferredSize(new Dimension(0, 50));
 		xoaBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
@@ -210,6 +215,8 @@ public class PremisePage extends BasePage implements MouseListener {
 		});
 
 		suaBtn = new JButton("Sửa");
+		if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý"))
+			suaBtn.setVisible(false);
 		suaBtn.setIcon(new ImageIcon("icon\\ic_writeLight.png"));
 		suaBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		suaBtn.setFont(commonButtonFont);
