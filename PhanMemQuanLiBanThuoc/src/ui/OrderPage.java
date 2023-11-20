@@ -50,6 +50,7 @@ import dao.HoaDonDao;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.Thuoc;
+import utils.FileChooser;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -536,8 +537,12 @@ public class OrderPage extends BasePage implements MouseListener{
 							+ "\tnhân viên để được phụ vụ,\n"
 							+ "\tXin cảm ơn Quý Khách!";
 					
-					try {
-						if(saveFile(content, "data/bill"+txtDH.getText()+".txt"))
+					try { 
+						String path = FileChooser.fileButtonActionPerformed();
+						if(path==null) {
+							return;
+						}
+						if(saveFile(content, path+"_HD"+txtDH.getText()+".txt"))
 							JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(OrderPage.this),
 									"Đã xuất hóa đơn!");
 					} catch (Exception e1) {
@@ -623,7 +628,7 @@ public class OrderPage extends BasePage implements MouseListener{
 	}
 	private void dropText() {
 		txtDH.setText("");
-		lblTK.setText("");
+		lblTK.setText(".");
 		lblQuay.setText("");
 		lblNgayTaoDonHang.setText("");
 		txtTenKhachHang.setText("");
@@ -709,7 +714,7 @@ public class OrderPage extends BasePage implements MouseListener{
 			dsHoaDon = hoaDonDao.getHoaDonTheoNgayDen(denNgay);
 		}else if(!dateFrom.isEmpty()&&dateTo.isEmpty()) {//lấy từ ngày
 			tuNgay = datePickerFrom.getDate();
-			ArrayList<HoaDon> dsHoaDon = hoaDonDao.getHoaDonTheoNgayTu(tuNgay);
+			dsHoaDon = hoaDonDao.getHoaDonTheoNgayTu(tuNgay);
 		}else if(!dateFrom.isEmpty()&&!dateTo.isEmpty()) {
 			tuNgay = datePickerFrom.getDate();
 			denNgay = datePickerTo.getDate();
