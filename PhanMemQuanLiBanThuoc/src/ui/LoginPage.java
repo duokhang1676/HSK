@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
 import components.ColorConsts;
@@ -17,6 +18,8 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 import java.awt.Panel;
@@ -31,17 +34,18 @@ import java.awt.Font;
 import java.awt.Image;
 
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.ImageIcon;
 import java.awt.Dimension;
 import javax.swing.border.BevelBorder;
 
 public class LoginPage extends JFrame implements ActionListener {
 	private JTextField txtSdt;
-	private JTextField txtPassword;
+	private JPasswordField txtPassword;
 	private JButton btnLogin;
 	private JButton btnSignUp;
 	private JButton btnExit;
-	
+	private Boolean flag = true;
 	
 	
 	private NhanVienDao nhanVienDao;
@@ -104,10 +108,24 @@ public class LoginPage extends JFrame implements ActionListener {
 		jp_login.add(txtSdt);
 		txtSdt.setColumns(10);
 		
-		txtPassword = new JTextField();
+		txtPassword = new JPasswordField();
 		txtPassword.setColumns(10);
 		txtPassword.setBounds(90, 378, 434, 41);
 		jp_login.add(txtPassword);
+		//Chuột phải để ẩn hiện mật khẩu
+		txtPassword.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						if(SwingUtilities.isRightMouseButton(e)) {
+							if(flag)
+								txtPassword.setEchoChar((char)0);
+							else
+								txtPassword.setEchoChar('\u2022');
+							flag = !flag;
+						}
+					}
+				});
+				
 		
 		btnLogin = new JButton("Đăng nhập");
 		btnLogin.setFont(new Font("Arials", Font.PLAIN, 14));

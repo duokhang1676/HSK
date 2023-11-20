@@ -28,6 +28,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -109,9 +110,28 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		hoanThanhBtn.setForeground(Color.decode(ColorConsts.BackgroundColor));
 		hoanThanhBtn.setVisible(false);
 		hoanThanhBtn.addActionListener(new ActionListener() {
+			public boolean validData() {
+				String tenNhanVien = txtTennv.getText().trim();
+				String soDienThoai = txtSdt.getText().trim();
+		
+				if(tenNhanVien.isEmpty()) {
+					txtTennv.requestFocus();
+					return false;
+				}
+				if(!soDienThoai.matches("0\\d{9}")) {
+					JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(EmployeeManagerPage.this),
+							"Số điện thoại có 10 số!");
+					txtSdt.requestFocus();
+					return false;
+				}
+				
+				return true;
+			}
 			public void actionPerformed(ActionEvent e) {
 				int row = nhanVienTable.getSelectedRow();
-
+				if(row==-1)return;
+				if(!validData())
+					return;
 				int maNhanVien = Integer.parseInt(nhanVienModel.getValueAt(row, 0).toString());
 
 				String tenNhanVien = txtTennv.getText().trim();
@@ -183,6 +203,7 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		xoaBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int row = nhanVienTable.getSelectedRow();
+				if(row==-1)return;
 				int maNhanVien = Integer.parseInt(nhanVienTable.getValueAt(row, 0).toString());
 
 				String tenNhanVien = nhanVienModel.getValueAt(row, 1).toString();
@@ -242,7 +263,6 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 					JOptionPane.showMessageDialog(null, "Phải chọn dòng để sửa");
 					return;
 				}
-
 				hoanThanhBtn.setVisible(true);
 
 				txtManv.setEditable(false);
@@ -263,6 +283,14 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		lamMoiBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				getAllNhanVien();
+				clearData();
+			}
+
+			private void clearData() {
+				txtManv.setText("");
+				txtTennv.setText("");
+				txtNgayVaoLam.setText("");
+				txtSdt.setText("");
 			}
 		});
 
@@ -474,6 +502,7 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		chucVuComboBox.setSelectedIndex(0);
 
 		int row = nhanVienTable.getSelectedRow();
+		if(row==-1)return;
 
 		txtManv.setText(nhanVienModel.getValueAt(row, 0).toString());
 		txtTennv.setText(nhanVienModel.getValueAt(row, 1).toString());
@@ -483,7 +512,6 @@ public class EmployeeManagerPage extends BasePage implements MouseListener {
 		quayComboBox.setSelectedItem(nhanVienModel.getValueAt(row, 5).toString());
 		chucVuComboBox.setSelectedItem(nhanVienModel.getValueAt(row, 6).toString());
 
-		System.out.println(nhanVienModel.getValueAt(row, 6).toString());
 		incomeIPeriodChartPanel.setVisible(true);
 	}
 

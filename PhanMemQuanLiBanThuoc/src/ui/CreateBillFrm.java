@@ -981,9 +981,7 @@ public class CreateBillFrm extends JFrame {
             	thanhToan(true);
             }
         };
-        // Gắn hành động với phím tắt F4
-        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "performAction");
-        getRootPane().getActionMap().put("performAction", action);
+     
         
       //Tắt cửa sổ bằng phím Esc
       		// Tạo một Action và gán chức năng khi nhấn phím esc
@@ -993,9 +991,14 @@ public class CreateBillFrm extends JFrame {
                 	  dispose();
                   }
               };
+           // Gắn hành động với phím tắt F4
+              getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "performF4Action");
+              getRootPane().getActionMap().put("performF4Action", action);
+
               // Gắn hành động với phím tắt Esc
-              getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "performAction");
-              getRootPane().getActionMap().put("performAction", action1);
+              getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "performEscAction");
+              getRootPane().getActionMap().put("performEscAction", action1);
+
 		
 
 		this.add(contentPane);

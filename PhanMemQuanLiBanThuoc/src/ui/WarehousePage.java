@@ -546,12 +546,16 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 
 		if (src.equals(btn_suaSoLuong)) {
 			int row = prod_table.getSelectedRow();
-			
+			if(row==-1)return;
 			int maThuoc = Integer.parseInt(prod_model.getValueAt(row, 0).toString());
 
 			try {
 				String input = JOptionPane.showInputDialog("Nhập số lượng thuốc: ");
-				
+				if(!input.matches("\\d+")) {
+					JOptionPane.showMessageDialog(this, "Nhập số!!");
+					return;
+				}
+					
 				int soLuong = Integer.parseInt(input);
 				if (soLuong < 0) {
 					JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0");

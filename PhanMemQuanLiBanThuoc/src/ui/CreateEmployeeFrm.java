@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 import javax.xml.crypto.Data;
 
@@ -22,6 +23,7 @@ import entity.NhanVien;
 import entity.Quay;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
@@ -30,10 +32,13 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 public class CreateEmployeeFrm extends JFrame implements ActionListener{
 
@@ -44,7 +49,7 @@ public class CreateEmployeeFrm extends JFrame implements ActionListener{
 	private JPanel center;
 	private JTextField txtTen;
 	private JTextField txtSdt;
-	private JTextField txtMk;
+	private JPasswordField txtMk;
 	private DatePicker datePicker;
 
 	private NhanVienDao nhanVienDao = new NhanVienDao();
@@ -55,6 +60,7 @@ public class CreateEmployeeFrm extends JFrame implements ActionListener{
 	private DefaultComboBoxModel cbModelQuay;
 	private ArrayList<Quay> ds;
 	private JComboBox comboBox;
+	private Boolean flag = true;
 
 	public CreateEmployeeFrm() {
 		setTitle("Thêm nhân viên");
@@ -142,8 +148,21 @@ public class CreateEmployeeFrm extends JFrame implements ActionListener{
 		center.add(lblMk = new JLabel("Mật khẩu"));
 		lblMk.setFont(font2);
 		lblMk.setPreferredSize(lblTen.getPreferredSize());
-		center.add(txtMk = new JTextField(50));
+		center.add(txtMk = new JPasswordField(50));
 		txtMk.setFont(font3);
+		//Chuột phải để ẩn hiện mật khẩu
+		txtMk.addMouseListener(new MouseAdapter() {
+							@Override
+							public void mouseClicked(MouseEvent e) {
+								if(SwingUtilities.isRightMouseButton(e)) {
+									if(flag)
+										txtMk.setEchoChar((char)0);
+									else
+										txtMk.setEchoChar('\u2022');
+									flag = !flag;
+								}
+							}
+						});
 		
 		center.add(lblMaquay = new JLabel("Tên quầy"));
 		lblMaquay.setFont(font2);
@@ -194,8 +213,12 @@ public class CreateEmployeeFrm extends JFrame implements ActionListener{
 			txtTen.setText("");
 			txtTen.requestFocus();
 		}if(o.equals(btn_them)) {
+			if(!validData())
+				return;
 			String tenNhanVien = txtTen.getText().trim();
-			LocalDate ngayVaoLam = datePicker.getDate();
+			LocalDate ngayVaoLam = LocalDate.now();
+			if(!datePicker.getDateStringOrEmptyString().isEmpty())
+				ngayVaoLam = datePicker.getDate();
 			String caLamViec = cbCa.getSelectedItem().toString();
 			String soDienThoai = txtSdt.getText().trim();
 			String matKhau = txtMk.getText().trim();
@@ -206,5 +229,27 @@ public class CreateEmployeeFrm extends JFrame implements ActionListener{
 			nhanVienDao.addNhanVien(nv);
 			setVisible(false);
 		}
+	}
+	public boolean validData() {
+		String tenNhanVien = txtTen.getText().trim();
+		String soDienThoai = txtSdt.getText().trim();
+		String matKhau = txtMk.getText().trim();
+		if(tenNhanVien.isEmpty()) {
+			txtTen.requestFocus();
+			return false;
+		}
+		if(!soDienThoai.matches("0\\d{9}")) {
+			JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateEmployeeFrm.this),
+					"Số điện thoại có 10 số!");
+			txtSdt.requestFocus();
+			return false;
+		}
+		if(!matKhau.matches(".{4,}")) {
+			JOptionPane.showMessageDialog((RootFrame) SwingUtilities.getWindowAncestor(CreateEmployeeFrm.this),
+					"Mật khẩu phải từ 4 ký tự!");
+			txtMk.requestFocus();
+			return false;
+		}
+		return true;
 	}
 }
