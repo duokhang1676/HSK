@@ -1157,8 +1157,8 @@ public class CreateBillFrm extends JFrame {
 		
 		LocalDate ngayLapHoaDon = LocalDate.now();
 		String trangThai;
-		if(tt) trangThai = "Đã TT";
-		else trangThai = "Chưa TT";
+		if(tt) trangThai = "Đã thanh toán";
+		else trangThai = "Chưa thanh toán";
 		String phuongThucThanhToan = " ";
 		if(tt) {
 			if (tienMat.isSelected())

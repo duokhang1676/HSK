@@ -354,10 +354,8 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		
 		JPanel jp_tinhTrangThuoc = new JPanel(new GridLayout(2, 1));
 		jp_tinhTrangThuoc.setPreferredSize(new Dimension(250, 100));
-		jl_thongBao = new JLabel("Thuốc sắp hết hạn!!!");
+		jl_thongBao = new JLabel("");
 		jl_thongBao.setFont(bigFont);
-		jl_thongBao.setForeground(Color.RED);
-		jl_thongBao.setVisible(false);
 		jp_tinhTrangThuoc.add(jl_tinhTrangThuoc);
 		jp_tinhTrangThuoc.add(jl_thongBao);
 		jp_tinhTrangThuoc.setBackground(Color.decode(ColorConsts.ForegroundColor));
@@ -490,11 +488,15 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 			LocalDate hanSuDung = kho.getThuoc().getHanSuDung();
 			LocalDate ngayHienTai = LocalDate.now();
 			
-			Long ngayConLai = ChronoUnit.DAYS.between(hanSuDung, ngayHienTai);
-			if (Math.abs(ngayConLai) <= 30) {
-				jl_thongBao.setVisible(true);
+			long daysBetween = hanSuDung.until(ngayHienTai, ChronoUnit.DAYS);
+			if (daysBetween>=-30) {
+				jl_thongBao.setForeground(Color.RED);
+				jl_thongBao.setText("Thuốc sắp hết hạn sử dụng");
+				if(daysBetween>=0)
+					jl_thongBao.setText("Thuốc đã hết hạn sử dụng");
 			}else {
-				jl_thongBao.setVisible(false);
+				jl_thongBao.setText("Thuốc còn hạn sử dụng "+Math.abs(daysBetween)+" ngày");
+				jl_thongBao.setForeground(Color.GREEN);
 			}
 		}
 	}
@@ -623,6 +625,7 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		txt_giaNhapLe.setText("");
 		txt_giaNhapChan.setText("");
 		txt_soLuongTrongKho.setText("");
+		jl_thongBao.setText("");
 	}
 
 	private void showMessage(String string) {

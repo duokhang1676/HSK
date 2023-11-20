@@ -2,6 +2,7 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Image;
@@ -97,7 +98,8 @@ public class MyProfilePage extends BasePage {
 
 		
 		JLabel lblAvatar = new JLabel("");
-		lblAvatar.setIcon(new ImageIcon("img\\img_avatar.jpg"));
+		lblAvatar.setIcon(new ImageIcon("img\\avt.jpg"));
+		lblAvatar.setPreferredSize(new Dimension(250,300));
 		lblAvatar.setBorder(new EmptyBorder(20, 20, 20, 20));
 
 		JLabel thongTinLb = new JLabel("Thông tin cá nhân");
@@ -136,6 +138,7 @@ public class MyProfilePage extends BasePage {
 		pLeft.setBackground(Color.decode(ColorConsts.ForegroundColor));
 		pLeft.add(thongTinLb);
 		pLeft.add(lblAvatar);
+		pLeft.add(Box.createVerticalStrut(20));
 		pLeft.add(hoTenBox);
 		pLeft.add(Box.createVerticalStrut(20));
 		pLeft.add(sdtBox);

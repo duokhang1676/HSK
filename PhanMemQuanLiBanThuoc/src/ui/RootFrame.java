@@ -33,7 +33,7 @@ public class RootFrame extends JFrame implements WindowStateListener {
 	private DiscountPage discountPage;
 	
 	public RootFrame() {
-		super("Phần mềm quản lí thuốc nhóm 2");
+		super("HKTD Pharamacy");
 
 		
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
