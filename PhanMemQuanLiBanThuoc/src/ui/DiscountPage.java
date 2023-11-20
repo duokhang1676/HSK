@@ -94,6 +94,7 @@ public class DiscountPage extends BasePage implements MouseListener, ActionListe
 		btn_lamMoi = new JButton("Làm mới");
 		btn_lamMoi.setPreferredSize(new Dimension(width, height));
 		btn_lamMoi.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		btn_lamMoi.setIcon(new ImageIcon("icon\\ic_refresh.png"));
 		
 		jp_button.add(btn_them);
 		jp_button.add(btn_xoa);

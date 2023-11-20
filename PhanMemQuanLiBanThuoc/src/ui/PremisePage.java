@@ -14,6 +14,7 @@ import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -146,6 +147,7 @@ public class PremisePage extends BasePage implements MouseListener {
 		quayTable.addMouseListener(this);
 
 		themBtn = new JButton("Thêm");
+		themBtn.setIcon(new ImageIcon("icon\\ic_addLight.png"));
 		themBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		themBtn.setFont(commonButtonFont);
 		themBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
@@ -156,6 +158,7 @@ public class PremisePage extends BasePage implements MouseListener {
 		});
 
 		xoaBtn = new JButton("Xóa");
+		xoaBtn.setIcon(new ImageIcon("icon\\ic_clearLight.png"));
 		xoaBtn.setPreferredSize(new Dimension(0, 50));
 		xoaBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		xoaBtn.setFont(commonButtonFont);
@@ -177,6 +180,7 @@ public class PremisePage extends BasePage implements MouseListener {
 		});
 
 		xoaTrangBtn = new JButton("Xóa trắng");
+		xoaTrangBtn.setIcon(new ImageIcon("icon\\ic_clearInfoLight.png"));
 		xoaTrangBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		xoaTrangBtn.setFont(commonButtonFont);
 		xoaTrangBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
@@ -202,6 +206,7 @@ public class PremisePage extends BasePage implements MouseListener {
 		});
 
 		suaBtn = new JButton("Sửa");
+		suaBtn.setIcon(new ImageIcon("icon\\ic_writeLight.png"));
 		suaBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		suaBtn.setFont(commonButtonFont);
 		suaBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
@@ -227,6 +232,7 @@ public class PremisePage extends BasePage implements MouseListener {
 		});
 
 		lamMoiBtn = new JButton("Làm mới");
+		lamMoiBtn.setIcon(new ImageIcon("icon\\ic_refreshLight.png"));
 		lamMoiBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		lamMoiBtn.setFont(commonButtonFont);
 		lamMoiBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));

@@ -110,28 +110,29 @@ public class LoginPage extends JFrame implements ActionListener {
 		jp_login.add(txtPassword);
 		
 		btnLogin = new JButton("Đăng nhập");
-		btnLogin.setFont(new Font("Arials", Font.PLAIN, 16));
+		btnLogin.setFont(new Font("Arials", Font.PLAIN, 14));
 		btnLogin.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btnLogin.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		btnLogin.setBounds(90, 442, 99, 41);
+		btnLogin.setBounds(250, 442, 150, 41);
 		jp_login.add(btnLogin);
 		
-		btnSignUp = new JButton("Sign Up");
-		btnSignUp.setFont(new Font("Arials", Font.PLAIN, 15));
-		btnSignUp.setBackground(Color.decode(ColorConsts.PrimaryColor));
-		btnSignUp.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		btnSignUp.setBounds(253, 442, 99, 41);
-		jp_login.add(btnSignUp);
+//		btnSignUp = new JButton("Sign Up");
+//		btnSignUp.setFont(new Font("Arials", Font.PLAIN, 14));
+//		btnSignUp.setBackground(Color.decode(ColorConsts.PrimaryColor));
+//		btnSignUp.setForeground(Color.decode(ColorConsts.ForegroundColor));
+//		btnSignUp.setBounds(253, 442, 99, 41);
+//		jp_login.add(btnSignUp);
 		
-		btnExit = new JButton("Exit");
-		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		btnExit = new JButton("Thoát");
+		btnExit.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnExit.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btnExit.setForeground(Color.decode(ColorConsts.ForegroundColor));
-		btnExit.setBounds(425, 442, 99, 41);
+		btnExit.setBounds(250, 490, 150, 41);
 		jp_login.add(btnExit);
 		
 		//add event
 		btnLogin.addActionListener(this);
+		btnExit.addActionListener(this);
 	}
 
 	@Override
@@ -153,6 +154,9 @@ public class LoginPage extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null, "Đăng nhập không thành công.");
 				return;
 			}
+		}
+		if (src.equals(btnExit)) {
+			System.exit(0);
 		}
 	}
 	

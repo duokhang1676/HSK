@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
 import java.util.ArrayList;
@@ -38,6 +40,9 @@ public class RootFrame extends JFrame implements WindowStateListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLocationRelativeTo(null);
 		setMinimumSize(new Dimension(1000, 1000));
+		Image img = Toolkit.getDefaultToolkit().createImage("img\\img_logoSmall.png");
+		setIconImage(img);
+
 		
 		dashboardPage = new DashboardPage();
 		orderPage = new OrderPage();
@@ -63,11 +68,11 @@ public class RootFrame extends JFrame implements WindowStateListener {
 				.addNaviButton("Đơn hàng", "icon\\ic_bill.png")
 				.addNaviButton("Sản phẩm", "icon\\ic_product.png")
 				.addNaviButton("Khách hàng", "icon\\ic_customer.png")
-				.addNaviButton("Quầy", "")
-				.addNaviButton("Quản lí nhân viên", "")
-				.addNaviButton("Quản lí kho", "")
-				.addNaviButton("Mã giảm giá", "")
-				.addNaviButton("Thông tin cá nhân", "")
+				.addNaviButton("Quầy", "icon\\ic_stall.png")
+				.addNaviButton("Quản lí nhân viên", "icon\\ic_employee.png")
+				.addNaviButton("Quản lí kho", "icon\\ic_warehouse.png")
+				.addNaviButton("Mã giảm giá", "icon\\ic_discount.png")
+				.addNaviButton("Thông tin cá nhân", "icon\\ic_profile.png")
 				.addNavigateListener(new INavigateListener() {
 					@Override
 					public void onNavigated(String txt) {
