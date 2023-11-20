@@ -223,10 +223,12 @@ public class ProductPage extends BasePage implements ActionListener, MouseListen
 		btn_sua = new JButton("Sửa");
 		btn_sua.setPreferredSize(new Dimension(width, height));
 		btn_sua.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		btn_sua.setIcon(new ImageIcon("icon\\ic_write.png"));
 		
 		btn_lamMoi = new JButton("Làm mới");
 		btn_lamMoi.setPreferredSize(new Dimension(width, height));
 		btn_lamMoi.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		btn_lamMoi.setIcon(new ImageIcon("icon\\ic_refresh.png"));
 		
 		btn_hoanThanh = new JButton("Hoàn thành");
 		btn_hoanThanh.setPreferredSize(new Dimension(width, height));

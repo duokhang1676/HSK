@@ -276,6 +276,7 @@ public class OrderPage extends BasePage implements MouseListener{
 		taoDonHang.setForeground(Color.decode(ColorConsts.PrimaryColor));
 		taoDonHang.setPreferredSize(new Dimension(0,50));
 		taoDonHang.setFont(new Font("Arial",Font.BOLD,16));
+		taoDonHang.setIcon(new ImageIcon("icon\\ic_create.png"));
 		taoDonHang.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

@@ -339,7 +339,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		}
 		//check thanh phan chinh
 		if (thanhPhanChinh.length() > 0) {
-			if (!(thanhPhanChinh.matches("[a-zA-Z0-9. ]+"))) {
+			if (!(thanhPhanChinh.matches("[^!@#$%^&*()_+]+"))) {
 				showMessage("Thành phần chính không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
 				txt_thanhPhan.requestFocus();
 				txt_thanhPhan.selectAll();
@@ -351,7 +351,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		}
 		// check dk bao quan
 		if (dieuKienBQ.length() > 0) {
-			if (!(dieuKienBQ.matches("[a-zA-Z0-9. ]+"))) {
+			if (!(dieuKienBQ.matches("[^!@#$%^&*()_+]+"))) {
 				showMessage("Điều kiện bảo quản không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
 				txt_dieuKienBQ.requestFocus();
 				txt_dieuKienBQ.selectAll();
@@ -363,7 +363,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		}
 		//check don vi tinh
 		if (donViTinh.length() > 0) {
-			if (!(donViTinh.matches("[a-zA-Z0-9. ]+"))) {
+			if (!(donViTinh.matches("[^!@#$%^&*()_+]+"))) {
 				showMessage("Đơn vị tính không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
 				txt_donViTinh.requestFocus();
 				txt_donViTinh.selectAll();
@@ -375,7 +375,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		}
 		//check don vi tinh le
 		if (donViTinhLe.length() > 0) {
-			if (!(donViTinhLe.matches("[a-zA-Z0-9. ]+"))) {
+			if (!(donViTinhLe.matches("[^!@#$%^&*()_+]+"))) {
 				showMessage("Đơn vị tính lẻ không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
 				txt_donViTinhLe.requestFocus();
 				txt_donViTinhLe.selectAll();
@@ -387,7 +387,7 @@ public class CreateProductFrm extends JFrame implements ActionListener {
 		}
 		//check don vi tinh chan
 		if (donViTinhChan.length() > 0) {
-			if (!(donViTinhChan.matches("[a-zA-Z0-9. ]+"))) {
+			if (!(donViTinhChan.matches("[^!@#$%^&*()_+]+"))) {
 				showMessage("Đơn vị tính chẵn không đúng định dạng (không được dùng kí tự đặc biệt)!!!");
 				txt_donViTinhChan.requestFocus();
 				txt_donViTinhChan.selectAll();

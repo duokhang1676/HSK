@@ -169,7 +169,7 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		btn_them.setBackground(Color.decode(ColorConsts.BackgroundColor));
 
 		btn_suaSoLuong = new JButton("Sử số lượng");
-		btn_suaSoLuong.setIcon(new ImageIcon("icon\\ic_clear.png"));
+		btn_suaSoLuong.setIcon(new ImageIcon("icon\\ic_write.png"));
 		btn_suaSoLuong.setPreferredSize(new Dimension(width, height));
 		btn_suaSoLuong.setBackground(Color.decode(ColorConsts.BackgroundColor));
 
@@ -186,6 +186,7 @@ public class WarehousePage extends BasePage implements ActionListener, MouseList
 		btn_lamMoi = new JButton("Làm mới");
 		btn_lamMoi.setPreferredSize(new Dimension(width, height));
 		btn_lamMoi.setBackground(Color.decode(ColorConsts.BackgroundColor));
+		btn_lamMoi.setIcon(new ImageIcon("icon\\ic_refresh.png"));
 
 		jp_btnRight.add(btn_suaSoLuong);
 		jp_btnRight.add(btn_xoaTrang);

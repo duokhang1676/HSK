@@ -132,6 +132,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 		cusTable.addMouseListener(this);
 
 		btn_them = new JButton("Thêm");
+		btn_them.setIcon(new ImageIcon("icon\\ic_addLight.png"));
 		btn_them.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btn_them.setFont(commonButtonFont);
 		btn_them.setForeground(Color.decode(ColorConsts.ForegroundColor));
@@ -141,6 +142,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 			}
 		});
 		btn_xoa = new JButton("Xóa");
+		btn_xoa.setIcon(new ImageIcon("icon\\ic_clearLight.png"));
 		btn_xoa.setPreferredSize(new Dimension(0, 50));
 		btn_xoa.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btn_xoa.setFont(commonButtonFont);
@@ -163,6 +165,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 		});
 
 		btn_xoaTrang = new JButton("Xóa trắng");
+		btn_xoaTrang.setIcon(new ImageIcon("icon\\ic_clearInfoLight.png"));
 		btn_xoaTrang.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btn_xoaTrang.setFont(commonButtonFont);
 		btn_xoaTrang.setForeground(Color.decode(ColorConsts.ForegroundColor));
@@ -182,6 +185,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 			}
 		});
 		btn_sua = new JButton("Sửa");
+		btn_sua.setIcon(new ImageIcon("icon\\ic_writeLight.png"));
 		btn_sua.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btn_sua.setFont(commonButtonFont);
 		btn_sua.setForeground(Color.decode(ColorConsts.ForegroundColor));
@@ -204,6 +208,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 		});
 
 		btn_lamMoi = new JButton("Làm mới");
+		btn_lamMoi.setIcon(new ImageIcon("icon\\ic_refreshLight.png"));
 		btn_lamMoi.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		btn_lamMoi.setFont(commonButtonFont);
 		btn_lamMoi.setForeground(Color.decode(ColorConsts.ForegroundColor));
