@@ -350,6 +350,20 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		LocalDate from = datePickerFrom.getDate();
 		LocalDate to = datePickerTo.getDate();
 		
+		if (datePickerTo.getDate() == null || datePickerFrom.getDate() == null) {
+			
+			incomeLabel.setText("0đ");
+			orderCountLabel.setText("0");
+			
+			incomeDataSet.clear();
+			paymentMethodDataset.clear();
+			topSaleProductModel.clear();
+			topSaleInPremisDateset.clear();
+			topSaleInCategoryDataset.clear();
+			return;
+		}
+			
+		
 		getTopSaleInPremisDateset();
 		getPaymentMethodPercentDataset();
 		getTopSaleInCategory();

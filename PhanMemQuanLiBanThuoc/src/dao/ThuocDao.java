@@ -273,7 +273,7 @@ public class ThuocDao {
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		try {
-			String sql = "  SELECT TOP 5 MaThuoc, TenThuoc, COUNT(*) AS SoLuongBanRa FROM Thuoc\r\n"
+			String sql = "  SELECT TOP 5 MaThuoc, TenThuoc, SUM(SoLuong) AS SoLuongBanRa FROM Thuoc\r\n"
 					+ "  LEFT JOIN ChiTietHoaDon ON MaSanPham = MaThuoc\r\n"
 					+ "  LEFT JOIN HoaDon ON ChiTietHoaDon.MaHoaDon = HoaDon.MaHoaDon\r\n"
 					+ "  WHERE NgayLapHoaDon BETWEEN ? AND ?\r\n"

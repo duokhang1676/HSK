@@ -276,7 +276,7 @@ public class OrderPage extends BasePage implements MouseListener{
 						txtKhachThanhToan.setText(hoaDon.getTongTien()+"");
 						txtPttt.setText(hoaDon.getPhuongThucThanhToan()+"");
 						ghiChuTextArea.setText(hoaDon.getGhiChu());
-						if(hoaDon.getTrangThai().equals("Chưa TT"))
+						if(hoaDon.getTrangThai().equals("Chưa thanh toán"))
 							btnXuatHoaDon.setText("Thanh toán");
 						else btnXuatHoaDon.setText("Xuất hóa đơn");
 					}

@@ -244,8 +244,8 @@ public class HoaDonDao {
 			db.ConnectDB.getInstance();
 			Connection con = db.ConnectDB.getConnection();
 			String sql = "SELECT [PhuongThucThanhToan], COUNT([PhuongThucThanhToan]) AS SoLuongDonHang\r\n"
-					+ "FROM [dbo].[HoaDon] \r\n"
-					+ "WHERE NgayLapHoaDon BETWEEN ? AND ?\r\n"
+					+ "FROM [dbo].[HoaDon]\r\n"
+					+ "WHERE (NgayLapHoaDon BETWEEN ? AND ?) AND TrangThai <> N'Chưa thanh toán'\r\n"
 					+ "GROUP BY [PhuongThucThanhToan]";
 
 			PreparedStatement statement = con.prepareStatement(sql);
@@ -316,6 +316,7 @@ public class HoaDonDao {
 		try {
 			statement = con.prepareStatement("update HoaDon\r\n"
 					+ "set TrangThai = 'Đã TT'\r\n"
+					+ ", PhuongThucThanhToan = 'Tiền mặt'\r\n"
 					+ "where MaHoaDon = ?");
 			statement.setInt(1, maHoaDon);
 			return statement.executeUpdate()>0;
