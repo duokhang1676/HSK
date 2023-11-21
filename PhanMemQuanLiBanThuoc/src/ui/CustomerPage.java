@@ -158,7 +158,7 @@ public class CustomerPage extends BasePage implements MouseListener {
 					return;
 				}
 				int row = cusTable.getSelectedRow();
-				
+				if(row==-1)return;
 				int maKhachHang = Integer.parseInt(cusModel.getValueAt(row, 0).toString());
 				String tenKhachHang = cusModel.getValueAt(row, 1).toString();
 				
