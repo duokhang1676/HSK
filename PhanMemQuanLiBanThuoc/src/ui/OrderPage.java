@@ -51,7 +51,7 @@ import dao.HoaDonDao;
 import entity.ChiTietHoaDon;
 import entity.HoaDon;
 import entity.Thuoc;
-import utils.FileChooser;
+import utils.HKTDFileChooser;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -270,7 +270,7 @@ public class OrderPage extends BasePage implements MouseListener{
 							});
 						}
 						
-						double tongTien = hoaDon.getTongTien()-hoaDon.getTongTienGiam();
+						double tongTien = hoaDon.getTongTien() + hoaDon.getTongTienGiam();
 						txtTongTienHang.setText(tongTien+"");
 						txtTongGiamGia.setText(hoaDon.getTongTienGiam()+"");
 						txtKhachThanhToan.setText(hoaDon.getTongTien()+"");
@@ -554,7 +554,7 @@ public class OrderPage extends BasePage implements MouseListener{
 							+ "\tXin cảm ơn Quý Khách!";
 					
 					try { 
-						String path = FileChooser.fileButtonActionPerformed();
+						String path = HKTDFileChooser.fileButtonActionPerformed();
 						if(path==null) {
 							return;
 						}

@@ -1113,9 +1113,18 @@ public class CreateBillFrm extends JFrame {
 
 				// int maHoaDon = hoaDonDao.getMaHoaDonLast();
 
+				
+				MaGiamGia maGiamGia = maGiamGiaDao.getMaGiamGiaTheoMaThuoc(sanPham.getMaThuoc());
 				ChiTietHoaDon chiTietHoaDon = new ChiTietHoaDon(0, soLuong, donViTinh, donGia, sanPham, thue, thanhTien,
-						giamGia, hoaDon, 1);
-				chiTietHoaDonDao.themChiTietHoaDonKhongGG(chiTietHoaDon);
+						giamGia, hoaDon, maGiamGia);
+				
+				if (maGiamGia != null) {
+					chiTietHoaDonDao.themChiTietHoaDon(chiTietHoaDon);
+				} else {
+					chiTietHoaDonDao.themChiTietHoaDonKhongGG(chiTietHoaDon);
+				}
+				
+				
 			} catch (NumberFormatException e) {
 				e.printStackTrace();
 			}

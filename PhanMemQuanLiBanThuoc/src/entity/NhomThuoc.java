@@ -12,7 +12,7 @@ public class NhomThuoc {
 		super();
 		MaNhomThuoc = maNhomThuoc;
 		TenNhomThuoc = tenNhomThuoc;
-	}
+	}	
 	public NhomThuoc(int maNhomThuoc) {
 		super();
 		MaNhomThuoc = maNhomThuoc;

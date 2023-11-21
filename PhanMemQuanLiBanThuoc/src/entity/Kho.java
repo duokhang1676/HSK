@@ -6,24 +6,12 @@ public class Kho {
 
 	public Kho() {
 		super();
-		// TODO Auto-generated constructor stub
 		soLuong = 0;
-	}
-
-	public Kho(int soLuong) {
-		super();
-		this.soLuong = soLuong;
 	}
 
 	public Kho(int soLuong, Thuoc thuoc) {
 		super();
 		this.soLuong = soLuong;
-		this.thuoc = thuoc;
-	}
-	
-	
-	public Kho(Thuoc thuoc) {
-		super();
 		this.thuoc = thuoc;
 	}
 

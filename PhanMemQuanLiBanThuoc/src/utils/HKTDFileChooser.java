@@ -15,7 +15,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1CFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
-public class FileChooser extends JFileChooser{
+public class HKTDFileChooser extends JFileChooser{
 	public static String fileButtonActionPerformed() {
 	    JFileChooser fileChooser = new JFileChooser();
 	    FileNameExtensionFilter imgFilter = new FileNameExtensionFilter("Text", "txt");

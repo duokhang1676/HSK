@@ -267,13 +267,13 @@ public class ThuocDao {
 		return getAllData().size();
 	}
 	
-	public ArrayList<TopThuocBanChay> getTop5ThuocBanChay(LocalDate from, LocalDate to) {
+	public ArrayList<TopThuocBanChay> getTop10ThuocBanChay(LocalDate from, LocalDate to) {
 		ArrayList<TopThuocBanChay> dsTop10 = new ArrayList<TopThuocBanChay>();
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 		PreparedStatement stmt = null;
 		try {
-			String sql = "  SELECT TOP 5 MaThuoc, TenThuoc, SUM(SoLuong) AS SoLuongBanRa FROM Thuoc\r\n"
+			String sql = "  SELECT TOP 10 MaThuoc, TenThuoc, SUM(SoLuong) AS SoLuongBanRa FROM Thuoc\r\n"
 					+ "  LEFT JOIN ChiTietHoaDon ON MaSanPham = MaThuoc\r\n"
 					+ "  LEFT JOIN HoaDon ON ChiTietHoaDon.MaHoaDon = HoaDon.MaHoaDon\r\n"
 					+ "  WHERE NgayLapHoaDon BETWEEN ? AND ?\r\n"

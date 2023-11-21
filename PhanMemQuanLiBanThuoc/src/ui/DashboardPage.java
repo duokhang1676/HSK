@@ -153,7 +153,7 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		chartGridGroup.setBorder(new EmptyBorder(15, 0, 15, 0));
 
 		incomeDataSet = new DefaultCategoryDataset();
-		incomeInWeekChart = ChartFactory.createBarChart("Doanh Thu 7 Ngày Gần Nhất", "Ngày trong tuần", "Doanh thu",
+		incomeInWeekChart = ChartFactory.createBarChart("Doanh Thu theo ngày", "Ngày trong tuần", "Doanh thu",
 				incomeDataSet, PlotOrientation.VERTICAL, false, false, false);
 
 		incomeInWeekChart.setBorderVisible(false);
@@ -192,7 +192,7 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		topSaleProductList = new JList<TopThuocBanChay>(topSaleProductModel);
 		topSaleProductList.setCellRenderer(new TopSaleProductView());
 		topSaleProductPanel.add(topSaleProductLabel, BorderLayout.NORTH);
-		topSaleProductPanel.add(topSaleProductList, BorderLayout.CENTER);
+		topSaleProductPanel.add(new JScrollPane(topSaleProductList), BorderLayout.CENTER);
 
 		//
 
@@ -314,12 +314,12 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		}
 	}
 	
-	private void getTop5ThuocBanChayNhat() {
+	private void getTop10ThuocBanChayNhat() {
 		LocalDate from = datePickerFrom.getDate();
 		LocalDate to = datePickerTo.getDate();
 		
 		topSaleProductModel.clear();
-		for (TopThuocBanChay item : thuocDao.getTop5ThuocBanChay(from, to)) {
+		for (TopThuocBanChay item : thuocDao.getTop10ThuocBanChay(from, to)) {
 			topSaleProductModel.addElement(item);
 		}
 		
@@ -368,7 +368,7 @@ public class DashboardPage extends BasePage implements DateChangeListener {
 		getPaymentMethodPercentDataset();
 		getTopSaleInCategory();
 		getIncomeInPeriod();
-		getTop5ThuocBanChayNhat();
+		getTop10ThuocBanChayNhat();
 		getTongDoanhThu();
 		
 		long tongSoDonHang = hoaDonDao.getTongSoDonHang(from, to);

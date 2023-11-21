@@ -12,7 +12,7 @@ public class ChiTietHoaDon {
 	private double thanhTien;
 	private double giamGia;
 	private HoaDon hoaDon;
-	private int maGiamGia;
+	private MaGiamGia maGiamGia;
 
 	public ChiTietHoaDon() {
 		super();
@@ -24,7 +24,7 @@ public class ChiTietHoaDon {
 	}
 
 	public ChiTietHoaDon(int maCTHD, int soLuong, String donViTinh, double donGia, Thuoc sanPham, double thue,
-			double thanhTien, double giamGia, HoaDon hoaDon, int maGiamGia) {
+			double thanhTien, double giamGia, HoaDon hoaDon, MaGiamGia maGiamGia) {
 		super();
 		this.maCTHD = maCTHD;
 		this.soLuong = soLuong;
@@ -110,11 +110,11 @@ public class ChiTietHoaDon {
 		this.hoaDon = hoaDon;
 	}
 
-	public int getMaGiamGia() {
+	public MaGiamGia getMaGiamGia() {
 		return maGiamGia;
 	}
 
-	public void setMaGiamGia(int maGiamGia) {
+	public void setMaGiamGia(MaGiamGia maGiamGia) {
 		this.maGiamGia = maGiamGia;
 	}
 
