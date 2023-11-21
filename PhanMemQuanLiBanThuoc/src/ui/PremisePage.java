@@ -152,21 +152,21 @@ public class PremisePage extends BasePage implements MouseListener {
 		quayTable.addMouseListener(this);
 
 		themBtn = new JButton("Thêm");
-		if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý"))
-			themBtn.setVisible(false);
 		themBtn.setIcon(new ImageIcon("icon\\ic_addLight.png"));
 		themBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		themBtn.setFont(commonButtonFont);
 		themBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		themBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý")) {
+					JOptionPane.showMessageDialog(null, "Chỉ quản lý mới có quyền này!");
+					return;
+				}
 				new CreatePremisesFrm().setVisible(true);
 			}
 		});
 
 		xoaBtn = new JButton("Xóa");
-		if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý"))
-			xoaBtn.setVisible(false);
 		xoaBtn.setIcon(new ImageIcon("icon\\ic_clearLight.png"));
 		xoaBtn.setPreferredSize(new Dimension(0, 50));
 		xoaBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
@@ -174,6 +174,10 @@ public class PremisePage extends BasePage implements MouseListener {
 		xoaBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		xoaBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý")) {
+					JOptionPane.showMessageDialog(null, "Chỉ quản lý mới có quyền này!");
+					return;
+				}
 				int row = quayTable.getSelectedRow();
 				int maQuay = Integer.parseInt(quayModel.getValueAt(row, 0).toString());
 				String tenQuay = quayModel.getValueAt(row, 1).toString();
@@ -215,14 +219,16 @@ public class PremisePage extends BasePage implements MouseListener {
 		});
 
 		suaBtn = new JButton("Sửa");
-		if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý"))
-			suaBtn.setVisible(false);
 		suaBtn.setIcon(new ImageIcon("icon\\ic_writeLight.png"));
 		suaBtn.setBackground(Color.decode(ColorConsts.PrimaryColor));
 		suaBtn.setFont(commonButtonFont);
 		suaBtn.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		suaBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý")) {
+					JOptionPane.showMessageDialog(null, "Chỉ quản lý mới có quyền này!");
+					return;
+				}
 				int row = quayTable.getSelectedRow();
 
 				if (row < 0) {

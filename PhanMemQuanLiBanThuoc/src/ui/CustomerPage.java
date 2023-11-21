@@ -146,8 +146,6 @@ public class CustomerPage extends BasePage implements MouseListener {
 			}
 		});
 		btn_xoa = new JButton("Xóa");
-		if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý"))
-			btn_xoa.setVisible(false);
 		btn_xoa.setIcon(new ImageIcon("icon\\ic_clearLight.png"));
 		btn_xoa.setPreferredSize(new Dimension(0, 50));
 		btn_xoa.setBackground(Color.decode(ColorConsts.PrimaryColor));
@@ -155,6 +153,10 @@ public class CustomerPage extends BasePage implements MouseListener {
 		btn_xoa.setForeground(Color.decode(ColorConsts.ForegroundColor));
 		btn_xoa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(!TaiKhoanDangNhap.getNV().getChucVu().equals("Quản lý")) {
+					JOptionPane.showMessageDialog(null, "Chỉ quản lý mới có quyền này!");
+					return;
+				}
 				int row = cusTable.getSelectedRow();
 				
 				int maKhachHang = Integer.parseInt(cusModel.getValueAt(row, 0).toString());
